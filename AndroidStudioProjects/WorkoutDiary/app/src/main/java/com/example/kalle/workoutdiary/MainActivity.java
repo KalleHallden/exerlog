@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Button;
+import java.io.*;
+import android.content.Context;
+
 
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<EditText> textFieldArray;
     int numberOfExercises;
     int vol;
+
+    ArrayList<Exercise> savedExercises = new ArrayList<Exercise>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,11 +112,14 @@ public class MainActivity extends AppCompatActivity {
         layoutTop2.addView(startNewWorkoutButton);
         layoutTop3.addView(one);
 
+        startNewWorkoutButton.setOnClickListener(new StartNewWorkoutListener());
+
         //saveButton.setBackgroundResource(R.mipmap.ticks);
         saveButton.setText("✓");
         saveButton.setTextSize(25);
         saveButton.setTextColor(Color.RED);
         saveButton.setBackgroundColor(topBar.getSolidColor());
+        saveButton.setOnClickListener(new SaveWorkoutListener());
 
         GridLayout grid = new GridLayout(this);
         //grid.setBackgroundColor(Color.RED);
@@ -208,6 +216,118 @@ public class MainActivity extends AppCompatActivity {
           params.bottomMargin = 20;
           params.gravity = Gravity.CENTER_HORIZONTAL;
     }
+
+        class StartNewWorkoutListener implements View.OnClickListener {
+
+            @Override
+            public void onClick(View view) {
+
+                int number = 0;
+                FileInputStream fis = null;
+                try {
+                    fis = openFileInput("Workout");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                InputStreamReader isr = new InputStreamReader(fis);
+                BufferedReader bufferedReader = new BufferedReader(isr);
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+                try {
+                    while (null != (line = bufferedReader.readLine())) {
+                        sb.append(line);
+
+
+                        //Right now the bufferreader does not read every line it only reads the first line.
+                        //Which is why everything gets named ssss
+                        
+
+
+
+                        //sb.append("\n");
+                        //sb.append(line);
+                        savedExercises.add(new Exercise());
+                        if (!sb.equals("END")) {
+                            number++;
+                            savedExercises.add(new Exercise());
+                        }
+                            Exercise exer = savedExercises.get(number);
+                        for (int x = 0; x < 5; x++) {
+                            line = sb.toString();
+                            if (x == 0) {
+                                exer.setName(line);
+                                System.out.println("This is what you're saving your exercise data as: " + exer.getName());
+                            } if (x == 1) {
+                               try {
+                                   exer.setReps(line);
+                               } catch (Exception e) {
+
+                               }
+                                System.out.println("This is what you're saving your exercise data as: " + exer.getReps());
+                            }
+
+                        }
+                        System.out.println("This is current: " + sb);
+
+                    }
+                } catch (IOException e) {
+                    System.out.println("Exception");
+                }
+
+
+
+
+
+                try {
+                    System.out.println("This is your workout: " +(openFileInput("Workout")));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        class SaveWorkoutListener implements  View.OnClickListener {
+           @Override
+            public void onClick(View v) {
+
+               //This is where you save the workout
+               String filename = "Workout";
+               FileOutputStream outputStream;
+
+               try {
+                   outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+                   for (int i = 0; i < numberOfExercises; i++) {
+                       Exercise exer = exerciseList.get(i);
+                       String name = exer.getName();
+                       String reps = Integer.toString(exer.getReps());
+                       String sets = Integer.toString(exer.getSets());
+                       String weight = Integer.toString(exer.getWeight());
+                       String rest = Integer.toString(exer.getRest());
+                       outputStream.write(name.getBytes());
+                       outputStream.write(Integer.parseInt("\n"));
+                       outputStream.write(reps.getBytes());
+                       outputStream.write(Integer.parseInt("\n"));
+                       outputStream.write(sets.getBytes());
+                       outputStream.write(Integer.parseInt("\n"));
+                       outputStream.write(weight.getBytes());
+                       outputStream.write(Integer.parseInt("\n"));
+                       outputStream.write(rest.getBytes());
+                       outputStream.write(Integer.parseInt("\n"));
+                       String stopper = "END";
+                       outputStream.write(stopper.getBytes());
+                   }
+                   String volume = Integer.toString(vol);
+                   outputStream.write(Integer.parseInt("\n"));
+                   outputStream.write(volume.getBytes());
+                   outputStream.close();
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+
+
+           }
+        }
 
          class AddRowOnClickListener implements View.OnClickListener {
 
