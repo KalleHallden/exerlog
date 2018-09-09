@@ -25,6 +25,11 @@ import static android.view.ViewGroup.LayoutParams.FILL_PARENT;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    //Hej
+
+
+
     Button addExerciseButton;
     LinearLayout row;
     LinearLayout exerciseRowContainer;
