@@ -2,9 +2,13 @@ package com.example.kalle.workoutdiary;
 
 import android.app.ActionBar;
 import android.graphics.Color;
+import android.graphics.ImageDecoder;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Button;
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         display.getSize(size);
         int width = size.x;
         int height = size.y;
+        int thirdWidth = (int)(width*0.333333);
 
         LinearLayout testLayout = new LinearLayout(this);
         testLayout.setBackgroundColor(rgb(43, 43, 43));
@@ -74,17 +79,48 @@ public class MainActivity extends AppCompatActivity {
         topBar.setBackgroundColor(Color.rgb(10,10,10));
 
         LinearLayout layoutTop = new LinearLayout(this);
-        layoutTop.setBackgroundColor(Color.BLUE);
+        //layoutTop.setBackgroundColor(Color.BLUE);
+
         LinearLayout layoutTop2 = new LinearLayout(this);
+        layoutTop2.setBackgroundColor(Color.GREEN);
         LinearLayout layoutTop3 = new LinearLayout(this);
         layoutTop3.setBackgroundColor(Color.WHITE);
+
+
+        int widths = topBar.getWidth();
+
+        layoutTop2.setMinimumHeight(100);
+        layoutTop2.setMinimumWidth(thirdWidth);
+        layoutTop3.setMinimumHeight(100);
+        layoutTop3.setMinimumWidth(thirdWidth);
+        layoutTop.setMinimumHeight(100);
+        layoutTop.setMinimumWidth(thirdWidth);
 
         saveButton = new Button(this);
         startNewWorkoutButton = new Button(this);
         one = new Button(this);
-        topBar.addView(layoutTop);
-        topBar.addView(layoutTop2);
-        topBar.addView(layoutTop3);
+
+        ImageView tick = new ImageView(this);
+        tick.setImageResource(R.mipmap.ticks);
+
+        layoutTop.addView(saveButton);
+        layoutTop2.addView(startNewWorkoutButton);
+        layoutTop3.addView(one);
+
+        //saveButton.setBackgroundResource(R.mipmap.ticks);
+        saveButton.setText("✓");
+        saveButton.setTextSize(25);
+        saveButton.setTextColor(Color.RED);
+        saveButton.setBackgroundColor(topBar.getSolidColor());
+
+        GridLayout grid = new GridLayout(this);
+        //grid.setBackgroundColor(Color.RED);
+        grid.setOrientation(GridLayout.HORIZONTAL);
+        grid.addView(layoutTop);
+        grid.addView(layoutTop2);
+        grid.addView(layoutTop3);
+
+        topBar.addView(grid);
         topBar.setMinimumHeight(100);
 
 
@@ -147,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setSupportActionBar(Toolbar toolbar) {
     }
+
 
     public void makeLinearLayoutParamsTopBar(LinearLayout layout) {
         LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
@@ -256,32 +293,32 @@ public class MainActivity extends AppCompatActivity {
         //Make Labels:
          TextView nameLabel = new TextView(this);
          nameLabel.setText("Exercise");
-         nameLabel.setPadding(70, 0, 0, 0);
-         nameLabel.setTextSize(12);
+         nameLabel.setPadding(60, 0, 0, 0);
+         nameLabel.setTextSize(15);
          nameLabel.setTextColor(WHITE);
 
          TextView repsLabel = new TextView(this);
          repsLabel.setText("Reps");
          repsLabel.setPadding(110, 0, 0, 0);
-         repsLabel.setTextSize(12);
+         repsLabel.setTextSize(15);
          repsLabel.setTextColor(WHITE);
 
          TextView setsLabel = new TextView(this);
          setsLabel.setText("Sets");
          setsLabel.setPadding(70, 0, 0, 0);
-         setsLabel.setTextSize(12);
+         setsLabel.setTextSize(15);
          setsLabel.setTextColor(WHITE);
 
          TextView weightLabel = new TextView(this);
          weightLabel.setText("Weight");
          weightLabel.setPadding(60, 0, 0, 0);
-         weightLabel.setTextSize(12);
+         weightLabel.setTextSize(15);
          weightLabel.setTextColor(WHITE);
 
          TextView restLabel = new TextView(this);
          restLabel.setText("Rest");
          restLabel.setPadding(45, 0, 10, 0);
-         restLabel.setTextSize(12);
+         restLabel.setTextSize(15);
          restLabel.setTextColor(WHITE);
 
          creatLinearLayout.setupLayout(linear);
@@ -309,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
                   LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                      LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-             layoutParams.setMargins(10, 10, 10, 10);
+             layoutParams.setMargins(10, 0, 10, 0);
              layoutParams.gravity = Gravity.CENTER;
 
 
@@ -324,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
           maktxt.makeTextField(exerciseName);
           //exerciseName.setMaxWidth(300);
           exerciseName.setMinimumWidth(300);
-          exerciseName.setPadding(10,10,10,10);
+          exerciseName.setPadding(10,5,10,5);
           textFieldArray.add(exerciseName);
 
           // second textfield
@@ -332,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
               maktxt.makeTextField(repsTextField);
              // repsTextField.setMaxWidth(150);
               repsTextField.setMinimumWidth(150);
-              repsTextField.setPadding(10,10,10,10);
+              repsTextField.setPadding(10,5,10,5);
               textFieldArray.add(repsTextField);
 
           // third textField
@@ -340,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
               maktxt.makeTextField(setsTextField);
              // setsTextField.setMaxWidth(150);
               setsTextField.setMinimumWidth(150);
-              setsTextField.setPadding(10,10,10,10);
+              setsTextField.setPadding(10,5,10,5);
               textFieldArray.add(setsTextField);
 
           //fourth textField
@@ -348,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
               maktxt.makeTextField(weightTextField);
              // weightTextField.setMaxWidth(150);
               weightTextField.setMinimumWidth(150);
-              weightTextField.setPadding(10,10,10,10);
+              weightTextField.setPadding(10,5,10,5);
               textFieldArray.add(weightTextField);
 
           // fifth textField
@@ -356,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
               maktxt.makeTextField(restTextField);
              // restTextField.setMaxWidth(150);
               restTextField.setMinimumWidth(150);
-              restTextField.setPadding(10,10,10,10);
+              restTextField.setPadding(10,5,10,5);
               textFieldArray.add(restTextField);
 
               linlay.setLayoutParams(layoutParams);
