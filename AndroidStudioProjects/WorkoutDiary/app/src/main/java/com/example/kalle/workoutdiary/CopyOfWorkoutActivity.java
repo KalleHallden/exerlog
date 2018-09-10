@@ -202,6 +202,9 @@ public class CopyOfWorkoutActivity extends MainActivity {
                         text.setText(Integer.toString(r));
                     }
                 }
+                ex.setVolume(ex.getReps(), ex.getSets());
+                vol = vol + ex.getVolume();
+                volumeLabel.setText("Total Volume: " + vol);
             }
         } else {
                 System.out.println("We are NOT in the matrix!!");
@@ -384,31 +387,31 @@ public class CopyOfWorkoutActivity extends MainActivity {
         TextView nameLabel = new TextView(this);
         nameLabel.setText("Exercise");
         nameLabel.setPadding(60, 0, 0, 0);
-        nameLabel.setTextSize(15);
+        nameLabel.setTextSize(12);
         nameLabel.setTextColor(WHITE);
 
         TextView repsLabel = new TextView(this);
         repsLabel.setText("Reps");
         repsLabel.setPadding(110, 0, 0, 0);
-        repsLabel.setTextSize(15);
+        repsLabel.setTextSize(12);
         repsLabel.setTextColor(WHITE);
 
         TextView setsLabel = new TextView(this);
         setsLabel.setText("Sets");
         setsLabel.setPadding(70, 0, 0, 0);
-        setsLabel.setTextSize(15);
+        setsLabel.setTextSize(12);
         setsLabel.setTextColor(WHITE);
 
         TextView weightLabel = new TextView(this);
         weightLabel.setText("Weight");
         weightLabel.setPadding(60, 0, 0, 0);
-        weightLabel.setTextSize(15);
+        weightLabel.setTextSize(12);
         weightLabel.setTextColor(WHITE);
 
         TextView restLabel = new TextView(this);
         restLabel.setText("Rest");
         restLabel.setPadding(45, 0, 10, 0);
-        restLabel.setTextSize(15);
+        restLabel.setTextSize(12);
         restLabel.setTextColor(WHITE);
 
         creatLinearLayout.setupLayout(linear);
