@@ -26,6 +26,7 @@ import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.Toolbar;
+import android.content.Intent;
 
 import java.util.ArrayList;
 
@@ -45,10 +46,35 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
     ArrayList<ArrayList> containerFortestxArray = new ArrayList<ArrayList>();
     ArrayList<EditText> textFieldArray;
+    Workout thisWorkout;
     int numberOfExercises;
     int vol;
 
-    ArrayList<Exercise> savedExercises = new ArrayList<Exercise>();
+
+
+
+    static int numWorkouts;
+
+    private String fileNameExercises = "";
+    private String fileNameWorkout = "";
+
+    public String getFileNameExercises() {
+        return fileNameExercises;
+    }
+    public String getFileNameWorkout() {
+        return fileNameWorkout;
+    }
+
+    public void setFileNameExercises(String s) {
+        fileNameExercises = s;
+    }
+
+    public void setFileNameWorkout(String w) {
+        fileNameWorkout = w;
+    }
+
+    public ArrayList<Exercise> savedExercises = new ArrayList<Exercise>();
+    ArrayList<Workout> savedWorkouts = new ArrayList<Workout>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void setUp() {
 
+
+        String wok = "Workout" + numWorkouts;
+        String exs = "Exercises" + numWorkouts;
+        setFileNameExercises(exs);
+        setFileNameWorkout(wok);
+        numWorkouts++;
+
+
+
+
+        savedWorkouts.add(new Workout());
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -106,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         saveButton = new Button(this);
         startNewWorkoutButton = new Button(this);
         one = new Button(this);
+        one.setOnClickListener(new ShowOldWorkoutListener());
 
         ImageView tick = new ImageView(this);
         tick.setImageResource(R.mipmap.ticks);
@@ -172,7 +210,6 @@ public class MainActivity extends AppCompatActivity {
         makeTextFields(textFieldRows);
         exerciseRowContainer.addView(textFieldRows, buttonParams);
         numberOfExercises = numberOfExercises + 1;
-
         rowScroller.addView(exerciseRowContainer);
 
         makeLinearLayoutParams(volumeRow);
@@ -219,6 +256,20 @@ public class MainActivity extends AppCompatActivity {
           params.gravity = Gravity.CENTER_HORIZONTAL;
     }
 
+    int y;
+    class ShowOldWorkoutListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Context context = view.getContext();
+            Intent intent = new Intent(context, CopyOfWorkoutActivity.class);
+            context.startActivity(intent);
+            setUp();
+
+            System.out.println("we got called: " + y + " times");
+            y++;
+        }
+    }
+
         class StartNewWorkoutListener implements View.OnClickListener {
 
             @Override
@@ -226,23 +277,23 @@ public class MainActivity extends AppCompatActivity {
 
                 int number = 0;
                 int c = 0;
-                FileInputStream fis = null;
+
+
+
                 try {
-                    fis = openFileInput("Workout");
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                InputStreamReader isr = new InputStreamReader(fis);
-                BufferedReader bufferedReader = new BufferedReader(isr);
-
-
-
+                    String filename = getFileNameExercises();
+                    FileInputStream fis = null;
+                    try {
+                        fis = openFileInput(filename);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    InputStreamReader isr = new InputStreamReader(fis);
+                    BufferedReader bufferedReader = new BufferedReader(isr);
                     StringBuffer sb = new StringBuffer();
                     String line;
 
 
-
-                try {
                         while ((line = bufferedReader.readLine()) != null) {
                             c++;
                             System.out.println("This is how many times it runs " + c);
@@ -298,16 +349,17 @@ public class MainActivity extends AppCompatActivity {
                                         System.out.println("This was your rest: " + exer.getRest());
                                     }
 
-
                                 }
 
                             }
+                            isr.close();
 
                         }
+
                     } catch (IOException e) {
                         System.out.println("Exception");
                     }
-                    System.out.println("This is current: " + sb);
+                   // System.out.println("This is current: " + sb);
 
             }
         }
@@ -316,11 +368,17 @@ public class MainActivity extends AppCompatActivity {
            @Override
             public void onClick(View v) {
 
+
+               savedWorkouts.add(new Workout());
+
                //This is where you save the workout
-               String filename = "Workout";
-               FileOutputStream outputStream;
+               String filename = getFileNameExercises();
+               System.out.println("This is the name of the file you are creating: " + filename);
+               File f = new File(getFileNameExercises());
+               //FileOutputStream outputStream;
 
                try {
+                   FileOutputStream outputStream;
                    outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
                    for (int i = 0; i < numberOfExercises; i++) {
                        Exercise exer = exerciseList.get(i);
@@ -352,6 +410,22 @@ public class MainActivity extends AppCompatActivity {
                    e.printStackTrace();
                }
 
+               String workoutName = getFileNameWorkout();
+               FileOutputStream os;
+
+               try {
+                   os = openFileOutput(workoutName, Context.MODE_PRIVATE);
+                   for (int i = 0; i < savedWorkouts.size(); i++) {
+                       Workout wo = savedWorkouts.get(i);
+                       String volume = Integer.toString(wo.getWorkoutVolume());
+                       os.write(volume.getBytes());
+                       String stopper = "END";
+                       os.write(stopper.getBytes());
+                   }
+                   os.close();
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
 
            }
         }
@@ -373,6 +447,7 @@ public class MainActivity extends AppCompatActivity {
 
                 makeTextFields(textFieldRows);
                 exerciseRowContainer.addView(textFieldRows, textRowParams);
+
 
 
                 for (int i = 0; i < numberOfExercises; i++ ) {
@@ -555,12 +630,12 @@ public class MainActivity extends AppCompatActivity {
 
       }
 
-
 }
 
 class Workout {
     private int workoutVolume;
     private String workoutName;
+    private ArrayList<Exercise> workoutExerciseList;
 
     public void setWorkoutName(String name) {
         workoutName = name;
