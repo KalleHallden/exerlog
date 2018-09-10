@@ -14,8 +14,10 @@ import android.widget.RelativeLayout;
 import android.widget.Button;
 import java.io.*;
 import android.content.Context;
+import java.util.Scanner;
+import java.io.File;
 
-
+import java.io.IOException;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -223,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 int number = 0;
+                int c = 0;
                 FileInputStream fis = null;
                 try {
                     fis = openFileInput("Workout");
@@ -232,58 +235,80 @@ public class MainActivity extends AppCompatActivity {
                 InputStreamReader isr = new InputStreamReader(fis);
                 BufferedReader bufferedReader = new BufferedReader(isr);
 
-                StringBuilder sb = new StringBuilder();
-                String line;
+
+
+                    StringBuffer sb = new StringBuffer();
+                    String line;
+
+
+
                 try {
-                    while (null != (line = bufferedReader.readLine())) {
-                        sb.append(line);
+                        while ((line = bufferedReader.readLine()) != null) {
+                            c++;
+                            System.out.println("This is how many times it runs " + c);
+                            sb.append(line);
+                            String text = (String) line;
+                            System.out.println("This is the total line: " + text);
+
+                            String[] data = text.split("END");
+
+                            for (int d = 0; d < data.length; d++) {
+                                System.out.println("This is current: " + data[d]);
+                                String dat = data[d];
+                                String[] info = dat.split("SPLIT");
+
+                                savedExercises.add(new Exercise());
+                                Exercise exer = savedExercises.get(d);
+                                for (int o = 0; o < 5; o++) {
+                                    if (o == 0) {
+                                        try {
+                                            exer.setName(info[o]);
+                                        } catch (Exception e) {
+                                            exer.setName(" ");
+                                        }
+                                        System.out.println("This was your name: " + exer.getName());
+                                    } if (o == 1) {
+                                        try {
+                                            exer.setReps(info[o]);
+                                        } catch (Exception e) {
+                                            exer.setReps("0");
+                                        }
+                                        System.out.println("This was your reps: " + exer.getReps());
+                                    }
+                                    if (o == 2) {
+                                        try {
+                                            exer.setSets(info[o]);
+                                        } catch (Exception e) {
+                                            exer.setSets("1");
+                                        }
+                                        System.out.println("This was your sets: " + exer.getSets());
+                                    } if (o == 3) {
+                                        try {
+                                            exer.setWeight(info[o]);
+                                        } catch (Exception e) {
+                                            exer.setWeight("0");
+                                        }
+                                        System.out.println("This was your weight: " + exer.getWeight());
+                                    } if (o == 4) {
+                                        try {
+                                            exer.setRest(info[o]);
+                                        } catch (Exception e) {
+                                            exer.setRest("0");
+                                        }
+                                        System.out.println("This was your rest: " + exer.getRest());
+                                    }
 
 
-                        //Right now the bufferreader does not read every line it only reads the first line.
-                        //Which is why everything gets named ssss
-                        
+                                }
 
-
-
-                        //sb.append("\n");
-                        //sb.append(line);
-                        savedExercises.add(new Exercise());
-                        if (!sb.equals("END")) {
-                            number++;
-                            savedExercises.add(new Exercise());
-                        }
-                            Exercise exer = savedExercises.get(number);
-                        for (int x = 0; x < 5; x++) {
-                            line = sb.toString();
-                            if (x == 0) {
-                                exer.setName(line);
-                                System.out.println("This is what you're saving your exercise data as: " + exer.getName());
-                            } if (x == 1) {
-                               try {
-                                   exer.setReps(line);
-                               } catch (Exception e) {
-
-                               }
-                                System.out.println("This is what you're saving your exercise data as: " + exer.getReps());
                             }
 
                         }
-                        System.out.println("This is current: " + sb);
-
+                    } catch (IOException e) {
+                        System.out.println("Exception");
                     }
-                } catch (IOException e) {
-                    System.out.println("Exception");
-                }
+                    System.out.println("This is current: " + sb);
 
-
-
-
-
-                try {
-                    System.out.println("This is your workout: " +(openFileInput("Workout")));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
             }
         }
 
@@ -305,20 +330,22 @@ public class MainActivity extends AppCompatActivity {
                        String weight = Integer.toString(exer.getWeight());
                        String rest = Integer.toString(exer.getRest());
                        outputStream.write(name.getBytes());
-                       outputStream.write(Integer.parseInt("\n"));
+                       String split = "SPLIT";
+                       outputStream.write(split.getBytes());
                        outputStream.write(reps.getBytes());
-                       outputStream.write(Integer.parseInt("\n"));
+                       outputStream.write(split.getBytes());
                        outputStream.write(sets.getBytes());
-                       outputStream.write(Integer.parseInt("\n"));
+                       outputStream.write(split.getBytes());
                        outputStream.write(weight.getBytes());
-                       outputStream.write(Integer.parseInt("\n"));
+                       outputStream.write(split.getBytes());
                        outputStream.write(rest.getBytes());
-                       outputStream.write(Integer.parseInt("\n"));
+                       outputStream.write(split.getBytes());
                        String stopper = "END";
                        outputStream.write(stopper.getBytes());
+                       //outputStream.write(Integer.parseInt("END"));
                    }
                    String volume = Integer.toString(vol);
-                   outputStream.write(Integer.parseInt("\n"));
+                   //outputStream.write(Integer.parseInt("\n"));
                    outputStream.write(volume.getBytes());
                    outputStream.close();
                } catch (Exception e) {
@@ -529,6 +556,27 @@ public class MainActivity extends AppCompatActivity {
       }
 
 
+}
+
+class Workout {
+    private int workoutVolume;
+    private String workoutName;
+
+    public void setWorkoutName(String name) {
+        workoutName = name;
+    }
+
+    public String getWorkoutName() {
+       return workoutName;
+    }
+
+    public void setVolume(int v) {
+        workoutVolume = v;
+    }
+
+    public int getWorkoutVolume() {
+        return  workoutVolume;
+    }
 }
 
 class Exercise {
