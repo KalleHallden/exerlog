@@ -1,11 +1,14 @@
 package com.example.kalle.workoutdiary;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -52,8 +55,13 @@ public class CopyOfWorkoutActivity extends MainActivity {
         @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        System.out.println("We are in!!!");
             buildit();
+            System.out.println("We built this city!!");
         setUp();
+
     }
 
     public void setUp() {
@@ -89,9 +97,9 @@ public class CopyOfWorkoutActivity extends MainActivity {
         //layoutTop.setBackgroundColor(Color.BLUE);
 
         LinearLayout layoutTop2 = new LinearLayout(this);
-        layoutTop2.setBackgroundColor(Color.GREEN);
+        //layoutTop2.setBackgroundColor(Color.GREEN);
         LinearLayout layoutTop3 = new LinearLayout(this);
-        layoutTop3.setBackgroundColor(Color.WHITE);
+        //layoutTop3.setBackgroundColor(Color.WHITE);
 
 
         int widths = topBar.getWidth();
@@ -121,6 +129,9 @@ public class CopyOfWorkoutActivity extends MainActivity {
         saveButton.setTextSize(25);
         saveButton.setTextColor(Color.RED);
         saveButton.setBackgroundColor(topBar.getSolidColor());
+
+
+        startNewWorkoutButton.setOnClickListener(new ShowOldWorkoutListener());
 
 
 
@@ -235,6 +246,22 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
     }
 
+    int y;
+    class ShowOldWorkoutListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Context context = view.getContext();
+
+            Intent intent = new Intent(context, MainActivity.class);
+            context.startActivity(intent);
+            System.out.println("So far so good");
+
+            System.out.println("we got called: " + y + " times");
+            y++;
+        }
+    }
+
+
     int c;
     public void buildit() {
 
@@ -244,25 +271,31 @@ public class CopyOfWorkoutActivity extends MainActivity {
             int x = numWorkouts;
             System.out.println("This is numWorkouts: " + x);
 
-            String file1 = "Exercises" + (x -2);
+            String file1 = "Exercises" + (x -1);
 
             System.out.println("You are currently creating this workout: " + file1);
 
 
 
-            System.out.println("This is something you are now printing: " + getFilesDir());
-
+            System.out.println("This is something you are now printing: " + getFilesDir().listFiles().length);
 
         File f = new File(file1);
         if(f.exists() == true) {
+            System.out.println("We are here now");
 
-        } else {
-
-
+            System.out.println("We are here now2");
             FileInputStream fis = null;
             try {
                 fis = openFileInput(file1);
             } catch (FileNotFoundException e) {
+                System.out.println("this is the bloody exception");
+                savedExercisez.add(new Exercise());
+                Exercise exer = savedExercisez.get(0);
+                exer.setName("");
+                exer.setReps("0");
+                exer.setSets("0");
+                exer.setWeight("0");
+                exer.setRest("0");
                 e.printStackTrace();
             }
             InputStreamReader isr = new InputStreamReader(fis);
@@ -335,7 +368,12 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
                     }
 
+
                 }
+
+                System.out.println("");
+                isr.close();
+                System.out.println("");
             } catch (IOException e) {
                 System.out.println("Exception");
 
@@ -345,7 +383,115 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
 
 
+
+
+        } else {
+
+            if (f.exists() == false){
+                System.out.println("We are here now");
+            }
+
+        System.out.println("We are here now2");
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput(file1);
+        } catch (FileNotFoundException e) {
+            System.out.println("this is the bloody exception");
+            savedExercisez.add(new Exercise());
+            Exercise exer = savedExercisez.get(0);
+            exer.setName("");
+            exer.setReps("0");
+            exer.setSets("0");
+            exer.setWeight("0");
+            exer.setRest("0");
+            e.printStackTrace();
         }
+        InputStreamReader isr = new InputStreamReader(fis);
+        BufferedReader bufferedReader = new BufferedReader(isr);
+
+
+
+
+        try {
+            StringBuffer sb = new StringBuffer();
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                c++;
+                System.out.println("This is how many times it runs " + c);
+                sb.append(line);
+                String text = (String) line;
+                System.out.println("This is the total lines int this new one: " + text);
+
+                String[] data = text.split("END");
+
+                for (int d = 0; d < data.length; d++) {
+                    System.out.println("This is current: " + data[d]);
+                    String dat = data[d];
+                    String[] info = dat.split("SPLIT");
+
+                    savedExercisez.add(new Exercise());
+                    Exercise exer = savedExercisez.get(d);
+                    for (int o = 0; o < 5; o++) {
+                        if (o == 0) {
+                            try {
+                                exer.setName(info[o]);
+                            } catch (Exception e) {
+                                exer.setName(" ");
+                            }
+                            System.out.println("This was your name: " + exer.getName());
+                        } if (o == 1) {
+                            try {
+                                exer.setReps(info[o]);
+                            } catch (Exception e) {
+                                exer.setReps("0");
+                            }
+                            System.out.println("This was your reps: " + exer.getReps());
+                        }
+                        if (o == 2) {
+                            try {
+                                exer.setSets(info[o]);
+                            } catch (Exception e) {
+                                exer.setSets("1");
+                            }
+                            System.out.println("This was your sets: " + exer.getSets());
+                        } if (o == 3) {
+                            try {
+                                exer.setWeight(info[o]);
+                            } catch (Exception e) {
+                                exer.setWeight("0");
+                            }
+                            System.out.println("This was your weight: " + exer.getWeight());
+                        } if (o == 4) {
+                            try {
+                                exer.setRest(info[o]);
+                            } catch (Exception e) {
+                                exer.setRest("0");
+                            }
+                            System.out.println("This was your rest: " + exer.getRest());
+                        }
+
+
+                    }
+
+                }
+
+
+            }
+
+            System.out.println("");
+            isr.close();
+            System.out.println("");
+        } catch (IOException e) {
+            System.out.println("Exception");
+
+        }
+        System.out.println("");
+
+
+
+
+    }
 
 
 
