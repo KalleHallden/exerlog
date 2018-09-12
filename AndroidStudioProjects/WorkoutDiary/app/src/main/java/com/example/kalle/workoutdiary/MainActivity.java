@@ -277,6 +277,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
 
+            Context context = view.getContext();
+            Intent i = new Intent(context, StatsActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
+
             int number = 0;
             int c = 0;
 
