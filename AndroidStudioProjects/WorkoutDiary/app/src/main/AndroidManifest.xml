@@ -17,9 +17,7 @@
         </activity>
         <activity android:name=".DiaryActivity" />
         <activity android:name=".CopyOfWorkoutActivity" />
-        <activity
-            android:name=".BottomNavigation"
-            android:label="@string/title_activity_bottom_navigation"></activity>
+        <activity android:name=".BottomNavigation"></activity>
     </application>
 
 </manifest>

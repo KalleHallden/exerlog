@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
     int vol;
 
 
-
-
     static int numWorkouts;
 
     private String fileNameExercises = "";
@@ -63,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     public String getFileNameExercises() {
         return fileNameExercises;
     }
+
     public String getFileNameWorkout() {
         return fileNameWorkout;
     }
@@ -98,15 +97,13 @@ public class MainActivity extends AppCompatActivity {
         numWorkouts++;
 
 
-
-
         savedWorkouts.add(new Workout());
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
         int height = size.y;
-        int thirdWidth = (int)(width*0.333333);
+        int thirdWidth = (int) (width * 0.333333);
 
         LinearLayout testLayout = new LinearLayout(this);
         testLayout.setBackgroundColor(rgb(43, 43, 43));
@@ -120,17 +117,17 @@ public class MainActivity extends AppCompatActivity {
         row = new LinearLayout(this);
         row.setOrientation(LinearLayout.VERTICAL);
 
-       // makeLinearLayoutParams(row);
+        // makeLinearLayoutParams(row);
 
 
         LinearLayout topBar = new LinearLayout(this);
-        topBar.setBackgroundColor(Color.rgb(10,10,10));
+        topBar.setBackgroundColor(Color.rgb(10, 10, 10));
 
         LinearLayout layoutTop = new LinearLayout(this);
         //layoutTop.setBackgroundColor(Color.BLUE);
 
         LinearLayout layoutTop2 = new LinearLayout(this);
-       // layoutTop2.setBackgroundColor(Color.GREEN);
+        // layoutTop2.setBackgroundColor(Color.GREEN);
         LinearLayout layoutTop3 = new LinearLayout(this);
         //layoutTop3.setBackgroundColor(Color.WHITE);
 
@@ -176,8 +173,6 @@ public class MainActivity extends AppCompatActivity {
         topBar.setMinimumHeight(100);
 
 
-
-
         // Make layout for labels
         LinearLayout labelrow = new LinearLayout(this);
         makeLabels(labelrow);
@@ -186,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
         volumeLabel.setText("Total Volume: 0");
         volumeLabel.setTextColor(WHITE);
         LinearLayout volumeRow = new LinearLayout(this);
-
 
 
         // Make container for Exercise rows
@@ -225,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
         row.addView(rowScroller);
         row.addView(addExerciseButton, buttonParams);
         row.addView(volumeRow);
-       // totalLayout.addView(topBar);
+        // totalLayout.addView(topBar);
         totalLayout.addView(row);
         testLayout.addView(totalLayout);
 
@@ -245,33 +239,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void makeLinearLayoutParams(LinearLayout layout) {
-          LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
-                   LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-          layoutpara.setMargins(10, 10, 10, 10);
-          layoutpara.gravity = Gravity.CENTER;
-          layout.setLayoutParams(layoutpara);
+        LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutpara.setMargins(10, 10, 10, 10);
+        layoutpara.gravity = Gravity.CENTER;
+        layout.setLayoutParams(layoutpara);
     }
 
     public void makeButtonAndTextRowParams(LinearLayout.LayoutParams params) {
-          params.leftMargin = 10;
-          params.rightMargin = 10;
-          params.topMargin = 20;
-          params.bottomMargin = 20;
-          params.gravity = Gravity.CENTER_HORIZONTAL;
+        params.leftMargin = 10;
+        params.rightMargin = 10;
+        params.topMargin = 20;
+        params.bottomMargin = 20;
+        params.gravity = Gravity.CENTER_HORIZONTAL;
     }
 
 
-
     int y;
+
     class ShowOldWorkoutListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             Context context = view.getContext();
 
-            Intent intent = new Intent(context, CopyOfWorkoutActivity.class);
+            Intent intent = new Intent(context, DiaryActivity.class);
             context.startActivity(intent);
             System.out.println("So far so good");
-           //reload();
+            //reload();
 
             System.out.println("we got called: " + y + " times");
             y++;
@@ -285,7 +279,6 @@ public class MainActivity extends AppCompatActivity {
 
             int number = 0;
             int c = 0;
-
 
 
             try {
@@ -324,7 +317,8 @@ public class MainActivity extends AppCompatActivity {
                                     exer.setName(" ");
                                 }
                                 System.out.println("This was your name: " + exer.getName());
-                            } if (o == 1) {
+                            }
+                            if (o == 1) {
                                 try {
                                     exer.setReps(info[o]);
                                 } catch (Exception e) {
@@ -339,14 +333,16 @@ public class MainActivity extends AppCompatActivity {
                                     exer.setSets("1");
                                 }
                                 System.out.println("This was your sets: " + exer.getSets());
-                            } if (o == 3) {
+                            }
+                            if (o == 3) {
                                 try {
                                     exer.setWeight(info[o]);
                                 } catch (Exception e) {
                                     exer.setWeight("0");
                                 }
                                 System.out.println("This was your weight: " + exer.getWeight());
-                            } if (o == 4) {
+                            }
+                            if (o == 4) {
                                 try {
                                     exer.setRest(info[o]);
                                 } catch (Exception e) {
@@ -371,102 +367,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-        class StartNewWorkoutListenerOriginal implements View.OnClickListener {
-
-            @Override
-            public void onClick(View view) {
-
-                int number = 0;
-                int c = 0;
-
-
-
-                try {
-                    String filename = getFileNameExercises();
-                    FileInputStream fis = null;
-                    try {
-                        fis = openFileInput(filename);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    InputStreamReader isr = new InputStreamReader(fis);
-                    BufferedReader bufferedReader = new BufferedReader(isr);
-                    StringBuffer sb = new StringBuffer();
-                    String line;
-
-                    System.out.println("This is something you are now printing: " + getFilesDir().listFiles().length);
-
-                        while ((line = bufferedReader.readLine()) != null) {
-                            c++;
-                            System.out.println("This is how many times it runs " + c);
-                            sb.append(line);
-                            String text = (String) line;
-                            System.out.println("This is the total line: " + text);
-
-                            String[] data = text.split("END");
-
-                            for (int d = 0; d < data.length; d++) {
-                                System.out.println("This is current: " + data[d]);
-                                String dat = data[d];
-                                String[] info = dat.split("SPLIT");
-
-                                savedExercises.add(new Exercise());
-                                Exercise exer = savedExercises.get(d);
-                                for (int o = 0; o < 5; o++) {
-                                    if (o == 0) {
-                                        try {
-                                            exer.setName(info[o]);
-                                        } catch (Exception e) {
-                                            exer.setName(" ");
-                                        }
-                                        System.out.println("This was your name: " + exer.getName());
-                                    } if (o == 1) {
-                                        try {
-                                            exer.setReps(info[o]);
-                                        } catch (Exception e) {
-                                            exer.setReps("0");
-                                        }
-                                        System.out.println("This was your reps: " + exer.getReps());
-                                    }
-                                    if (o == 2) {
-                                        try {
-                                            exer.setSets(info[o]);
-                                        } catch (Exception e) {
-                                            exer.setSets("1");
-                                        }
-                                        System.out.println("This was your sets: " + exer.getSets());
-                                    } if (o == 3) {
-                                        try {
-                                            exer.setWeight(info[o]);
-                                        } catch (Exception e) {
-                                            exer.setWeight("0");
-                                        }
-                                        System.out.println("This was your weight: " + exer.getWeight());
-                                    } if (o == 4) {
-                                        try {
-                                            exer.setRest(info[o]);
-                                        } catch (Exception e) {
-                                            exer.setRest("0");
-                                        }
-                                        System.out.println("This was your rest: " + exer.getRest());
-                                    }
-
-                                }
-
-                            }
-
-                        }
-                    System.out.println("h");
-                    isr.close();
-                    System.out.println("t");
-
-                    } catch (IOException e) {
-                        System.out.println("Exception");
-                    }
-                   // System.out.println("This is current: " + sb);
-                reload();
-            }
-        }
 
     public void reload() {
         Intent intent = getIntent();
@@ -477,20 +377,38 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    class SaveWorkoutListener implements  View.OnClickListener {
+    class SaveWorkoutListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
 
-
+            int count = 0;
             savedWorkouts.add(new Workout());
+            Boolean existing = true;
 
             //This is where you save the workout
             String filename = getFileNameExercises();
-            System.out.println("This is the name of the file you are creating: " + filename);
-            //File fouts = new File(filename);
+
+            File fouts = new File(filename);
+
+            FileInputStream fis = null;
+            while (existing == true) {
+                try {
+                    fis = openFileInput(filename);
+                    System.out.println("Right now you are at Exercise" + count);
+                    count++;
+                    filename = "Exercises" + count;
+                } catch (Exception e) {
+                    System.out.println("No more files");
+                    existing = false;
+                }
+            }
+
+
+
 
             try {
                 FileOutputStream os = openFileOutput(filename, Context.MODE_PRIVATE);
+                System.out.println("Workout number " + filename);
 
                 System.out.println("Creating bufferedwriter");
                 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os));
@@ -537,85 +455,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-
-
     }
 
-    class SaveWorkoutListenerOriginal implements  View.OnClickListener {
-           @Override
-            public void onClick(View v) {
-
-
-               savedWorkouts.add(new Workout());
-
-                          //This is where you save the workout
-            String filename = getFileNameExercises();
-               System.out.println("This is the name of the file you are creating: " + filename);
 
 
 
-            //FileOutputStream outputStream;
-
-               try {
-                FileOutputStream outputStream;
-                outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-
-                for (int i = 0; i < numberOfExercises; i++) {
-                    Exercise exer = exerciseList.get(i);
-                    String name = exer.getName();
-                    String reps = Integer.toString(exer.getReps());
-                    String sets = Integer.toString(exer.getSets());
-                    String weight = Integer.toString(exer.getWeight());
-                    String rest = Integer.toString(exer.getRest());
-                    outputStream.write(name.getBytes());
-                    String split = "SPLIT";
-                    outputStream.write(split.getBytes());
-                    outputStream.write(reps.getBytes());
-                    outputStream.write(split.getBytes());
-                    outputStream.write(sets.getBytes());
-                    outputStream.write(split.getBytes());
-                    outputStream.write(weight.getBytes());
-                    outputStream.write(split.getBytes());
-                    outputStream.write(rest.getBytes());
-                    outputStream.write(split.getBytes());
-                    String stopper = "END";
-                    outputStream.write(stopper.getBytes());
-                    //outputStream.write(Integer.parseInt("END"));
-                }
-                String volume = Integer.toString(vol);
-                //outputStream.write(Integer.parseInt("\n"));
-                outputStream.write(volume.getBytes());
-                outputStream.close();
-                outputStream.flush();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-
-
-
-            String workoutName = getFileNameWorkout();
-            FileOutputStream os;
-
-               try {
-                os = openFileOutput(workoutName, Context.MODE_PRIVATE);
-                for (int i = 0; i < savedWorkouts.size(); i++) {
-                    Workout wo = savedWorkouts.get(i);
-                    String volume = Integer.toString(wo.getWorkoutVolume());
-                    os.write(volume.getBytes());
-                    String stopper = "END";
-                    os.write(stopper.getBytes());
-                }
-                os.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-
-        }
 
          class AddRowOnClickListener implements View.OnClickListener {
 
@@ -922,7 +766,7 @@ class MyButton {
 
 class myTextField {
     public void makeTextField(EditText texfield) {
-        texfield.setBackgroundColor(rgb(0,0,0));
+        texfield.setBackgroundColor(rgb(0, 0, 0));
         texfield.setTextColor(rgb(150, 0, 0));
         texfield.setTextSize(12);
         texfield.setMaxHeight(100);
