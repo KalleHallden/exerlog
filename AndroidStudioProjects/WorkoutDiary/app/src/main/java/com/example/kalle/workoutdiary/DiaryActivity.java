@@ -3,9 +3,11 @@ package com.example.kalle.workoutdiary;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
+import android.view.Display;
 import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -13,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Button;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,6 +24,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import android.graphics.Typeface;
+
+import static android.text.Layout.Alignment.ALIGN_CENTER;
 
 public class DiaryActivity extends AppCompatActivity {
 
@@ -60,8 +66,14 @@ public class DiaryActivity extends AppCompatActivity {
 
     public void setUp() {
         buildit();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
         LinearLayout layout = new LinearLayout(this);
-        setContentView(layout);
         layout.setBackgroundColor(Color.rgb(43,43,43));
         LinearLayout rowsInsideScroll = new LinearLayout(this);
         rowsInsideScroll.setOrientation(LinearLayout.VERTICAL);
@@ -94,23 +106,107 @@ public class DiaryActivity extends AppCompatActivity {
             rowCreated.setMinimumHeight(80);
             TextView name = new TextView(this);
             name.setText("Workout " + counter);
+            name.setTypeface(null, Typeface.BOLD);
+            name.setTextSize(15);
             name.setTextColor(Color.rgb(43,43,43));
             name.setPadding(20, 40, 0, 0);
 
-            name.setTextSize(10);
             rowCreated.addView(name, buttonParams);
 
             rowsInsideScroll.addView(rowCreated, buttonParams);
             counter = counter -1;
         }
 
+        LinearLayout bottomBar = new LinearLayout(this);
+        bottomBar.setBackgroundColor(Color.BLACK);
+        bottomBar.setMinimumHeight(150);
+        bottomBar.setMinimumWidth(width);
+        LinearLayout.LayoutParams bottomPara = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, Gravity.BOTTOM);
 
+        LinearLayout container = new LinearLayout(this);
+        container.setLayoutParams(bottomPara);
+        container.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout scrollContainer = new LinearLayout(this);
 
+        BottomNav bottomNav = new BottomNav();
 
+        LinearLayout bar = new LinearLayout(this);
+        bottomNav.makeBottomnavBar(bar, width);
+
+        bottomNav.stats.setOnClickListener(new NavBarOnClickListener(1));
+        bottomNav.addWorkout.setOnClickListener(new NavBarOnClickListener(2));
+        bottomNav.diary.setOnClickListener(new NavBarOnClickListener(3));
 
         rowScroller.addView(rowsInsideScroll);
-        layout.addView(rowScroller);
+        scrollContainer.addView(rowScroller);
+        scrollContainer.setLayoutParams(bottomPara);
+        //container.addView(rowsInsideScroll);
+        //container.addView(bottomBar);
+        container.addView(scrollContainer);
+        container.addView(bar);
+        setContentView(container, bottomPara);
 
+
+    }
+
+    class BottomNav {
+        LinearLayout addWorkout = new LinearLayout(getBaseContext());
+        LinearLayout diary = new LinearLayout(getBaseContext());
+        LinearLayout stats = new LinearLayout(getBaseContext());
+
+        public void makeBottomnavBar(LinearLayout layout, int widths) {
+            layout.setOrientation(LinearLayout.HORIZONTAL);
+            layout.setMinimumWidth(widths);
+            layout.setBackgroundColor(Color.BLACK);
+
+            LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutpara.gravity = Gravity.CENTER;
+            LinearLayout.LayoutParams para = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            para.gravity = Gravity.CENTER;
+
+
+            TextView statText = new TextView(getBaseContext());
+            statText.setText("Stats");
+            statText.setTextColor(Color.rgb(0, 109, 54));
+            statText.setLayoutParams(layoutpara);
+            statText.setTextSize(30);
+            stats.addView(statText);
+            stats.setMinimumWidth(widths / 3);
+            stats.setOrientation(LinearLayout.VERTICAL);
+            System.out.println("This is width: " + (widths / 3));
+            stats.setMinimumHeight(160);
+           // stats.setLayoutParams(para);
+
+            TextView addText = new TextView(getBaseContext());
+            addText.setText("+");
+            addText.setTypeface(null, Typeface.BOLD);
+            addText.setTextSize(45);
+            addText.setTextColor(Color.rgb(0, 109, 54));
+            addText.setLayoutParams(layoutpara);
+            addWorkout.addView(addText);
+            addWorkout.setMinimumWidth(widths / 3);
+            addWorkout.setMinimumHeight(160);
+            addWorkout.setOrientation(LinearLayout.VERTICAL);
+            addWorkout.setLayoutParams(layoutpara);
+
+            TextView diar = new TextView(getBaseContext());
+            diar.setText("Diary");
+            diar.setTextSize(30);
+            diary.addView(diar);
+            diary.setMinimumWidth(widths / 3);
+            diary.setMinimumHeight(160);
+            diary.setOrientation(LinearLayout.VERTICAL);
+            diar.setLayoutParams(layoutpara);
+            //diary.setLayoutParams(layoutpara);
+            diar.setTextColor(Color.rgb(0, 149, 84));
+
+            layout.addView(stats);
+            layout.addView(addWorkout);
+            layout.addView(diary);
+        }
 
     }
 
@@ -126,6 +222,7 @@ public class DiaryActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+
             System.out.println("Row " + id + " clicked");
             CopyOfWorkoutActivity builder = new CopyOfWorkoutActivity();
             builder.setWorkout(Integer.parseInt(id));

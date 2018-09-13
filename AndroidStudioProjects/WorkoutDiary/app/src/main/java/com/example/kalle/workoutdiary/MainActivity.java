@@ -3,6 +3,7 @@ package com.example.kalle.workoutdiary;
 import android.app.ActionBar;
 import android.graphics.Color;
 import android.graphics.ImageDecoder;
+import android.graphics.Typeface;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -158,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         //saveButton.setBackgroundResource(R.mipmap.ticks);
         saveButton.setText("✓");
         saveButton.setTextSize(25);
-        saveButton.setTextColor(Color.RED);
+        saveButton.setTextColor(Color.rgb(130, 0, 0));
         saveButton.setBackgroundColor(topBar.getSolidColor());
         saveButton.setOnClickListener(new SaveWorkoutListener());
 
@@ -217,12 +218,21 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout bottomBar = new LinearLayout(this);
         LinearLayout divider = new LinearLayout(this);
         bottomBar.setBackgroundColor(Color.BLACK);
-        bottomBar.setMinimumHeight(100);
+        bottomBar.setMinimumHeight(150);
         bottomBar.setMinimumWidth(width);
         LinearLayout.LayoutParams bottomPara = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, Gravity.BOTTOM);
         LinearLayout.LayoutParams topPara = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, Gravity.TOP);
+
+        BottomNav bottomNav = new BottomNav();
+
+        LinearLayout bar = new LinearLayout(this);
+        bottomNav.makeBottomnavBar(bar, width);
+
+        bottomNav.stats.setOnClickListener(new NavBarOnClickListener(1));
+        bottomNav.addWorkout.setOnClickListener(new NavBarOnClickListener(2));
+        bottomNav.diary.setOnClickListener(new NavBarOnClickListener(3));
 
         row.addView(topBar);
         row.addView(labelrow);
@@ -233,12 +243,72 @@ public class MainActivity extends AppCompatActivity {
         // totalLayout.addView(topBar);
         totalLayout.addView(row);
         totalLayout.addView(divider);
-        totalLayout.addView(bottomBar);
+        totalLayout.addView(bar);
         //row.addView(bottomBar, bottomPara);
         testLayout.addView(totalLayout, bottomPara);
 
 
     }
+    class BottomNav {
+        LinearLayout addWorkout = new LinearLayout(getBaseContext());
+        LinearLayout diary = new LinearLayout(getBaseContext());
+        LinearLayout stats = new LinearLayout(getBaseContext());
+
+        public void makeBottomnavBar(LinearLayout layout, int widths) {
+            layout.setOrientation(LinearLayout.HORIZONTAL);
+            layout.setMinimumWidth(widths);
+            layout.setBackgroundColor(Color.BLACK);
+
+            LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutpara.gravity = Gravity.CENTER;
+            LinearLayout.LayoutParams para = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            para.gravity = Gravity.CENTER;
+
+
+            TextView statText = new TextView(getBaseContext());
+            statText.setText("Stats");
+            statText.setTextColor(Color.rgb(0, 109, 54));
+            statText.setLayoutParams(layoutpara);
+            statText.setTextSize(30);
+            stats.addView(statText);
+            stats.setMinimumWidth(widths / 3);
+            stats.setOrientation(LinearLayout.VERTICAL);
+            System.out.println("This is width: " + (widths / 3));
+            stats.setMinimumHeight(160);
+            // stats.setLayoutParams(para);
+
+            TextView addText = new TextView(getBaseContext());
+            addText.setText("+");
+            addText.setTypeface(null, Typeface.BOLD);
+            addText.setTextSize(45);
+            addText.setTextColor(Color.rgb(0, 149, 84));
+            addText.setLayoutParams(layoutpara);
+            addWorkout.addView(addText);
+            addWorkout.setMinimumWidth(widths / 3);
+            addWorkout.setMinimumHeight(160);
+            addWorkout.setOrientation(LinearLayout.VERTICAL);
+            addWorkout.setLayoutParams(layoutpara);
+
+            TextView diar = new TextView(getBaseContext());
+            diar.setText("Diary");
+            diar.setTextSize(30);
+            diary.addView(diar);
+            diary.setMinimumWidth(widths / 3);
+            diary.setMinimumHeight(160);
+            diary.setOrientation(LinearLayout.VERTICAL);
+            diar.setLayoutParams(layoutpara);
+            //diary.setLayoutParams(layoutpara);
+            diar.setTextColor(Color.rgb(0, 109, 54));
+
+            layout.addView(stats);
+            layout.addView(addWorkout);
+            layout.addView(diary);
+        }
+
+    }
+
 
     private void setSupportActionBar(Toolbar toolbar) {
     }
@@ -303,122 +373,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    class StartNewWorkoutListener1 implements View.OnClickListener {
-
-        @Override
-        public void onClick(View view) {
-
-            int number = 0;
-            int c = 0;
-
-
-
-            try {
-                String filename = getFileNameExercises();
-                System.out.println("Name " + filename);
-                FileInputStream fis = null;
-                try {
-                    fis = openFileInput(filename);
-                } catch (FileNotFoundException e) {
-                    System.out.println("It stops here");
-                    e.printStackTrace();
-                    try {
-                        System.out.println("Trying this");
-                        Context context = view.getContext();
-                        Intent i = new Intent(context, StatsActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(i);
-
-                    } catch (Exception s) {
-                        System.out.println("This didn't effing work");
-                    }
-                }
-                InputStreamReader isr = new InputStreamReader(fis);
-                BufferedReader reads = new BufferedReader(isr);
-                String line;
-
-                System.out.println("This is something you are now printing: " + getFilesDir().listFiles().length);
-
-                while ((line = reads.readLine()) != null) {
-                    System.out.println("This is how many times it runs " + c);
-                    String text = (String) line;
-                    System.out.println("This is the total line: " + line);
-
-                    String[] data = text.split("END");
-
-                    for (int d = 0; d < data.length; d++) {
-                        System.out.println("This is current: " + data[d]);
-                        String dat = data[d];
-                        String[] info = dat.split("SPLIT");
-
-                        savedExercises.add(new Exercise());
-                        Exercise exer = savedExercises.get(d);
-                        for (int o = 0; o < 5; o++) {
-                            if (o == 0) {
-                                try {
-                                    exer.setName(info[o]);
-                                } catch (Exception e) {
-                                    exer.setName(" ");
-                                }
-                                System.out.println("This was your name: " + exer.getName());
-                            }
-                            if (o == 1) {
-                                try {
-                                    exer.setReps(info[o]);
-                                } catch (Exception e) {
-                                    exer.setReps("0");
-                                }
-                                System.out.println("This was your reps: " + exer.getReps());
-                            }
-                            if (o == 2) {
-                                try {
-                                    exer.setSets(info[o]);
-                                } catch (Exception e) {
-                                    exer.setSets("1");
-                                }
-                                System.out.println("This was your sets: " + exer.getSets());
-                            }
-                            if (o == 3) {
-                                try {
-                                    exer.setWeight(info[o]);
-                                } catch (Exception e) {
-                                    exer.setWeight("0");
-                                }
-                                System.out.println("This was your weight: " + exer.getWeight());
-                            }
-                            if (o == 4) {
-                                try {
-                                    exer.setRest(info[o]);
-                                } catch (Exception e) {
-                                    exer.setRest("0");
-                                }
-                                System.out.println("This was your rest: " + exer.getRest());
-                            }
-
-                        }
-
-                    }
-                }
-
-                isr.close();
-
-
-            } catch (IOException e) {
-                System.out.println("Exception");
-            }
-            // System.out.println("This is current: " + sb);
-            try {
-                System.out.println("Trying this");
-                Context context = view.getContext();
-                Intent i = new Intent(context, StatsActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(i);
-
-            } catch (Exception s) {
-                System.out.println("This didn't effing work");
-            }
-        }
-    }
 
 
     public void reload() {
@@ -827,7 +781,7 @@ class MyLinearLayout {
 class MyButton {
 
     public void makeButton(Button butn) {
-        butn.setTextColor(rgb(150, 0, 0));
+        butn.setTextColor(rgb(130, 0, 0));
         butn.setBackgroundColor(rgb(43, 43, 43));
         butn.setTextSize(20);
 
@@ -838,8 +792,9 @@ class MyButton {
 class myTextField {
     public void makeTextField(EditText texfield) {
         texfield.setBackgroundColor(rgb(0, 0, 0));
-        texfield.setTextColor(rgb(150, 0, 0));
-        texfield.setTextSize(12);
+        texfield.setTextColor(rgb(130, 0, 0));
+        texfield.setTextSize(15);
+        texfield.setTypeface(null, Typeface.BOLD);
         texfield.setMaxHeight(100);
 
     }

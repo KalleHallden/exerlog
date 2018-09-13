@@ -138,7 +138,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
         //saveButton.setBackgroundResource(R.mipmap.ticks);
         saveButton.setText("✓");
         saveButton.setTextSize(25);
-        saveButton.setTextColor(Color.RED);
+        saveButton.setTextColor(Color.rgb(130, 0, 0));
         saveButton.setBackgroundColor(topBar.getSolidColor());
         saveButton.setOnClickListener(new SaveWorkoutListener());
 
