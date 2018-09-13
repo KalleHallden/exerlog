@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         exerciseRowContainer.setOrientation(LinearLayout.VERTICAL);
         rowScroller = new ScrollView(this);
         rowScroller.setLayoutParams(new RelativeLayout.LayoutParams(
-                ScrollView.LayoutParams.FILL_PARENT, 900));
+                ScrollView.LayoutParams.FILL_PARENT, 800));
 
         // make save button
         MyButton makbtn = new MyButton();
@@ -214,14 +214,28 @@ public class MainActivity extends AppCompatActivity {
         volumeRow.addView(volumeLabel);
         makeLinearLayoutParamsTopBar(totalLayout);
 
+        LinearLayout bottomBar = new LinearLayout(this);
+        LinearLayout divider = new LinearLayout(this);
+        bottomBar.setBackgroundColor(Color.BLACK);
+        bottomBar.setMinimumHeight(100);
+        bottomBar.setMinimumWidth(width);
+        LinearLayout.LayoutParams bottomPara = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, Gravity.BOTTOM);
+        LinearLayout.LayoutParams topPara = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, Gravity.TOP);
+
         row.addView(topBar);
         row.addView(labelrow);
         row.addView(rowScroller);
         row.addView(addExerciseButton, buttonParams);
         row.addView(volumeRow);
+        row.setLayoutParams(bottomPara);
         // totalLayout.addView(topBar);
         totalLayout.addView(row);
-        testLayout.addView(totalLayout);
+        totalLayout.addView(divider);
+        totalLayout.addView(bottomBar);
+        //row.addView(bottomBar, bottomPara);
+        testLayout.addView(totalLayout, bottomPara);
 
 
     }
@@ -276,23 +290,48 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+            try {
+                System.out.println("Trying this");
+                Context context = view.getContext();
+                Intent i = new Intent(context, StatsActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
 
-            Context context = view.getContext();
-            Intent i = new Intent(context, StatsActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);
+            } catch (Exception s) {
+                System.out.println("This didn't effing work");
+            }
+        }
+    }
+
+    class StartNewWorkoutListener1 implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
 
             int number = 0;
             int c = 0;
 
 
+
             try {
                 String filename = getFileNameExercises();
+                System.out.println("Name " + filename);
                 FileInputStream fis = null;
                 try {
                     fis = openFileInput(filename);
                 } catch (FileNotFoundException e) {
+                    System.out.println("It stops here");
                     e.printStackTrace();
+                    try {
+                        System.out.println("Trying this");
+                        Context context = view.getContext();
+                        Intent i = new Intent(context, StatsActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
+
+                    } catch (Exception s) {
+                        System.out.println("This didn't effing work");
+                    }
                 }
                 InputStreamReader isr = new InputStreamReader(fis);
                 BufferedReader reads = new BufferedReader(isr);
@@ -368,7 +407,16 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("Exception");
             }
             // System.out.println("This is current: " + sb);
-            //reload();
+            try {
+                System.out.println("Trying this");
+                Context context = view.getContext();
+                Intent i = new Intent(context, StatsActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
+
+            } catch (Exception s) {
+                System.out.println("This didn't effing work");
+            }
         }
     }
 
@@ -392,73 +440,91 @@ public class MainActivity extends AppCompatActivity {
 
             //This is where you save the workout
             String filename = getFileNameExercises();
+            String fil = "Exercises" + count;
 
             File fouts = new File(filename);
 
-            FileInputStream fis = null;
-            while (existing == true) {
+            int x = 0;
+            String end = " ";
+            int y = 1;
+            for (int i = 0; i < y; i++) {
+                String file1 = "Exercises" + (x);
+                FileInputStream fis = null;
                 try {
-                    fis = openFileInput(filename);
-                    System.out.println("Right now you are at Exercise" + count);
-                    count++;
-                    filename = "Exercises" + count;
-                } catch (Exception e) {
-                    System.out.println("No more files");
-                    existing = false;
+                    fis = openFileInput(file1);
+                    System.out.println("We are still creating files");
+                    System.out.println("This is the current file you're creating: " + file1);
+                    x++;
+                    y++;
+                } catch (FileNotFoundException e) {
+                    System.out.println("this is the end of files");
+                    e.printStackTrace();
+                    end = "END";
                 }
             }
 
-
-
-
-            try {
-                FileOutputStream os = openFileOutput(filename, Context.MODE_PRIVATE);
-                System.out.println("Workout number " + filename);
-
-                System.out.println("Creating bufferedwriter");
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os));
-
-                try {
-                    System.out.println("Opening fileoutput");
-
-                    for (int i = 0; i < numberOfExercises; i++) {
-                        System.out.println("Writing files");
-                        Exercise exer = exerciseList.get(i);
-                        String name = exer.getName();
-                        String reps = Integer.toString(exer.getReps());
-                        String sets = Integer.toString(exer.getSets());
-                        String weight = Integer.toString(exer.getWeight());
-                        String rest = Integer.toString(exer.getRest());
-                        String split = "SPLIT";
-                        String stopper = "END";
-
-                        out.write(name);
-                        out.write(split);
-                        out.write(reps);
-                        out.write(split);
-                        out.write(sets);
-                        out.write(split);
-                        out.write(weight);
-                        out.write(split);
-                        out.write(rest);
-                        out.write(split);
-                        out.write(stopper);
-
+                if (end.equals("END")) {
+                    FileInputStream fis = null;
+                    try {
+                        fis = openFileInput(fil);
+                        System.out.println("Right now you are at Exercise" + x);
+                        fil = "Exercises" + x;
+                    } catch (Exception e) {
+                        System.out.println("No more files");
+                        existing = false;
                     }
 
+                    try {
+                        FileOutputStream os = openFileOutput(fil, Context.MODE_PRIVATE);
+                        System.out.println("Workout number " + filename);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        System.out.println("Creating bufferedwriter");
+                        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os));
+
+                        try {
+                            System.out.println("Opening fileoutput");
+
+                            for (int i = 0; i < numberOfExercises; i++) {
+                                System.out.println("Writing files");
+                                Exercise exer = exerciseList.get(i);
+                                String name = exer.getName();
+                                String reps = Integer.toString(exer.getReps());
+                                String sets = Integer.toString(exer.getSets());
+                                String weight = Integer.toString(exer.getWeight());
+                                String rest = Integer.toString(exer.getRest());
+                                String split = "SPLIT";
+                                String stopper = "END";
+
+                                out.write(name);
+                                out.write(split);
+                                out.write(reps);
+                                out.write(split);
+                                out.write(sets);
+                                out.write(split);
+                                out.write(weight);
+                                out.write(split);
+                                out.write(rest);
+                                out.write(split);
+                                out.write(stopper);
+
+                            }
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        out.close();
+                        os.close();
+                        out.flush();
+                        os.flush();
+                        System.out.println("Done");
+                    } catch (Exception fileForOutputstreamnotfound) {
+                        System.out.println("fileForOutputstreamnotfound");
+                    }
+
                 }
-                out.close();
-                os.close();
-                out.flush();
-                os.flush();
-                System.out.println("Done");
-            } catch (Exception fileForOutputstreamnotfound) {
-                System.out.println("fileForOutputstreamnotfound");
-            }
 
+            reload();
         }
     }
 
@@ -466,7 +532,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-         class AddRowOnClickListener implements View.OnClickListener {
+    class AddRowOnClickListener implements View.OnClickListener {
 
         @Override
 

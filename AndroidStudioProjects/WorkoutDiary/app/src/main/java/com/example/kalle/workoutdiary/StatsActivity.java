@@ -38,6 +38,7 @@ public class StatsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("We got through");
         setUp();
     }
 
@@ -83,16 +84,18 @@ public class StatsActivity extends AppCompatActivity {
             rowCreated.setOnClickListener(new BarClickedOnClickListener(theId));
         }
 
-        int counter = rows.size();
+        int counter = workoutList.size();
 
         while (counter != 0) {
             System.out.println("Row counter is at " + counter);
-
+            Workouts work = workoutList.get(counter -1);
             LinearLayout rowCreated = rows.get(counter - 1);
-            rowCreated.setBackgroundColor(Color.BLUE);
+            rowCreated.setBackgroundColor(Color.rgb(0,109,54));
             rowCreated.setMinimumWidth(50);
 
-            rowCreated.setMinimumHeight(counter *10);
+            System.out.println("This is the height: " + work.getVolume());
+
+            rowCreated.setMinimumHeight(work.getVolume());
 
             rowsInsideScroll.addView(rowCreated, buttonParams);
 
@@ -141,8 +144,11 @@ public class StatsActivity extends AppCompatActivity {
 
     }
 
+int g;
+
 class BarClickedOnClickListener implements View.OnClickListener {
     String id;
+
 
     public BarClickedOnClickListener(String name) {
         id = name;
@@ -154,11 +160,22 @@ class BarClickedOnClickListener implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         System.out.println("Row " + id + " clicked");
-        CopyOfWorkoutActivity builder = new CopyOfWorkoutActivity();
-        builder.setWorkout(Integer.parseInt(id));
+        //CopyOfWorkoutActivity builder = new CopyOfWorkoutActivity();
+        //builder.setWorkout(Integer.parseInt(id));
+        int row = Integer.parseInt(id);
+        LinearLayout rowCreated = rows.get(row);
+        rowCreated.setBackgroundColor(Color.rgb(0,80,34));
+            if (g != row) {
+                System.out.println("Number: " + g);
+                LinearLayout rowz = rows.get(g);
+                rowz.setBackgroundColor(Color.rgb(0,109,54));
+                g = row;
+            } else {
+                System.out.println("Number: " + g);
+                g = row;
+            }
+
     }
-
-
 }
 
     public void makeButtonAndTextRowParams(LinearLayout.LayoutParams params) {
@@ -173,7 +190,11 @@ class BarClickedOnClickListener implements View.OnClickListener {
 
     public void buildit() {
 
-        System.out.println("This is numWorkouts: " + x);
+        System.out.println("This is numWorkouts: " + (x));
+        //if (x != 0) {
+          //  x = x - 1;
+        //}
+
         String end = " ";
         int y = 1;
         for (int i = 0; i < y; i++) {
@@ -260,8 +281,11 @@ class BarClickedOnClickListener implements View.OnClickListener {
                                     System.out.println("This was your rest: " + exer.getRest());
                                 }
 
-
                             }
+
+                            thisWorkout.setVolume(exer.getReps(), exer.getSets());
+                            System.out.println("Volume: " + thisWorkout.getVolume());
+
 
                         }
 
@@ -282,116 +306,17 @@ class BarClickedOnClickListener implements View.OnClickListener {
         }
     }
 
-    public void buildWorkouts() {
-
-        System.out.println("This is numWorkouts: " + x);
-
-        System.out.println("You are currently creating this workout: " + "Exercises" + x);
-
-        int y = 0;
-        for (int i = 0; i < x; i++) {
-            String file1 = "Exercises" + (i);
-            FileInputStream fis = null;
-            try {
-                fis = openFileInput(file1);
-                y++;
-            } catch (FileNotFoundException e) {
-                System.out.println("this is the bloody exception");
-                e.printStackTrace();
-            }
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader bufferedReader = new BufferedReader(isr);
-            try {
-                StringBuffer sb = new StringBuffer();
-                String line;
-
-                while ((line = bufferedReader.readLine()) != null) {
-                    sb.append(line);
-                    String text = (String) line;
-                    System.out.println("This is the total lines int this new one: " + text);
-
-                    String[] data = text.split("END");
-
-                    workoutList.add(new Workouts());
-                    Workouts thisWorkout = workoutList.get(i);
-                    thisWorkout.savedExercisez = new ArrayList<Exercise>();
-
-                    for (int d = 0; d < data.length; d++) {
-                        System.out.println("This is current: " + data[d]);
-                        String dat = data[d];
-                        String[] info = dat.split("SPLIT");
-
-
-
-                        thisWorkout.savedExercisez.add(new Exercise());
-                        Exercise exer = thisWorkout.savedExercisez.get(d);
-
-                        for (int o = 0; o < 5; o++) {
-                            if (o == 0) {
-                                try {
-                                    exer.setName(info[o]);
-                                } catch (Exception e) {
-                                    exer.setName(" ");
-                                }
-                                System.out.println("This was your name: " + exer.getName());
-                            } if (o == 1) {
-                                try {
-                                    exer.setReps(info[o]);
-                                } catch (Exception e) {
-                                    exer.setReps("0");
-                                }
-                                System.out.println("This was your reps: " + exer.getReps());
-                            }
-                            if (o == 2) {
-                                try {
-                                    exer.setSets(info[o]);
-                                } catch (Exception e) {
-                                    exer.setSets("1");
-                                }
-                                System.out.println("This was your sets: " + exer.getSets());
-                            } if (o == 3) {
-                                try {
-                                    exer.setWeight(info[o]);
-                                } catch (Exception e) {
-                                    exer.setWeight("0");
-                                }
-                                System.out.println("This was your weight: " + exer.getWeight());
-                            } if (o == 4) {
-                                try {
-                                    exer.setRest(info[o]);
-                                } catch (Exception e) {
-                                    exer.setRest("0");
-                                }
-                                System.out.println("This was your rest: " + exer.getRest());
-                            }
-
-
-                        }
-
-                    }
-
-
-                }
-
-                System.out.println("");
-                isr.close();
-                System.out.println("");
-            } catch (IOException e) {
-                System.out.println("Exception");
-
-            }
-        }
-
-
-    }
-
-
-
-
-
 }
 
 class Workouts {
     ArrayList<Exercise> savedExercisez;
-    int volume;
+    private int volume;
+
+    public void setVolume(int reps, int sets) {
+        volume = volume + (reps*sets);
+    }
+
+    public int getVolume() {
+        return volume;
+    }
 }

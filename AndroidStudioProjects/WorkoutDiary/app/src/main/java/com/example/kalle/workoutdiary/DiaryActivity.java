@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
 import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -88,11 +89,14 @@ public class DiaryActivity extends AppCompatActivity {
             System.out.println("Row counter is at " + counter);
 
             LinearLayout rowCreated = rows.get(counter - 1);
-            rowCreated.setBackgroundColor(Color.BLUE);
+            rowCreated.setBackgroundColor(Color.rgb(0,109,54));
             rowCreated.setMinimumWidth(1000);
             rowCreated.setMinimumHeight(80);
             TextView name = new TextView(this);
             name.setText("Workout " + counter);
+            name.setTextColor(Color.rgb(43,43,43));
+            name.setPadding(20, 40, 0, 0);
+
             name.setTextSize(10);
             rowCreated.addView(name, buttonParams);
 

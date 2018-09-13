@@ -19,11 +19,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import static android.graphics.Color.WHITE;
@@ -121,6 +124,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
         saveButton = new Button(this);
         startNewWorkoutButton = new Button(this);
         one = new Button(this);
+        one.setOnClickListener(new DeleteWorkoutListener());
 
         ImageView tick = new ImageView(this);
         tick.setImageResource(R.mipmap.ticks);
@@ -136,6 +140,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
         saveButton.setTextSize(25);
         saveButton.setTextColor(Color.RED);
         saveButton.setBackgroundColor(topBar.getSolidColor());
+        saveButton.setOnClickListener(new SaveWorkoutListener());
 
 
         startNewWorkoutButton.setOnClickListener(new ShowOldWorkoutListener());
@@ -178,6 +183,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
         addExerciseButton = new Button(this);
         makbtn.makeButton(addExerciseButton);
         addExerciseButton.setText("Add");
+        addExerciseButton.setOnClickListener(new AddRowOnClickListener());
 
 
         // Button Parameter creator
@@ -186,6 +192,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
         makeButtonAndTextRowParams(buttonParams);
 
         int listlength = savedExercisez.size();
+        int length2 = exerciseList.size();
 
         ArrayList<LinearLayout> textFieldRows = new ArrayList<LinearLayout>();
 
@@ -201,23 +208,50 @@ public class CopyOfWorkoutActivity extends MainActivity {
                 numberOfExercises = numberOfExercises + 1;
 
                 Exercise ex = savedExercisez.get(s);
+                exerciseList.add(new Exercise());
+                Exercise exer = exerciseList.get(s);
 
                 for (int x = 0; x < 5; x++) {
                     EditText text = textFieldArray.get(x);
                     if (x == 0) {
                         text.setText(ex.getName());
+                        try {
+                            exer.setName(Integer.toString(ex.getReps()));
+                        } catch (Exception f) {
+                            exer.setName(" ");
+                        }
                     } if (x == 1) {
                         int r = ex.getReps();
                         text.setText(Integer.toString(r));
+                        try {
+                            exer.setReps(Integer.toString(ex.getReps()));
+                        } catch (Exception f) {
+                            exer.setReps("0");
+                        }
                     } if (x == 2) {
                         int r = ex.getSets();
                         text.setText(Integer.toString(r));
+                        try {
+                            exer.setSets(Integer.toString(ex.getSets()));
+                        } catch (Exception f) {
+                            exer.setSets("1");
+                        }
                     } if (x == 3) {
                         int r = ex.getWeight();
                         text.setText(Integer.toString(r));
+                        try {
+                            exer.setWeight(Integer.toString(ex.getWeight()));
+                        } catch (Exception f) {
+                            exer.setWeight("0");
+                        }
                     } if (x == 4) {
                         int r = ex.getRest();
                         text.setText(Integer.toString(r));
+                        try {
+                            exer.setRest(Integer.toString(ex.getRest()));
+                        } catch (Exception f) {
+                            exer.setRest("0");
+                        }
                     }
                 }
                 ex.setVolume(ex.getReps(), ex.getSets());
@@ -253,12 +287,176 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
     }
 
+    class AddRowOnClickListener implements View.OnClickListener {
+
+        @Override
+
+
+        public void onClick(View v) {
+
+            LinearLayout.LayoutParams textRowParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            makeButtonAndTextRowParams(textRowParams);
+            vol = 0;
+
+            rowList.add(new LinearLayout(getBaseContext()));
+            LinearLayout textFieldRows = rowList.get(numberOfExercises);
+
+            makeTextFields(textFieldRows);
+            exerciseRowContainer.addView(textFieldRows, textRowParams);
+
+
+
+            for (int i = 0; i < numberOfExercises; i++ ) {
+                int x = numberOfExercises * 5;
+
+                exerciseList.add(new Exercise());
+                Exercise exer = exerciseList.get(i);
+                ArrayList<EditText> rowinfo = containerFortestxArray.get(i);
+
+                for (int j = 0; j < 5; j++) {
+                    EditText textField = rowinfo.get(j);
+                    String ys = textField.getText().toString();
+                    if (j == 0) {
+                        try {
+                            exer.setName(ys);
+                        } catch (Exception a) {
+                            exer.setName(" ");
+                        }
+                    }
+                    if (j == 1) {
+                        try {
+                            exer.setReps(ys);
+                        } catch (Exception a) {
+                            exer.setReps("0");
+                        }
+                    }
+                    if (j == 2) {
+                        try {
+                            exer.setSets(ys);
+                        } catch (Exception a) {
+                            exer.setSets("1");
+                        }
+                    }
+                    if (j == 3) {
+                        try {
+                            exer.setWeight(ys);
+                        } catch (Exception a) {
+                            exer.setWeight("0");
+                        }
+                    }
+                    if (j == 4) {
+                        try {
+                            exer.setRest(ys);
+                        } catch (Exception a) {
+                            exer.setRest("0");
+                        }
+                    }
+                }
+                exer.setVolume(exer.getReps(), exer.getSets());
+                vol = vol + exer.getVolume();
+            }
+
+            numberOfExercises++;
+            String volString = Integer.toString(vol);
+            volumeLabel.setText("Total Volume: " + volString);
+        }
+    }
+
+    class DeleteWorkoutListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            String filename = "Exercises" + workoutNumber;
+            deleteFile(filename);
+
+            Context context = v.getContext();
+            Intent intent = new Intent(context, MainActivity.class);
+            context.startActivity(intent);
+            System.out.println("File should get deleted");
+
+        }
+    }
+
+    class SaveWorkoutListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+
+            int count = 0;
+            savedWorkouts.add(new Workout());
+            Boolean existing = true;
+
+            //This is where you save the workout
+            String filename = "Exercises" + workoutNumber;
+
+            File fouts = new File(filename);
+
+            deleteFile(filename);
+            FileInputStream fis = null;
+
+                try {
+                    fis = openFileInput(filename);
+                    System.out.println("Right now you are at Exercise" + workoutNumber);
+                } catch (Exception e) {
+                    System.out.println("No file");
+                }
+
+
+
+            try {
+                FileOutputStream os = openFileOutput(filename, Context.MODE_PRIVATE);
+                System.out.println("Workout number " + filename);
+
+                System.out.println("Creating bufferedwriter");
+                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os));
+                try {
+                    System.out.println("Opening fileoutput");
+
+                    for (int i = 0; i < exerciseList.size(); i++) {
+                        System.out.println("Writing files");
+                        Exercise exer = exerciseList.get(i);
+                        String name = exer.getName();
+                        String reps = Integer.toString(exer.getReps());
+                        String sets = Integer.toString(exer.getSets());
+                        String weight = Integer.toString(exer.getWeight());
+                        String rest = Integer.toString(exer.getRest());
+                        String split = "SPLIT";
+                        String stopper = "END";
+
+                        out.write(name);
+                        out.write(split);
+                        out.write(reps);
+                        out.write(split);
+                        out.write(sets);
+                        out.write(split);
+                        out.write(weight);
+                        out.write(split);
+                        out.write(rest);
+                        out.write(split);
+                        out.write(stopper);
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                out.close();
+                os.close();
+                out.flush();
+                os.flush();
+                System.out.println("Done");
+            } catch (Exception fileForOutputstreamnotfound) {
+                System.out.println("fileForOutputstreamnotfound");
+            }
+        }
+    }
+
+
     int y;
     class ShowOldWorkoutListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             Context context = view.getContext();
-
             Intent intent = new Intent(context, MainActivity.class);
             context.startActivity(intent);
             System.out.println("So far so good");
