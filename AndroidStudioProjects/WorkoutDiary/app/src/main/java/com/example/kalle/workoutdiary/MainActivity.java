@@ -34,6 +34,7 @@ import android.content.Intent;
 import java.util.ArrayList;
 
 import static android.graphics.Color.*;
+import static android.view.View.TEXT_ALIGNMENT_CENTER;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         LinearLayout topBar = new LinearLayout(this);
-        topBar.setBackgroundColor(Color.rgb(10, 10, 10));
+        topBar.setBackgroundColor(Color.rgb(30, 30, 30));
 
         LinearLayout layoutTop = new LinearLayout(this);
         //layoutTop.setBackgroundColor(Color.BLUE);
@@ -145,21 +146,23 @@ public class MainActivity extends AppCompatActivity {
         saveButton = new Button(this);
         startNewWorkoutButton = new Button(this);
         one = new Button(this);
-        one.setOnClickListener(new ShowOldWorkoutListener());
+        one.setOnClickListener(new AddRowOnClickListener());
+        one.setText("+");
+        one.setTextSize(30);
+        one.setTextColor(Color.rgb(0,109,54));
+        one.setBackgroundColor(Color.rgb(30,30,30));
+        one.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
 
         ImageView tick = new ImageView(this);
         tick.setImageResource(R.mipmap.ticks);
 
         layoutTop.addView(saveButton);
-        layoutTop2.addView(startNewWorkoutButton);
         layoutTop3.addView(one);
-
-        startNewWorkoutButton.setOnClickListener(new StartNewWorkoutListener());
 
         //saveButton.setBackgroundResource(R.mipmap.ticks);
         saveButton.setText("✓");
-        saveButton.setTextSize(25);
-        saveButton.setTextColor(Color.rgb(130, 0, 0));
+        saveButton.setTextSize(30);
+        saveButton.setTextColor(Color.rgb(0,109,54));
         saveButton.setBackgroundColor(topBar.getSolidColor());
         saveButton.setOnClickListener(new SaveWorkoutListener());
 
@@ -353,23 +356,6 @@ public class MainActivity extends AppCompatActivity {
 
             System.out.println("we got called: " + y + " times");
             y++;
-        }
-    }
-
-    class StartNewWorkoutListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View view) {
-            try {
-                System.out.println("Trying this");
-                Context context = view.getContext();
-                Intent i = new Intent(context, StatsActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(i);
-
-            } catch (Exception s) {
-                System.out.println("This didn't effing work");
-            }
         }
     }
 
@@ -636,7 +622,7 @@ public class MainActivity extends AppCompatActivity {
           // make textfield
           EditText exerciseName = new EditText(this);
           myTextField maktxt = new myTextField();
-          maktxt.makeTextField(exerciseName);
+          maktxt.makeTextField(exerciseName, 300);
           //exerciseName.setMaxWidth(300);
           exerciseName.setMinimumWidth(300);
           exerciseName.setPadding(10,5,10,5);
@@ -644,7 +630,7 @@ public class MainActivity extends AppCompatActivity {
 
           // second textfield
           EditText repsTextField = new EditText(this);
-              maktxt.makeTextField(repsTextField);
+              maktxt.makeTextField(repsTextField, 150);
              // repsTextField.setMaxWidth(150);
               repsTextField.setMinimumWidth(150);
               repsTextField.setPadding(10,5,10,5);
@@ -652,7 +638,7 @@ public class MainActivity extends AppCompatActivity {
 
           // third textField
           EditText setsTextField = new EditText(this);
-              maktxt.makeTextField(setsTextField);
+              maktxt.makeTextField(setsTextField, 150);
              // setsTextField.setMaxWidth(150);
               setsTextField.setMinimumWidth(150);
               setsTextField.setPadding(10,5,10,5);
@@ -660,7 +646,7 @@ public class MainActivity extends AppCompatActivity {
 
           //fourth textField
           EditText weightTextField = new EditText(this);
-              maktxt.makeTextField(weightTextField);
+              maktxt.makeTextField(weightTextField, 150);
              // weightTextField.setMaxWidth(150);
               weightTextField.setMinimumWidth(150);
               weightTextField.setPadding(10,5,10,5);
@@ -668,7 +654,7 @@ public class MainActivity extends AppCompatActivity {
 
           // fifth textField
           EditText restTextField = new EditText(this);
-              maktxt.makeTextField(restTextField);
+              maktxt.makeTextField(restTextField,150);
              // restTextField.setMaxWidth(150);
               restTextField.setMinimumWidth(150);
               restTextField.setPadding(10,5,10,5);
@@ -781,8 +767,8 @@ class MyLinearLayout {
 class MyButton {
 
     public void makeButton(Button butn) {
-        butn.setTextColor(rgb(130, 0, 0));
-        butn.setBackgroundColor(rgb(43, 43, 43));
+        butn.setTextColor(rgb(43, 43, 43));
+        butn.setBackgroundColor(Color.rgb(0,109,54));
         butn.setTextSize(20);
 
     }
@@ -790,12 +776,14 @@ class MyButton {
 
 
 class myTextField {
-    public void makeTextField(EditText texfield) {
-        texfield.setBackgroundColor(rgb(0, 0, 0));
-        texfield.setTextColor(rgb(130, 0, 0));
+    public void makeTextField(EditText texfield, int widths) {
+        texfield.setBackgroundColor(Color.rgb(0,109,54));
+        texfield.setTextColor(rgb(43, 43, 43));
         texfield.setTextSize(15);
         texfield.setTypeface(null, Typeface.BOLD);
         texfield.setMaxHeight(100);
+        texfield.setMaxLines(3);
+        texfield.setMaxWidth(widths);
 
     }
 }

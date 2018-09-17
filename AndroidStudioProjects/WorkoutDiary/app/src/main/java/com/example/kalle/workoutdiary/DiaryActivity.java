@@ -85,7 +85,7 @@ public class DiaryActivity extends AppCompatActivity {
 
         rowScroller = new ScrollView(this);
         rowScroller.setLayoutParams(new RelativeLayout.LayoutParams(
-                ScrollView.LayoutParams.FILL_PARENT, 900));
+                ScrollView.LayoutParams.FILL_PARENT, height));
 
 
         for (int i = 0; i < x; i++) {

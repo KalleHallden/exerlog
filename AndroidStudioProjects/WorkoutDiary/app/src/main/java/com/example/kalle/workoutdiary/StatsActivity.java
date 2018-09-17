@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -18,7 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.util.List;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,9 +33,14 @@ public class StatsActivity extends AppCompatActivity {
     ArrayList<LinearLayout> rows = new ArrayList<LinearLayout>();
     int y;
     private int rowClickedId;
+    int clicked;
+    Button barButton;
 
 
-    ArrayList<Workouts> workoutList = new ArrayList<Workouts>();
+    ArrayList<Workouts> workoutList;
+
+    LinearLayout rowsInsideScroll;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +52,6 @@ public class StatsActivity extends AppCompatActivity {
 
 
     public void setUp() {
-
-
 
         buildit();
         //buildWorkouts();
@@ -61,7 +65,7 @@ public class StatsActivity extends AppCompatActivity {
         LinearLayout layout = new LinearLayout(this);
         setContentView(layout);
         layout.setBackgroundColor(Color.rgb(43,43,43));
-        LinearLayout rowsInsideScroll = new LinearLayout(this);
+        rowsInsideScroll = new LinearLayout(this);
         rowsInsideScroll.setOrientation(LinearLayout.HORIZONTAL);
 
 
@@ -76,7 +80,9 @@ public class StatsActivity extends AppCompatActivity {
                 ScrollView.LayoutParams.FILL_PARENT, heighty));
 
 
-
+         int counter = x;
+         System.out.println("Size "+counter);
+         System.out.println("Workout list size " + workoutList.size());
 
         for (int i = 0; i < x; i++) {
             rows.add(new LinearLayout(getBaseContext()));
@@ -84,8 +90,6 @@ public class StatsActivity extends AppCompatActivity {
             String theId = Integer.toString(i);
             rowCreated.setOnClickListener(new BarClickedOnClickListener(theId));
         }
-
-        int counter = workoutList.size();
 
         while (counter != 0) {
             System.out.println("Row counter is at " + counter);
@@ -123,11 +127,30 @@ public class StatsActivity extends AppCompatActivity {
         LinearLayout bar = new LinearLayout(this);
         bottomNav.makeBottomnavBar(bar, width);
 
+
         bottomNav.stats.setOnClickListener(new NavBarOnClickListener(1));
         bottomNav.addWorkout.setOnClickListener(new NavBarOnClickListener(2));
         bottomNav.diary.setOnClickListener(new NavBarOnClickListener(3));
 
+        LinearLayout buttonBar = new LinearLayout(this);
+        buttonBar.setMinimumWidth(width);
+        buttonBar.setMinimumHeight(150);
+
+
+        barButton = new Button(this);
+        barButton.setBackgroundColor(Color.rgb(30,30,30));
+        barButton.setWidth(width);
+        barButton.setHeight(120);
+        barButton.setText("Day View");
+        barButton.setTextSize(20);
+        barButton.setTextColor(Color.rgb(0,109,54));
+        barButton.setOnClickListener(new ChangeBarOnClickListener());
+
+
+
+        buttonBar.addView(barButton);
         rowScroller.addView(rowsInsideScroll);
+        containerAllViews.addView(buttonBar);
         containerAllViews.addView(rowScroller, bottomPara);
         containerAllViews.addView(bar);
 
@@ -139,6 +162,158 @@ public class StatsActivity extends AppCompatActivity {
 
 
     }
+    List<Integer> barHeights;
+    class ChangeBarOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            
+            
+            LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            makeButtonAndTextRowParams(buttonParams);
+            System.out.println("Clicked " + clicked);
+            rowsInsideScroll.removeAllViews();
+
+            if (clicked == 0) {
+                System.out.println("We are in");
+                clicked++;
+                System.out.println("clicked2 " + clicked);
+                setRows(7);
+                barButton.setText("Week View");
+
+                int counter2 = barHeights.size();
+
+                while (counter2 != 0) {
+                    System.out.println("Row counter is at " + counter2);
+                    Workouts work = workoutList.get(counter2 -1);
+                    LinearLayout rowCreated = rows.get(counter2 - 1);
+                    rowCreated.setBackgroundColor(Color.rgb(0,109,54));
+                    rowCreated.setMinimumWidth(50);
+
+                    System.out.println("This is the height: " + work.getVolume());
+
+                    rowCreated.setMinimumHeight(work.getVolume());
+
+                    rowsInsideScroll.addView(rowCreated, buttonParams);
+
+                    counter2 = counter2 -1;
+                }
+
+            } else if (clicked == 1) {
+                barButton.setText("Month View");
+                clicked++;
+                System.out.println(clicked);
+                setRows(30);
+                int counter2 = barHeights.size();
+
+                while (counter2 != 0) {
+                    System.out.println("Row counter is at " + counter2);
+                    Workouts work = workoutList.get(counter2 -1);
+                    LinearLayout rowCreated = rows.get(counter2 - 1);
+                    rowCreated.setBackgroundColor(Color.rgb(0,109,54));
+                    rowCreated.setMinimumWidth(50);
+
+                    System.out.println("This is the height: " + work.getVolume());
+
+                    rowCreated.setMinimumHeight(work.getVolume());
+
+                    rowsInsideScroll.addView(rowCreated, buttonParams);
+
+                    counter2 = counter2 -1;
+                }                                                                            
+
+            } else if (clicked == 2) {
+                barButton.setText("Day View");
+                clicked = 0;
+                int counter = workoutList.size();
+                for (int i = 0; i < x; i++) {                                                 
+                    rows.add(new LinearLayout(getBaseContext()));                             
+                    LinearLayout rowCreated = rows.get(i);                                    
+                    String theId = Integer.toString(i);                                       
+                    rowCreated.setOnClickListener(new BarClickedOnClickListener(theId));      
+                }                                                                             
+                while (counter != 0) {
+                    System.out.println("Row counter is at " + counter);
+                    Workouts work = workoutList.get(counter -1);
+                    LinearLayout rowCreated = rows.get(counter - 1);
+                    rowCreated.setBackgroundColor(Color.rgb(0,109,54));
+                    rowCreated.setMinimumWidth(50);
+
+                    System.out.println("This is the height: " + work.getVolume());
+
+                    rowCreated.setMinimumHeight(work.getVolume());
+
+                    rowsInsideScroll.addView(rowCreated, buttonParams);
+
+                    counter = counter -1;
+                }
+            }
+        }
+    }
+    int weekDays = 7;
+
+
+    public void setRows(int weekOrMonth) {
+        int vol = 0;
+        int rowCount;
+        rows.clear();
+        if (weekOrMonth == 7) {
+            rowCount = 0;
+            System.out.println("building");
+            // try to sum up each seven days of workoutvolumes and set each bar to be that tall
+            System.out.println("building workouts " + x);
+            barHeights = new ArrayList<>();
+            int a = 0;
+            for (int i = 0; i < x; i++) {
+                if (a == 6) {
+                    rows.add(new LinearLayout(getBaseContext()));
+                    LinearLayout rowCreated = rows.get(rowCount);
+                    String theId = Integer.toString(rowCount);
+                    rowCreated.setOnClickListener(new BarClickedOnClickListener(theId));
+                    barHeights.add(vol);
+                    System.out.println(vol);
+                    vol = 0;
+                    a = 0;
+                    rowCount++;
+                } else {
+                    Workouts work = workoutList.get(i);
+                    vol = vol + work.getVolume();
+                    a++;
+                }
+            }
+        }
+        if (weekOrMonth == 30) {
+            rowCount = 0;
+            // try to sum up every 30 workouts worth of volumes and set each bar to be that tall
+            barHeights = new ArrayList<>();
+            int a = 0;
+            if (workoutList.size() >= 29) {
+            for (int i = 0; i < x; i++) {
+                if (a == 29) {
+                    rows.add(new LinearLayout(getBaseContext()));
+                    LinearLayout rowCreated = rows.get(rowCount);
+                    String theId = Integer.toString(rowCount);
+                    rowCreated.setOnClickListener(new BarClickedOnClickListener(theId));
+                    barHeights.add(vol);
+                    vol = 0;
+                    a = 0;
+                } else {
+                    Workouts work = workoutList.get(i);
+                    vol = vol + work.getVolume();
+                    a++;
+                }
+            }
+        }
+
+    } else {
+            // Print a messege to the user "Nothing to show here yet"
+            System.out.println("Not enough workouts yet: " + workoutList.size());
+        }
+    }
+
+
+
+
     class BottomNav {
         LinearLayout addWorkout = new LinearLayout(getBaseContext());
         LinearLayout diary = new LinearLayout(getBaseContext());
@@ -259,6 +434,8 @@ class BarClickedOnClickListener implements View.OnClickListener {
 
     public void buildit() {
 
+    workoutList = new ArrayList<Workouts>();
+
         System.out.println("This is numWorkouts: " + (x));
         //if (x != 0) {
           //  x = x - 1;
@@ -360,6 +537,7 @@ class BarClickedOnClickListener implements View.OnClickListener {
 
 
                     }
+                    System.out.println("this is how many workouts have been created " + workoutList.size());
 
                     System.out.println("");
                     isr.close();

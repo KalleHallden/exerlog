@@ -101,7 +101,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
 
         LinearLayout topBar = new LinearLayout(this);
-        topBar.setBackgroundColor(Color.rgb(10,10,10));
+        topBar.setBackgroundColor(Color.rgb(30,30,30));
 
         LinearLayout layoutTop = new LinearLayout(this);
         //layoutTop.setBackgroundColor(Color.BLUE);
@@ -125,6 +125,18 @@ public class CopyOfWorkoutActivity extends MainActivity {
         startNewWorkoutButton = new Button(this);
         one = new Button(this);
         one.setOnClickListener(new DeleteWorkoutListener());
+        one.setText("Delete");
+        one.setTextSize(30);
+        one.setTextColor(Color.rgb(0,109,54));
+        one.setBackgroundColor(Color.rgb(30,30,30));
+        one.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+
+
+
+
+
+
+
 
         ImageView tick = new ImageView(this);
         tick.setImageResource(R.mipmap.ticks);
@@ -137,14 +149,12 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
         //saveButton.setBackgroundResource(R.mipmap.ticks);
         saveButton.setText("✓");
-        saveButton.setTextSize(25);
-        saveButton.setTextColor(Color.rgb(130, 0, 0));
+        saveButton.setTextSize(30);
+        saveButton.setTextColor(Color.rgb(0,109,54));
         saveButton.setBackgroundColor(topBar.getSolidColor());
         saveButton.setOnClickListener(new SaveWorkoutListener());
 
-
-        startNewWorkoutButton.setOnClickListener(new ShowOldWorkoutListener());
-
+        startNewWorkoutButton.setBackgroundColor(topBar.getSolidColor());
 
 
         GridLayout grid = new GridLayout(this);
@@ -715,7 +725,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
         // make textfield
         EditText exerciseName = new EditText(this);
         myTextField maktxt = new myTextField();
-        maktxt.makeTextField(exerciseName);
+        maktxt.makeTextField(exerciseName, 300);
         //exerciseName.setMaxWidth(300);
         exerciseName.setMinimumWidth(300);
         exerciseName.setPadding(10, 5, 10, 5);
@@ -723,7 +733,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
         // second textfield
         EditText repsTextField = new EditText(this);
-        maktxt.makeTextField(repsTextField);
+        maktxt.makeTextField(repsTextField, 150);
         // repsTextField.setMaxWidth(150);
         repsTextField.setMinimumWidth(150);
         repsTextField.setPadding(10, 5, 10, 5);
@@ -731,7 +741,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
         // third textField
         EditText setsTextField = new EditText(this);
-        maktxt.makeTextField(setsTextField);
+        maktxt.makeTextField(setsTextField, 150);
         // setsTextField.setMaxWidth(150);
         setsTextField.setMinimumWidth(150);
         setsTextField.setPadding(10, 5, 10, 5);
@@ -739,7 +749,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
         //fourth textField
         EditText weightTextField = new EditText(this);
-        maktxt.makeTextField(weightTextField);
+        maktxt.makeTextField(weightTextField, 150);
         // weightTextField.setMaxWidth(150);
         weightTextField.setMinimumWidth(150);
         weightTextField.setPadding(10, 5, 10, 5);
@@ -747,7 +757,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
         // fifth textField
         EditText restTextField = new EditText(this);
-        maktxt.makeTextField(restTextField);
+        maktxt.makeTextField(restTextField, 150);
         // restTextField.setMaxWidth(150);
         restTextField.setMinimumWidth(150);
         restTextField.setPadding(10, 5, 10, 5);
