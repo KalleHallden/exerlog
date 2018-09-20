@@ -1,10 +1,11 @@
 package com.example.kalle.workoutdiary;
 
+import android.app.AppComponentFactory;
+import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
@@ -32,34 +33,31 @@ import java.util.ArrayList;
 import static android.graphics.Color.WHITE;
 import static android.graphics.Color.rgb;
 
-public class CopyOfWorkoutActivity extends MainActivity {
+public class CopyOfWorkoutActivity extends AppCompatActivity {
 
-    private static int workoutNumber;
-    public void setWorkout(int num) {
-        workoutNumber = num;
-    }
-    public int getWorkout() {
-        return workoutNumber;
-    }
+    static int green = Color.rgb(4,168,46);
+    int grey = Color.rgb(30,30,30);
+
+
+
+
+    Diary diary;
+    Workout workout;
 
     Button addExerciseButton;
     Button saveButton;
     Button one;
     Button startNewWorkoutButton;
     LinearLayout row;
-    LinearLayout exerciseRowContainer;
+    static LinearLayout exerciseRowContainer;
     ScrollView rowScroller;
-    TextView volumeLabel;
-    ArrayList<LinearLayout> rowList = new ArrayList<LinearLayout>();
+    static TextView volumeLabel;
+    static ArrayList<LinearLayout> rowList;
     ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-    ArrayList<ArrayList> containerFortestxArray = new ArrayList<ArrayList>();
-    ArrayList<EditText> textFieldArray;
-    int numberOfExercises;
+    static ArrayList<ArrayList> containerFortestxArray;
+    static ArrayList<EditText> textFieldArray;
+    static int numberOfExercises;
     int vol;
-
-    MainActivity main;
-
-    ArrayList<Exercise> savedExercisez = new ArrayList<Exercise>();
 
 
         @Override
@@ -68,16 +66,24 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
 
         System.out.println("We are in!!!");
-            buildit();
-            System.out.println("We built this city!!");
-        setUp();
+        System.out.println("Size " + Diary.workoutList.size());
+
+        buildit();
+        System.out.println("We built this city!!");
+
 
     }
 
-    public void setUp() {
+    public void setUp3(Workout w) {
+            Color.green(Color.rgb(4,168,46));
 
+        numberOfExercises = 0;
+        exerciseList = new ArrayList<Exercise>();
+        containerFortestxArray = new ArrayList<ArrayList>();
+        rowList = new ArrayList<LinearLayout>();
+        View view = new View(this);
 
-
+        //buildit();
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -127,7 +133,7 @@ public class CopyOfWorkoutActivity extends MainActivity {
         one.setOnClickListener(new DeleteWorkoutListener());
         one.setText("Delete");
         one.setTextSize(30);
-        one.setTextColor(Color.rgb(0,109,54));
+        one.setTextColor(green);
         one.setBackgroundColor(Color.rgb(30,30,30));
         one.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
 
@@ -193,7 +199,8 @@ public class CopyOfWorkoutActivity extends MainActivity {
         addExerciseButton = new Button(this);
         makbtn.makeButton(addExerciseButton);
         addExerciseButton.setText("Add");
-        addExerciseButton.setOnClickListener(new AddRowOnClickListener());
+
+        addExerciseButton.setOnClickListener(new AddRowOnClickListenerCopy());
 
 
         // Button Parameter creator
@@ -201,10 +208,11 @@ public class CopyOfWorkoutActivity extends MainActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         makeButtonAndTextRowParams(buttonParams);
 
-        int listlength = savedExercisez.size();
-        int length2 = exerciseList.size();
+        int listlength = Workout.savedExercisez.size();
+        System.out.println("Size of list = " + listlength);
 
         ArrayList<LinearLayout> textFieldRows = new ArrayList<LinearLayout>();
+        //listlength = listlength/2;
 
         if (listlength != 0) {
             for (int s = 0; s < listlength; s++) {
@@ -213,11 +221,11 @@ public class CopyOfWorkoutActivity extends MainActivity {
                 textFieldRows.add(new LinearLayout(getBaseContext()));
                 //LinearLayout textFieldRows = rowList.get(numberOfExercises);
                 LinearLayout rowsss = textFieldRows.get(s);
-                makeTextFields(rowsss);
+                TextFieldMakerCopy.makeTextFields(rowsss, view);
                 exerciseRowContainer.addView(rowsss, buttonParams);
                 numberOfExercises = numberOfExercises + 1;
 
-                Exercise ex = savedExercisez.get(s);
+                Exercise ex = w.savedExercisez.get(s);
                 exerciseList.add(new Exercise());
                 Exercise exer = exerciseList.get(s);
 
@@ -272,12 +280,13 @@ public class CopyOfWorkoutActivity extends MainActivity {
                 System.out.println("We are NOT in the matrix!!");
                 rowList.add(new LinearLayout(this));
                 LinearLayout textFieldRowz = rowList.get(numberOfExercises);
-                makeTextFields(textFieldRowz);
+                TextFieldMakerCopy.makeTextFields(textFieldRowz, view);
                 exerciseRowContainer.addView(textFieldRowz, buttonParams);
                 numberOfExercises = numberOfExercises + 1;
         }
         System.out.println("We left the matrix");
 
+        workout = w;
 
         rowScroller.addView(exerciseRowContainer);
 
@@ -297,340 +306,55 @@ public class CopyOfWorkoutActivity extends MainActivity {
 
     }
 
-    class AddRowOnClickListener implements View.OnClickListener {
-
-        @Override
-
-
-        public void onClick(View v) {
-
-            LinearLayout.LayoutParams textRowParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            makeButtonAndTextRowParams(textRowParams);
-            vol = 0;
-
-            rowList.add(new LinearLayout(getBaseContext()));
-            LinearLayout textFieldRows = rowList.get(numberOfExercises);
-
-            makeTextFields(textFieldRows);
-            exerciseRowContainer.addView(textFieldRows, textRowParams);
-
-
-
-            for (int i = 0; i < numberOfExercises; i++ ) {
-                int x = numberOfExercises * 5;
-
-                exerciseList.add(new Exercise());
-                Exercise exer = exerciseList.get(i);
-                ArrayList<EditText> rowinfo = containerFortestxArray.get(i);
-
-                for (int j = 0; j < 5; j++) {
-                    EditText textField = rowinfo.get(j);
-                    String ys = textField.getText().toString();
-                    if (j == 0) {
-                        try {
-                            exer.setName(ys);
-                        } catch (Exception a) {
-                            exer.setName(" ");
-                        }
-                    }
-                    if (j == 1) {
-                        try {
-                            exer.setReps(ys);
-                        } catch (Exception a) {
-                            exer.setReps("0");
-                        }
-                    }
-                    if (j == 2) {
-                        try {
-                            exer.setSets(ys);
-                        } catch (Exception a) {
-                            exer.setSets("1");
-                        }
-                    }
-                    if (j == 3) {
-                        try {
-                            exer.setWeight(ys);
-                        } catch (Exception a) {
-                            exer.setWeight("0");
-                        }
-                    }
-                    if (j == 4) {
-                        try {
-                            exer.setRest(ys);
-                        } catch (Exception a) {
-                            exer.setRest("0");
-                        }
-                    }
-                }
-                exer.setVolume(exer.getReps(), exer.getSets());
-                vol = vol + exer.getVolume();
-            }
-
-            numberOfExercises++;
-            String volString = Integer.toString(vol);
-            volumeLabel.setText("Total Volume: " + volString);
-        }
-    }
-
     class DeleteWorkoutListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            String filename = "Exercises" + workoutNumber;
+            String filename = "Workout" + DiaryActivity.identify;
             deleteFile(filename);
+            SaveWorkout.n -= 1;
+            Workout.savedExercisez.clear();
+            DiaryActivity.removeRow(DiaryActivity.identify);
 
             Context context = v.getContext();
-            Intent intent = new Intent(context, MainActivity.class);
+            Intent intent = new Intent(context, DiaryActivity.class);
             context.startActivity(intent);
             System.out.println("File should get deleted");
 
         }
     }
 
+    class GoBackOnClickListener implements  View.OnClickListener {
+            @Override
+             public void onClick(View v) {
+                Context context = v.getContext();
+                Intent intent = new Intent(context, DiaryActivity.class);
+                context.startActivity(intent);
+            }
+    }
+
     class SaveWorkoutListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
 
-            int count = 0;
-            savedWorkouts.add(new Workout());
-            Boolean existing = true;
-
-            //This is where you save the workout
-            String filename = "Exercises" + workoutNumber;
-
-            File fouts = new File(filename);
-
-            deleteFile(filename);
-            FileInputStream fis = null;
-
-                try {
-                    fis = openFileInput(filename);
-                    System.out.println("Right now you are at Exercise" + workoutNumber);
-                } catch (Exception e) {
-                    System.out.println("No file");
-                }
-
-
-
-            try {
-                FileOutputStream os = openFileOutput(filename, Context.MODE_PRIVATE);
-                System.out.println("Workout number " + filename);
-
-                System.out.println("Creating bufferedwriter");
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os));
-                try {
-                    System.out.println("Opening fileoutput");
-
-                    for (int i = 0; i < exerciseList.size(); i++) {
-                        System.out.println("Writing files");
-                        Exercise exer = exerciseList.get(i);
-                        String name = exer.getName();
-                        String reps = Integer.toString(exer.getReps());
-                        String sets = Integer.toString(exer.getSets());
-                        String weight = Integer.toString(exer.getWeight());
-                        String rest = Integer.toString(exer.getRest());
-                        String split = "SPLIT";
-                        String stopper = "END";
-
-                        out.write(name);
-                        out.write(split);
-                        out.write(reps);
-                        out.write(split);
-                        out.write(sets);
-                        out.write(split);
-                        out.write(weight);
-                        out.write(split);
-                        out.write(rest);
-                        out.write(split);
-                        out.write(stopper);
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                out.close();
-                os.close();
-                out.flush();
-                os.flush();
-                System.out.println("Done");
-            } catch (Exception fileForOutputstreamnotfound) {
-                System.out.println("fileForOutputstreamnotfound");
-            }
+            SaveWorkout savespec = new SaveWorkout();
+            savespec.saveSpecific(DiaryActivity.identify, v.getContext(), workout);
+            saveButton.setText("Back");
+            saveButton.setOnClickListener(new GoBackOnClickListener());
         }
     }
 
-
-    int y;
-    class ShowOldWorkoutListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            Context context = view.getContext();
-            Intent intent = new Intent(context, MainActivity.class);
-            context.startActivity(intent);
-            System.out.println("So far so good");
-
-            System.out.println("we got called: " + y + " times");
-            y++;
-        }
-    }
-
-
-    int c;
     public void buildit() {
+        View view = new View(this);
+        System.out.println("We are here ");
+        System.out.println("This is identity: " + DiaryActivity.identify);
+        //Diary.numWorkouts = Diary.numWorkouts - 1;
 
+        //Workout workouts = Diary.openSpecificWorkout(view.getContext(), (DiaryActivity.identify), workout);
+        SaveWorkout test = new SaveWorkout();
+        Workout workout = test.openWorkout(DiaryActivity.identify, view.getContext());
+        setUp3(workout);
 
-            int x = numWorkouts;
-            System.out.println("This is numWorkouts: " + workoutNumber);
-
-            String file1 = "Exercises" + workoutNumber;
-
-            System.out.println("You are currently creating this workout: " + file1);
-
-
-
-            System.out.println("This is something you are now printing: " + getFilesDir().listFiles().length);
-
-        File f = new File(file1);
-        if(f.exists() == false) {
-            System.out.println("We are here now");
-
-            System.out.println("We are here now2");
-            FileInputStream fis = null;
-            try {
-                fis = openFileInput(file1);
-            } catch (FileNotFoundException e) {
-                System.out.println("this is the bloody exception");
-                savedExercisez.add(new Exercise());
-                Exercise exer = savedExercisez.get(0);
-                exer.setName("");
-                exer.setReps("0");
-                exer.setSets("0");
-                exer.setWeight("0");
-                exer.setRest("0");
-                e.printStackTrace();
-            }
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader bufferedReader = new BufferedReader(isr);
-
-
-
-
-            try {
-                StringBuffer sb = new StringBuffer();
-                String line;
-
-                while ((line = bufferedReader.readLine()) != null) {
-                    c++;
-                    System.out.println("This is how many times it runs " + c);
-                    sb.append(line);
-                    String text = (String) line;
-                    System.out.println("This is the total lines int this new one: " + text);
-
-                    String[] data = text.split("END");
-
-                    for (int d = 0; d < data.length; d++) {
-                        System.out.println("This is current: " + data[d]);
-                        String dat = data[d];
-                        String[] info = dat.split("SPLIT");
-
-                        savedExercisez.add(new Exercise());
-                        Exercise exer = savedExercisez.get(d);
-                        for (int o = 0; o < 5; o++) {
-                            if (o == 0) {
-                                try {
-                                    exer.setName(info[o]);
-                                } catch (Exception e) {
-                                    exer.setName(" ");
-                                }
-                                System.out.println("This was your name: " + exer.getName());
-                            } if (o == 1) {
-                                try {
-                                    exer.setReps(info[o]);
-                                } catch (Exception e) {
-                                    exer.setReps("0");
-                                }
-                                System.out.println("This was your reps: " + exer.getReps());
-                            }
-                            if (o == 2) {
-                                try {
-                                    exer.setSets(info[o]);
-                                } catch (Exception e) {
-                                    exer.setSets("1");
-                                }
-                                System.out.println("This was your sets: " + exer.getSets());
-                            } if (o == 3) {
-                                try {
-                                    exer.setWeight(info[o]);
-                                } catch (Exception e) {
-                                    exer.setWeight("0");
-                                }
-                                System.out.println("This was your weight: " + exer.getWeight());
-                            } if (o == 4) {
-                                try {
-                                    exer.setRest(info[o]);
-                                } catch (Exception e) {
-                                    exer.setRest("0");
-                                }
-                                System.out.println("This was your rest: " + exer.getRest());
-                            }
-
-
-                        }
-
-                    }
-
-
-                }
-
-                System.out.println("");
-                isr.close();
-                System.out.println("");
-            } catch (IOException e) {
-                System.out.println("Exception");
-
-            }
-            System.out.println("");
-
-
-
-
-
-
-        } else {
-
-            if (f.exists() == true){
-                System.out.println("We are here now");
-            }
-
-        System.out.println("We are here now3");
-        FileInputStream fis = null;
-        try {
-            fis = openFileInput(file1);
-        } catch (FileNotFoundException e) {
-            System.out.println("this is the bloody exception");
-            savedExercisez.add(new Exercise());
-            Exercise exer = savedExercisez.get(0);
-            exer.setName("");
-            exer.setReps("0");
-            exer.setSets("0");
-            exer.setWeight("0");
-            exer.setRest("0");
-            e.printStackTrace();
         }
-
-
-        System.out.println("");
-
-
-
-
-    }
-
-
-
-    }
 
 
 

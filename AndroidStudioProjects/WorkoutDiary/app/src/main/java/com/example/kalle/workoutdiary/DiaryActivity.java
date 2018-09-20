@@ -30,17 +30,25 @@ import static android.text.Layout.Alignment.ALIGN_CENTER;
 
 public class DiaryActivity extends AppCompatActivity {
 
+    static int identify;
+
     int x;
     ScrollView rowScroller;
-    ArrayList<LinearLayout> rows = new ArrayList<LinearLayout>();
+    static ArrayList<LinearLayout> rows;
     int y;
     private int rowClickedId;
+
+    Diary diary;
 
     public void setRowClickedId(int row) {
         rowClickedId = row;
     }
     public int getRowClickedId() {
         return  rowClickedId;
+    }
+
+    public static void removeRow(int index) {
+        rows.remove(index);
     }
 
 
@@ -55,17 +63,9 @@ public class DiaryActivity extends AppCompatActivity {
         }
 
     }
-    public void reload() {
-        Intent intent = getIntent();
-        overridePendingTransition(0, 0);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        overridePendingTransition(0, 0);
-        startActivity(intent);
-    }
 
     public void setUp() {
-        buildit();
+        rows = new ArrayList<LinearLayout>();
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -73,8 +73,6 @@ public class DiaryActivity extends AppCompatActivity {
         int width = size.x;
         int height = size.y;
 
-        LinearLayout layout = new LinearLayout(this);
-        layout.setBackgroundColor(Color.rgb(43,43,43));
         LinearLayout rowsInsideScroll = new LinearLayout(this);
         rowsInsideScroll.setOrientation(LinearLayout.VERTICAL);
 
@@ -85,10 +83,12 @@ public class DiaryActivity extends AppCompatActivity {
 
         rowScroller = new ScrollView(this);
         rowScroller.setLayoutParams(new RelativeLayout.LayoutParams(
-                ScrollView.LayoutParams.FILL_PARENT, height));
+                ScrollView.LayoutParams.FILL_PARENT, height - 300));
+        rowScroller.setBackgroundColor(MainActivity.grey);
+        System.out.println("this is numworkouts " + ((SaveWorkout.n) + 1));
 
 
-        for (int i = 0; i < x; i++) {
+        for (int i = 0; i < ((SaveWorkout.n) + 1); i++) {
             rows.add(new LinearLayout(getBaseContext()));
             LinearLayout rowCreated = rows.get(i);
             String theId = Integer.toString(i);
@@ -101,14 +101,14 @@ public class DiaryActivity extends AppCompatActivity {
             System.out.println("Row counter is at " + counter);
 
             LinearLayout rowCreated = rows.get(counter - 1);
-            rowCreated.setBackgroundColor(Color.rgb(0,109,54));
+            rowCreated.setBackgroundColor(MainActivity.green);
             rowCreated.setMinimumWidth(1000);
             rowCreated.setMinimumHeight(80);
             TextView name = new TextView(this);
             name.setText("Workout " + counter);
             name.setTypeface(null, Typeface.BOLD);
             name.setTextSize(15);
-            name.setTextColor(Color.rgb(43,43,43));
+            name.setTextColor(MainActivity.grey);
             name.setPadding(20, 40, 0, 0);
 
             rowCreated.addView(name, buttonParams);
@@ -117,10 +117,6 @@ public class DiaryActivity extends AppCompatActivity {
             counter = counter -1;
         }
 
-        LinearLayout bottomBar = new LinearLayout(this);
-        bottomBar.setBackgroundColor(Color.BLACK);
-        bottomBar.setMinimumHeight(150);
-        bottomBar.setMinimumWidth(width);
         LinearLayout.LayoutParams bottomPara = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, Gravity.BOTTOM);
 
@@ -145,6 +141,7 @@ public class DiaryActivity extends AppCompatActivity {
         //container.addView(bottomBar);
         container.addView(scrollContainer);
         container.addView(bar);
+        container.setBackgroundColor(MainActivity.grey);
         setContentView(container, bottomPara);
 
 
@@ -158,7 +155,6 @@ public class DiaryActivity extends AppCompatActivity {
         public void makeBottomnavBar(LinearLayout layout, int widths) {
             layout.setOrientation(LinearLayout.HORIZONTAL);
             layout.setMinimumWidth(widths);
-            layout.setBackgroundColor(Color.BLACK);
 
             LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -170,7 +166,7 @@ public class DiaryActivity extends AppCompatActivity {
 
             TextView statText = new TextView(getBaseContext());
             statText.setText("Stats");
-            statText.setTextColor(Color.rgb(0, 109, 54));
+            statText.setTextColor(MainActivity.green);
             statText.setLayoutParams(layoutpara);
             statText.setTextSize(30);
             stats.addView(statText);
@@ -184,7 +180,7 @@ public class DiaryActivity extends AppCompatActivity {
             addText.setText("+");
             addText.setTypeface(null, Typeface.BOLD);
             addText.setTextSize(45);
-            addText.setTextColor(Color.rgb(0, 109, 54));
+            addText.setTextColor(MainActivity.green);
             addText.setLayoutParams(layoutpara);
             addWorkout.addView(addText);
             addWorkout.setMinimumWidth(widths / 3);
@@ -199,9 +195,10 @@ public class DiaryActivity extends AppCompatActivity {
             diary.setMinimumWidth(widths / 3);
             diary.setMinimumHeight(160);
             diary.setOrientation(LinearLayout.VERTICAL);
+            diary.setBackgroundColor(Color.rgb(46,52,56));
             diar.setLayoutParams(layoutpara);
             //diary.setLayoutParams(layoutpara);
-            diar.setTextColor(Color.rgb(0, 149, 84));
+            diar.setTextColor(MainActivity.green);
 
             layout.addView(stats);
             layout.addView(addWorkout);
@@ -224,13 +221,17 @@ public class DiaryActivity extends AppCompatActivity {
         public void onClick(View view) {
 
             System.out.println("Row " + id + " clicked");
-            CopyOfWorkoutActivity builder = new CopyOfWorkoutActivity();
-            builder.setWorkout(Integer.parseInt(id));
             Context context = view.getContext();
+            System.out.println("one");
+            identify = Integer.parseInt(id);
+            System.out.println("two");
             Intent i = new Intent(context, CopyOfWorkoutActivity.class);
+            System.out.println("three");
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            System.out.println("four");
             //Intent intent = new Intent(context, BottomNavigation.class);
             context.startActivity(i);
+            System.out.println("five");
         }
 
 
@@ -242,45 +243,6 @@ public class DiaryActivity extends AppCompatActivity {
         params.topMargin = 20;
         params.bottomMargin = 20;
         params.gravity = Gravity.CENTER_HORIZONTAL;
-    }
-
-
-
-    public void buildit() {
-
-        System.out.println("This is numWorkouts: " + x);
-        int y = 1;
-        for (int i = 0; i < y; i++) {
-            String file1 = "Exercises" + (x);
-            FileInputStream fis = null;
-            try {
-                fis = openFileInput(file1);
-                System.out.println("We are still creating files");
-                System.out.println("This is the current file you're creating: " + file1);
-                x++;
-                y++;
-            } catch (FileNotFoundException e) {
-                System.out.println("this is the end of files");
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-
-
-}
-
-class WorkoutData {
-    static int numberOfThisWorkout;
-    ArrayList<Exercise> exercises = new ArrayList<Exercise>();
-    private int volumeOfWorkout;
-
-    public void setVolumeOfWorkout(int reps, int sets) {
-        volumeOfWorkout = reps * sets;
-    }
-    public int getVolumeOfWorkout() {
-        return  volumeOfWorkout;
     }
 
 }

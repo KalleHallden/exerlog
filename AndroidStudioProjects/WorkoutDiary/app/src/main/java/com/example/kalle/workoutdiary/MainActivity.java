@@ -38,21 +38,25 @@ import static android.view.View.TEXT_ALIGNMENT_CENTER;
 
 public class MainActivity extends AppCompatActivity {
 
+    static int green = Color.rgb(4,168,46);
+    static int grey = Color.rgb(56,62,66);
+
     Button addExerciseButton;
     Button saveButton;
     Button one;
     Button startNewWorkoutButton;
     LinearLayout row;
-    LinearLayout exerciseRowContainer;
+    static LinearLayout exerciseRowContainer;
     ScrollView rowScroller;
-    TextView volumeLabel;
-    ArrayList<LinearLayout> rowList = new ArrayList<LinearLayout>();
+    static TextView volumeLabel;
+    static ArrayList<LinearLayout> rowList;
     ArrayList<Exercise> exerciseList;
-    ArrayList<ArrayList> containerFortestxArray = new ArrayList<ArrayList>();
-    ArrayList<EditText> textFieldArray;
-    Workout thisWorkout;
-    int numberOfExercises;
+    static ArrayList<ArrayList> containerFortestxArray;
+    static ArrayList<EditText> textFieldArray;
+    static Workout thisWorkout;
+    static int numberOfExercises;
     int vol;
+    Diary diary;
 
 
     static int numWorkouts;
@@ -89,8 +93,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void setUp() {
 
+        View view = new View(this);
+        diary = new Diary();
+        diary.openWorkouts(view.getContext());
+        //thisWorkout.savedExercisez.clear();
+        //diary.openSpecificWorkout(view, 0);
+        thisWorkout = new Workout();
+
+
+
         numberOfExercises = 0;
         exerciseList = new ArrayList<Exercise>();
+        containerFortestxArray = new ArrayList<ArrayList>();
+        rowList = new ArrayList<LinearLayout>();
+
+
+
+
+
+
+
+
+
 
         String wok = "Workout" + numWorkouts;
         String exs = "Exercises" + numWorkouts;
@@ -108,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         int thirdWidth = (int) (width * 0.333333);
 
         LinearLayout testLayout = new LinearLayout(this);
-        testLayout.setBackgroundColor(rgb(43, 43, 43));
+        testLayout.setBackgroundColor(grey);
         setContentView(testLayout);
 
         LinearLayout totalLayout = new LinearLayout(this);
@@ -149,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         one.setOnClickListener(new AddRowOnClickListener());
         one.setText("+");
         one.setTextSize(30);
-        one.setTextColor(Color.rgb(0,109,54));
+        one.setTextColor(green);
         one.setBackgroundColor(Color.rgb(30,30,30));
         one.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
 
@@ -162,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         //saveButton.setBackgroundResource(R.mipmap.ticks);
         saveButton.setText("✓");
         saveButton.setTextSize(30);
-        saveButton.setTextColor(Color.rgb(0,109,54));
+        saveButton.setTextColor(green);
         saveButton.setBackgroundColor(topBar.getSolidColor());
         saveButton.setOnClickListener(new SaveWorkoutListener());
 
@@ -194,12 +218,13 @@ public class MainActivity extends AppCompatActivity {
         rowScroller.setLayoutParams(new RelativeLayout.LayoutParams(
                 ScrollView.LayoutParams.FILL_PARENT, 800));
 
+       // AddRowOnClickListener addRow = new AddRowOnClickListener();
         // make save button
         MyButton makbtn = new MyButton();
         addExerciseButton = new Button(this);
         makbtn.makeButton(addExerciseButton);
         addExerciseButton.setText("Add");
-        addExerciseButton.setOnClickListener(new AddRowOnClickListener());
+        addExerciseButton.setOnClickListener(new Adder());
 
         // Button Parameter creator
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
@@ -209,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
         // Make initial row of textfields and increment number of rows by 1 and add it to the exerciseRowContainer
         rowList.add(new LinearLayout(this));
         LinearLayout textFieldRows = rowList.get(numberOfExercises);
-        makeTextFields(textFieldRows);
+        TextFieldMaker.makeTextFields(textFieldRows, view);
         exerciseRowContainer.addView(textFieldRows, buttonParams);
         numberOfExercises = numberOfExercises + 1;
         rowScroller.addView(exerciseRowContainer);
@@ -252,6 +277,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    class Adder extends AddRowOnClickListener {
+
+    }
     class BottomNav {
         LinearLayout addWorkout = new LinearLayout(getBaseContext());
         LinearLayout diary = new LinearLayout(getBaseContext());
@@ -260,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
         public void makeBottomnavBar(LinearLayout layout, int widths) {
             layout.setOrientation(LinearLayout.HORIZONTAL);
             layout.setMinimumWidth(widths);
-            layout.setBackgroundColor(Color.BLACK);
+            //layout.setBackgroundColor(Color.BLACK);
 
             LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -272,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
 
             TextView statText = new TextView(getBaseContext());
             statText.setText("Stats");
-            statText.setTextColor(Color.rgb(0, 109, 54));
+            statText.setTextColor(green);
             statText.setLayoutParams(layoutpara);
             statText.setTextSize(30);
             stats.addView(statText);
@@ -286,11 +315,12 @@ public class MainActivity extends AppCompatActivity {
             addText.setText("+");
             addText.setTypeface(null, Typeface.BOLD);
             addText.setTextSize(45);
-            addText.setTextColor(Color.rgb(0, 149, 84));
+            addText.setTextColor(green);
             addText.setLayoutParams(layoutpara);
             addWorkout.addView(addText);
             addWorkout.setMinimumWidth(widths / 3);
             addWorkout.setMinimumHeight(160);
+            addWorkout.setBackgroundColor(Color.rgb(46,52,56));
             addWorkout.setOrientation(LinearLayout.VERTICAL);
             addWorkout.setLayoutParams(layoutpara);
 
@@ -303,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
             diary.setOrientation(LinearLayout.VERTICAL);
             diar.setLayoutParams(layoutpara);
             //diary.setLayoutParams(layoutpara);
-            diar.setTextColor(Color.rgb(0, 109, 54));
+            diar.setTextColor(green);
 
             layout.addView(stats);
             layout.addView(addWorkout);
@@ -341,26 +371,6 @@ public class MainActivity extends AppCompatActivity {
         params.gravity = Gravity.CENTER_HORIZONTAL;
     }
 
-
-    int y;
-
-    class ShowOldWorkoutListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            Context context = view.getContext();
-
-            Intent intent = new Intent(context, DiaryActivity.class);
-            context.startActivity(intent);
-            System.out.println("So far so good");
-            //reload();
-
-            System.out.println("we got called: " + y + " times");
-            y++;
-        }
-    }
-
-
-
     public void reload() {
         Intent intent = getIntent();
         overridePendingTransition(0, 0);
@@ -373,180 +383,13 @@ public class MainActivity extends AppCompatActivity {
     class SaveWorkoutListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            //Diary.saveWorkout(v);
+            //reload();
 
-            int count = 0;
-            savedWorkouts.add(new Workout());
-            Boolean existing = true;
-
-            //This is where you save the workout
-            String filename = getFileNameExercises();
-            String fil = "Exercises" + count;
-
-            File fouts = new File(filename);
-
-            int x = 0;
-            String end = " ";
-            int y = 1;
-            for (int i = 0; i < y; i++) {
-                String file1 = "Exercises" + (x);
-                FileInputStream fis = null;
-                try {
-                    fis = openFileInput(file1);
-                    System.out.println("We are still creating files");
-                    System.out.println("This is the current file you're creating: " + file1);
-                    x++;
-                    y++;
-                } catch (FileNotFoundException e) {
-                    System.out.println("this is the end of files");
-                    e.printStackTrace();
-                    end = "END";
-                }
-            }
-
-                if (end.equals("END")) {
-                    FileInputStream fis = null;
-                    try {
-                        fis = openFileInput(fil);
-                        System.out.println("Right now you are at Exercise" + x);
-                        fil = "Exercises" + x;
-                    } catch (Exception e) {
-                        System.out.println("No more files");
-                        existing = false;
-                    }
-
-                    try {
-                        FileOutputStream os = openFileOutput(fil, Context.MODE_PRIVATE);
-                        System.out.println("Workout number " + filename);
-
-                        System.out.println("Creating bufferedwriter");
-                        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os));
-
-                        try {
-                            System.out.println("Opening fileoutput");
-
-                            for (int i = 0; i < numberOfExercises; i++) {
-                                System.out.println("Writing files");
-                                Exercise exer = exerciseList.get(i);
-                                String name = exer.getName();
-                                String reps = Integer.toString(exer.getReps());
-                                String sets = Integer.toString(exer.getSets());
-                                String weight = Integer.toString(exer.getWeight());
-                                String rest = Integer.toString(exer.getRest());
-                                String split = "SPLIT";
-                                String stopper = "END";
-
-                                out.write(name);
-                                out.write(split);
-                                out.write(reps);
-                                out.write(split);
-                                out.write(sets);
-                                out.write(split);
-                                out.write(weight);
-                                out.write(split);
-                                out.write(rest);
-                                out.write(split);
-                                out.write(stopper);
-
-                            }
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        out.close();
-                        os.close();
-                        out.flush();
-                        os.flush();
-                        System.out.println("Done");
-                    } catch (Exception fileForOutputstreamnotfound) {
-                        System.out.println("fileForOutputstreamnotfound");
-                    }
-
-                }
-
-            reload();
+            SaveWorkout test = new SaveWorkout();
+            test.WriteObjectToFile(thisWorkout, v.getContext());
         }
     }
-
-
-
-
-
-    class AddRowOnClickListener implements View.OnClickListener {
-
-        @Override
-
-
-             public void onClick(View v) {
-
-                LinearLayout.LayoutParams textRowParams = new LinearLayout.LayoutParams(
-                          LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                makeButtonAndTextRowParams(textRowParams);
-                vol = 0;
-
-                rowList.add(new LinearLayout(getBaseContext()));
-                LinearLayout textFieldRows = rowList.get(numberOfExercises);
-
-                makeTextFields(textFieldRows);
-                exerciseRowContainer.addView(textFieldRows, textRowParams);
-
-
-
-                for (int i = 0; i < numberOfExercises; i++ ) {
-                    int x = numberOfExercises * 5;
-
-                    exerciseList.add(new Exercise());
-                    Exercise exer = exerciseList.get(i);
-                    ArrayList<EditText> rowinfo = containerFortestxArray.get(i);
-
-                    for (int j = 0; j < 5; j++) {
-                        EditText textField = rowinfo.get(j);
-                        String ys = textField.getText().toString();
-                        if (j == 0) {
-                            try {
-                                exer.setName(ys);
-                            } catch (Exception a) {
-                                exer.setName(" ");
-                            }
-                        }
-                        if (j == 1) {
-                            try {
-                                exer.setReps(ys);
-                            } catch (Exception a) {
-                                exer.setReps("0");
-                            }
-                        }
-                        if (j == 2) {
-                            try {
-                                exer.setSets(ys);
-                            } catch (Exception a) {
-                                exer.setSets("1");
-                            }
-                        }
-                        if (j == 3) {
-                            try {
-                                exer.setWeight(ys);
-                            } catch (Exception a) {
-                                exer.setWeight("0");
-                            }
-                        }
-                        if (j == 4) {
-                            try {
-                                exer.setRest(ys);
-                            } catch (Exception a) {
-                                exer.setRest("0");
-                            }
-                        }
-                    }
-                    exer.setVolume(exer.getReps(), exer.getSets());
-                    vol = vol + exer.getVolume();
-                }
-
-            numberOfExercises++;
-                String volString = Integer.toString(vol);
-                volumeLabel.setText("Total Volume: " + volString);
-             }
-         }
 
 
       public void makeLabels(LinearLayout linear) {
@@ -595,108 +438,9 @@ public class MainActivity extends AppCompatActivity {
 
       }
 
-
-
-
-
-
-
-
-      public void makeTextFields(LinearLayout linlay) {
-
-        containerFortestxArray.add(new ArrayList<EditText>());
-        textFieldArray = containerFortestxArray.get(numberOfExercises);
-
-                  LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-             layoutParams.setMargins(10, 0, 10, 0);
-             layoutParams.gravity = Gravity.CENTER;
-
-
-          LinearLayout.LayoutParams leftMarginParams = new LinearLayout.LayoutParams(
-                  LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-          leftMarginParams.leftMargin = 10;
-          leftMarginParams.rightMargin = 5;
-
-          // make textfield
-          EditText exerciseName = new EditText(this);
-          myTextField maktxt = new myTextField();
-          maktxt.makeTextField(exerciseName, 300);
-          //exerciseName.setMaxWidth(300);
-          exerciseName.setMinimumWidth(300);
-          exerciseName.setPadding(10,5,10,5);
-          textFieldArray.add(exerciseName);
-
-          // second textfield
-          EditText repsTextField = new EditText(this);
-              maktxt.makeTextField(repsTextField, 150);
-             // repsTextField.setMaxWidth(150);
-              repsTextField.setMinimumWidth(150);
-              repsTextField.setPadding(10,5,10,5);
-              textFieldArray.add(repsTextField);
-
-          // third textField
-          EditText setsTextField = new EditText(this);
-              maktxt.makeTextField(setsTextField, 150);
-             // setsTextField.setMaxWidth(150);
-              setsTextField.setMinimumWidth(150);
-              setsTextField.setPadding(10,5,10,5);
-              textFieldArray.add(setsTextField);
-
-          //fourth textField
-          EditText weightTextField = new EditText(this);
-              maktxt.makeTextField(weightTextField, 150);
-             // weightTextField.setMaxWidth(150);
-              weightTextField.setMinimumWidth(150);
-              weightTextField.setPadding(10,5,10,5);
-              textFieldArray.add(weightTextField);
-
-          // fifth textField
-          EditText restTextField = new EditText(this);
-              maktxt.makeTextField(restTextField,150);
-             // restTextField.setMaxWidth(150);
-              restTextField.setMinimumWidth(150);
-              restTextField.setPadding(10,5,10,5);
-              textFieldArray.add(restTextField);
-
-              linlay.setLayoutParams(layoutParams);
-
-              //textFieldRows.setLayoutParams(layoutParams);
-              linlay.addView(exerciseName,leftMarginParams);
-              linlay.addView(repsTextField,leftMarginParams);
-              linlay.addView(setsTextField,leftMarginParams);
-              linlay.addView(weightTextField,leftMarginParams);
-              linlay.addView(restTextField,leftMarginParams);
-
-
-      }
-
 }
 
-class Workout {
-    private int workoutVolume;
-    private String workoutName;
-    private ArrayList<Exercise> workoutExerciseList;
-
-    public void setWorkoutName(String name) {
-        workoutName = name;
-    }
-
-    public String getWorkoutName() {
-       return workoutName;
-    }
-
-    public void setVolume(int v) {
-        workoutVolume = v;
-    }
-
-    public int getWorkoutVolume() {
-        return  workoutVolume;
-    }
-}
-
-class Exercise {
+class Exercise implements Serializable{
 
     private String name;
     private int reps;
@@ -767,8 +511,8 @@ class MyLinearLayout {
 class MyButton {
 
     public void makeButton(Button butn) {
-        butn.setTextColor(rgb(43, 43, 43));
-        butn.setBackgroundColor(Color.rgb(0,109,54));
+        butn.setTextColor(MainActivity.grey);
+        butn.setBackgroundColor(MainActivity.green);
         butn.setTextSize(20);
 
     }
@@ -777,8 +521,8 @@ class MyButton {
 
 class myTextField {
     public void makeTextField(EditText texfield, int widths) {
-        texfield.setBackgroundColor(Color.rgb(0,109,54));
-        texfield.setTextColor(rgb(43, 43, 43));
+        texfield.setBackgroundColor(MainActivity.green);
+        texfield.setTextColor(MainActivity.grey);
         texfield.setTextSize(15);
         texfield.setTypeface(null, Typeface.BOLD);
         texfield.setMaxHeight(100);

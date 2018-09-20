@@ -29,6 +29,8 @@ public class NavBarOnClickListener implements View.OnClickListener {
             Intent i = new Intent(context, MainActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
+            SaveWorkout test = new SaveWorkout();
+            test.openWorkout(0, v.getContext());
         } else if (id == 3) {
             Intent i = new Intent(context, DiaryActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

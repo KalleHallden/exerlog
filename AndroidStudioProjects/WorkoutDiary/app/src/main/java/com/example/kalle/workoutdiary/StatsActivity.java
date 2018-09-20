@@ -322,7 +322,7 @@ public class StatsActivity extends AppCompatActivity {
         public void makeBottomnavBar(LinearLayout layout, int widths) {
             layout.setOrientation(LinearLayout.HORIZONTAL);
             layout.setMinimumWidth(widths);
-            layout.setBackgroundColor(Color.BLACK);
+
 
             LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -339,6 +339,7 @@ public class StatsActivity extends AppCompatActivity {
             statText.setTextSize(30);
             stats.addView(statText);
             stats.setMinimumWidth(widths / 3);
+            stats.setBackgroundColor(Color.rgb(46,52,56));
             stats.setOrientation(LinearLayout.VERTICAL);
             System.out.println("This is width: " + (widths / 3));
             stats.setMinimumHeight(160);
@@ -444,7 +445,7 @@ class BarClickedOnClickListener implements View.OnClickListener {
         String end = " ";
         int y = 1;
         for (int i = 0; i < y; i++) {
-            String file1 = "Exercises" + (x);
+            String file1 = "Workout" + (x);
             FileInputStream fis = null;
             try {
                 fis = openFileInput(file1);
