@@ -8,29 +8,43 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 public class SaveWorkout {
 
     static int n;
 
     static String filepath = "Workout";
+    static int[] volumes;
+
+    public static int checkExistingFiles(Context context) {
+        n = 0;
+        int y = 1;
+                 for (int i = 0; i < y; i++) {
+                     try {
+                         FileInputStream fi = context.openFileInput("Workout" + n);
+                         ObjectInputStream oi = new ObjectInputStream(fi);
+                         y++;
+                         n++;
+                     } catch (Exception e) {
+
+                         System.out.println("Done checking existing files");
+                     }
+                 }
+         volumes = new int[n];
+         return n;
+    }
 
     public void WriteObjectToFile(Workout workout, Context context) {
-        n = 0;
-        System.out.println("hey");
-        int y = 1;
-        for (int i = 0; i < y; i++) {
-            try {
-                FileInputStream fi = context.openFileInput("Workout" + n);
-                ObjectInputStream oi = new ObjectInputStream(fi);
-                y++;
-                n++;
-            } catch (Exception e) {
-                System.out.println("Done checking existing files");
-            }
-        }
+        workout.setVolume(CopyOfWorkoutActivity.vol);
+        workout.setTheSavedExercisesList(Workout.savedExercisez);
 
-        filepath = "Workout" + n;
+        System.out.println("hey");
+        int num = checkExistingFiles(context);
+
+        System.out.println("Amount of workouts " + num);
+
+        filepath = "Workout" + num;
 
         try {
             FileOutputStream fileOut = context.openFileOutput(filepath, Context.MODE_PRIVATE);
@@ -44,10 +58,14 @@ public class SaveWorkout {
             System.out.println("Couldnt find it");
             ex.printStackTrace();
         }
+        //Workout.savedExercisez.clear();
     }
 
     public void saveSpecific(int id, Context context, Workout workout) {
         String fileName = "Workout" + id;
+        workout.setVolume(CopyOfWorkoutActivity.vol);
+        workout.setTheSavedExercisesList(Workout.savedExercisez);
+
         try {
             FileOutputStream fileOut = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
@@ -60,28 +78,43 @@ public class SaveWorkout {
             System.out.println("Couldnt find it");
             ex.printStackTrace();
         }
+        //Workout.savedExercisez.clear();
 
     }
 
     public Workout openWorkout(int id, Context context) {
         Workout workout;
+        int volume = 0;
         try {
             FileInputStream fi = context.openFileInput("Workout" + id);
             ObjectInputStream oi = new ObjectInputStream(fi);
 
             // Read objects
-           workout = (Workout) oi.readObject();
-
-            System.out.println(workout.getVolume());
+            workout = (Workout) oi.readObject();
             System.out.println("It worked");
 
             oi.close();
             fi.close();
+
+            Workout.savedExercisez = workout.getSavedExercisesList();
+
+            for (int i = 0; i < workout.getSavedExercisesList().size(); i++){
+                System.out.println("Hey " + i);
+                Exercise e = Workout.savedExercisez.get(i);
+                e.setVolume(e.getReps(), e.getSets());
+                volume = volume + e.getVolume();
+                System.out.println("Volume " + volume);
+            }
+
+            workout.setVolume(volume);
+            volumes[id] = volume;
+
             return workout;
         } catch (Exception s) {
             System.out.println("It didn't work");
             System.out.println("This the exception: ");
             s.printStackTrace();
+
          return workout = new Workout();
         }
     }

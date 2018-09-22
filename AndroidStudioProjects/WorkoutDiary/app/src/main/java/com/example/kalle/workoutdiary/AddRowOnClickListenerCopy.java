@@ -66,7 +66,7 @@ public class AddRowOnClickListenerCopy implements View.OnClickListener {
                     try {
                         ex.setWeight(ys);
                     } catch (Exception a) {
-                        ex.setWeight("0");
+                        ex.setWeight("1");
                     }
                 }
                 if (j == 4) {

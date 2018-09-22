@@ -57,7 +57,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
     static ArrayList<ArrayList> containerFortestxArray;
     static ArrayList<EditText> textFieldArray;
     static int numberOfExercises;
-    int vol;
+    static int vol;
 
 
         @Override
@@ -92,7 +92,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         int thirdWidth = (int)(width*0.333333);
 
         LinearLayout testLayout = new LinearLayout(this);
-        testLayout.setBackgroundColor(rgb(43, 43, 43));
+        testLayout.setBackgroundColor(MainActivity.grey);
         setContentView(testLayout);
 
         LinearLayout totalLayout = new LinearLayout(this);
@@ -156,7 +156,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         //saveButton.setBackgroundResource(R.mipmap.ticks);
         saveButton.setText("✓");
         saveButton.setTextSize(30);
-        saveButton.setTextColor(Color.rgb(0,109,54));
+        saveButton.setTextColor(MainActivity.green);
         saveButton.setBackgroundColor(topBar.getSolidColor());
         saveButton.setOnClickListener(new SaveWorkoutListener());
 
@@ -213,6 +213,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
 
         ArrayList<LinearLayout> textFieldRows = new ArrayList<LinearLayout>();
         //listlength = listlength/2;
+        vol = 0;
 
         if (listlength != 0) {
             for (int s = 0; s < listlength; s++) {

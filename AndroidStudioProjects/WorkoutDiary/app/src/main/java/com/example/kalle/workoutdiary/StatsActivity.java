@@ -36,8 +36,7 @@ public class StatsActivity extends AppCompatActivity {
     int clicked;
     Button barButton;
 
-
-    ArrayList<Workouts> workoutList;
+    ArrayList<Workout> workoutList;
 
     LinearLayout rowsInsideScroll;
 
@@ -53,6 +52,9 @@ public class StatsActivity extends AppCompatActivity {
 
     public void setUp() {
 
+        View view = new View(this);
+        SaveWorkout.checkExistingFiles(view.getContext());
+
         buildit();
         //buildWorkouts();
 
@@ -64,7 +66,7 @@ public class StatsActivity extends AppCompatActivity {
 
         LinearLayout layout = new LinearLayout(this);
         setContentView(layout);
-        layout.setBackgroundColor(Color.rgb(43,43,43));
+        layout.setBackgroundColor(MainActivity.grey);
         rowsInsideScroll = new LinearLayout(this);
         rowsInsideScroll.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -80,11 +82,11 @@ public class StatsActivity extends AppCompatActivity {
                 ScrollView.LayoutParams.FILL_PARENT, heighty));
 
 
-         int counter = x;
-         System.out.println("Size "+counter);
+         int counter = workoutList.size();
+         System.out.println("Size "+ counter);
          System.out.println("Workout list size " + workoutList.size());
 
-        for (int i = 0; i < x; i++) {
+        for (int i = 0; i < counter; i++) {
             rows.add(new LinearLayout(getBaseContext()));
             LinearLayout rowCreated = rows.get(i);
             String theId = Integer.toString(i);
@@ -93,14 +95,14 @@ public class StatsActivity extends AppCompatActivity {
 
         while (counter != 0) {
             System.out.println("Row counter is at " + counter);
-            Workouts work = workoutList.get(counter -1);
+            Workout work = workoutList.get(counter - 1);
             LinearLayout rowCreated = rows.get(counter - 1);
-            rowCreated.setBackgroundColor(Color.rgb(0,109,54));
+            rowCreated.setBackgroundColor(MainActivity.green);
             rowCreated.setMinimumWidth(50);
 
-            System.out.println("This is the height: " + work.getVolume());
+            System.out.println("This is the height: " + SaveWorkout.volumes[counter - 1]);
 
-            rowCreated.setMinimumHeight(work.getVolume());
+            rowCreated.setMinimumHeight(SaveWorkout.volumes[counter - 1]);
 
             rowsInsideScroll.addView(rowCreated, buttonParams);
 
@@ -143,7 +145,7 @@ public class StatsActivity extends AppCompatActivity {
         barButton.setHeight(120);
         barButton.setText("Day View");
         barButton.setTextSize(20);
-        barButton.setTextColor(Color.rgb(0,109,54));
+        barButton.setTextColor(MainActivity.green);
         barButton.setOnClickListener(new ChangeBarOnClickListener());
 
 
@@ -185,14 +187,14 @@ public class StatsActivity extends AppCompatActivity {
 
                 while (counter2 != 0) {
                     System.out.println("Row counter is at " + counter2);
-                    Workouts work = workoutList.get(counter2 -1);
+                    Workout work = workoutList.get(counter2 -1);
                     LinearLayout rowCreated = rows.get(counter2 - 1);
-                    rowCreated.setBackgroundColor(Color.rgb(0,109,54));
+                    rowCreated.setBackgroundColor(MainActivity.green);
                     rowCreated.setMinimumWidth(50);
 
                     System.out.println("This is the height: " + work.getVolume());
 
-                    rowCreated.setMinimumHeight(work.getVolume());
+                    rowCreated.setMinimumHeight(barHeights.get(counter2-1));
 
                     rowsInsideScroll.addView(rowCreated, buttonParams);
 
@@ -208,14 +210,14 @@ public class StatsActivity extends AppCompatActivity {
 
                 while (counter2 != 0) {
                     System.out.println("Row counter is at " + counter2);
-                    Workouts work = workoutList.get(counter2 -1);
+                    Workout work = workoutList.get(counter2 -1);
                     LinearLayout rowCreated = rows.get(counter2 - 1);
-                    rowCreated.setBackgroundColor(Color.rgb(0,109,54));
+                    rowCreated.setBackgroundColor(MainActivity.green);
                     rowCreated.setMinimumWidth(50);
 
                     System.out.println("This is the height: " + work.getVolume());
 
-                    rowCreated.setMinimumHeight(work.getVolume());
+                    rowCreated.setMinimumHeight(barHeights.get(counter2 - 1));
 
                     rowsInsideScroll.addView(rowCreated, buttonParams);
 
@@ -226,7 +228,8 @@ public class StatsActivity extends AppCompatActivity {
                 barButton.setText("Day View");
                 clicked = 0;
                 int counter = workoutList.size();
-                for (int i = 0; i < x; i++) {                                                 
+                System.out.println();
+                for (int i = 0; i < counter; i++) {
                     rows.add(new LinearLayout(getBaseContext()));                             
                     LinearLayout rowCreated = rows.get(i);                                    
                     String theId = Integer.toString(i);                                       
@@ -234,14 +237,13 @@ public class StatsActivity extends AppCompatActivity {
                 }                                                                             
                 while (counter != 0) {
                     System.out.println("Row counter is at " + counter);
-                    Workouts work = workoutList.get(counter -1);
                     LinearLayout rowCreated = rows.get(counter - 1);
-                    rowCreated.setBackgroundColor(Color.rgb(0,109,54));
+                    rowCreated.setBackgroundColor(MainActivity.green);
                     rowCreated.setMinimumWidth(50);
 
-                    System.out.println("This is the height: " + work.getVolume());
+                    System.out.println("This is the height: " + SaveWorkout.volumes[counter - 1] );
 
-                    rowCreated.setMinimumHeight(work.getVolume());
+                    rowCreated.setMinimumHeight(SaveWorkout.volumes[counter - 1]);
 
                     rowsInsideScroll.addView(rowCreated, buttonParams);
 
@@ -261,10 +263,10 @@ public class StatsActivity extends AppCompatActivity {
             rowCount = 0;
             System.out.println("building");
             // try to sum up each seven days of workoutvolumes and set each bar to be that tall
-            System.out.println("building workouts " + x);
+            System.out.println("building workouts " + SaveWorkout.n);
             barHeights = new ArrayList<>();
             int a = 0;
-            for (int i = 0; i < x; i++) {
+            for (int i = 0; i < SaveWorkout.n; i++) {
                 if (a == 6) {
                     rows.add(new LinearLayout(getBaseContext()));
                     LinearLayout rowCreated = rows.get(rowCount);
@@ -276,8 +278,7 @@ public class StatsActivity extends AppCompatActivity {
                     a = 0;
                     rowCount++;
                 } else {
-                    Workouts work = workoutList.get(i);
-                    vol = vol + work.getVolume();
+                    vol = vol + SaveWorkout.volumes[i];
                     a++;
                 }
             }
@@ -298,8 +299,7 @@ public class StatsActivity extends AppCompatActivity {
                     vol = 0;
                     a = 0;
                 } else {
-                    Workouts work = workoutList.get(i);
-                    vol = vol + work.getVolume();
+                    vol = vol + SaveWorkout.volumes[i];
                     a++;
                 }
             }
@@ -334,7 +334,7 @@ public class StatsActivity extends AppCompatActivity {
 
             TextView statText = new TextView(getBaseContext());
             statText.setText("Stats");
-            statText.setTextColor(Color.rgb(0, 149, 84));
+            statText.setTextColor(MainActivity.green);
             statText.setLayoutParams(layoutpara);
             statText.setTextSize(30);
             stats.addView(statText);
@@ -349,7 +349,7 @@ public class StatsActivity extends AppCompatActivity {
             addText.setText("+");
             addText.setTypeface(null, Typeface.BOLD);
             addText.setTextSize(45);
-            addText.setTextColor(Color.rgb(0, 109, 54));
+            addText.setTextColor(MainActivity.green);
             addText.setLayoutParams(layoutpara);
             addWorkout.addView(addText);
             addWorkout.setMinimumWidth(widths / 3);
@@ -366,7 +366,7 @@ public class StatsActivity extends AppCompatActivity {
             diary.setOrientation(LinearLayout.VERTICAL);
             diar.setLayoutParams(layoutpara);
             //diary.setLayoutParams(layoutpara);
-            diar.setTextColor(Color.rgb(0, 109, 54));
+            diar.setTextColor(MainActivity.green);
 
             layout.addView(stats);
             layout.addView(addWorkout);
@@ -413,7 +413,7 @@ class BarClickedOnClickListener implements View.OnClickListener {
             if (g != row) {
                 System.out.println("Number: " + g);
                 LinearLayout rowz = rows.get(g);
-                rowz.setBackgroundColor(Color.rgb(0,109,54));
+                rowz.setBackgroundColor(MainActivity.green);
                 g = row;
             } else {
                 System.out.println("Number: " + g);
@@ -431,140 +431,23 @@ class BarClickedOnClickListener implements View.OnClickListener {
         params.gravity = Gravity.BOTTOM;
     }
 
+    public ArrayList<Workout> buildit() {
+        View view = new View(getBaseContext());
+        workoutList = new ArrayList<Workout>();
+        SaveWorkout opener = new SaveWorkout();
 
-
-    public void buildit() {
-
-    workoutList = new ArrayList<Workouts>();
-
-        System.out.println("This is numWorkouts: " + (x));
-        //if (x != 0) {
-          //  x = x - 1;
-        //}
-
-        String end = " ";
-        int y = 1;
-        for (int i = 0; i < y; i++) {
-            String file1 = "Workout" + (x);
-            FileInputStream fis = null;
+        for (int i = 0; i < SaveWorkout.n; i++) {
+            workoutList.add(new Workout());
+            Workout workout = workoutList.get(i);
             try {
-                fis = openFileInput(file1);
-                System.out.println("We are still creating files");
-                System.out.println("This is the current file you're creating: " + file1);
-                x++;
-                y++;
-            } catch (FileNotFoundException e) {
-                System.out.println("this is the end of files");
-                e.printStackTrace();
-                end = "END";
+                workout = opener.openWorkout(i, view.getContext());
+                System.out.println("Workout built: " + i);
+            } catch (Exception e) {
+                System.out.println("No workout found");
+                System.out.println(workoutList.size());
             }
-
-            if (!end.equals("END")) {
-                InputStreamReader isr = new InputStreamReader(fis);
-                BufferedReader bufferedReader = new BufferedReader(isr);
-
-
-                try {
-                    StringBuffer sb = new StringBuffer();
-                    String line;
-
-                    while ((line = bufferedReader.readLine()) != null) {
-                        sb.append(line);
-                        String text = (String) line;
-                        System.out.println("This is the total lines int this new one: " + text);
-
-                        String[] data = text.split("END");
-
-                        workoutList.add(new Workouts());
-                        Workouts thisWorkout = workoutList.get(i);
-                        thisWorkout.savedExercisez = new ArrayList<Exercise>();
-
-                        for (int d = 0; d < data.length; d++) {
-                            System.out.println("This is current: " + data[d]);
-                            String dat = data[d];
-                            String[] info = dat.split("SPLIT");
-
-
-
-                            thisWorkout.savedExercisez.add(new Exercise());
-                            Exercise exer = thisWorkout.savedExercisez.get(d);
-
-                            for (int o = 0; o < 5; o++) {
-                                if (o == 0) {
-                                    try {
-                                        exer.setName(info[o]);
-                                    } catch (Exception e) {
-                                        exer.setName(" ");
-                                    }
-                                    System.out.println("This was your name: " + exer.getName());
-                                } if (o == 1) {
-                                    try {
-                                        exer.setReps(info[o]);
-                                    } catch (Exception e) {
-                                        exer.setReps("0");
-                                    }
-                                    System.out.println("This was your reps: " + exer.getReps());
-                                }
-                                if (o == 2) {
-                                    try {
-                                        exer.setSets(info[o]);
-                                    } catch (Exception e) {
-                                        exer.setSets("1");
-                                    }
-                                    System.out.println("This was your sets: " + exer.getSets());
-                                } if (o == 3) {
-                                    try {
-                                        exer.setWeight(info[o]);
-                                    } catch (Exception e) {
-                                        exer.setWeight("0");
-                                    }
-                                    System.out.println("This was your weight: " + exer.getWeight());
-                                } if (o == 4) {
-                                    try {
-                                        exer.setRest(info[o]);
-                                    } catch (Exception e) {
-                                        exer.setRest("0");
-                                    }
-                                    System.out.println("This was your rest: " + exer.getRest());
-                                }
-
-                            }
-
-                            thisWorkout.setVolume(exer.getReps(), exer.getSets());
-                            System.out.println("Volume: " + thisWorkout.getVolume());
-
-
-                        }
-
-
-                    }
-                    System.out.println("this is how many workouts have been created " + workoutList.size());
-
-                    System.out.println("");
-                    isr.close();
-                    System.out.println("");
-                } catch (IOException e) {
-                    System.out.println("Exception");
-
-                }
-            }
-
-
-
         }
+        return workoutList;
     }
 
-}
-
-class Workouts {
-    ArrayList<Exercise> savedExercisez;
-    private int volume;
-
-    public void setVolume(int reps, int sets) {
-        volume = volume + (reps*sets);
-    }
-
-    public int getVolume() {
-        return volume;
-    }
 }

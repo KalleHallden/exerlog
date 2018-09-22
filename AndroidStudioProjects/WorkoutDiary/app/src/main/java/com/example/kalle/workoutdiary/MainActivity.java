@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<EditText> textFieldArray;
     static Workout thisWorkout;
     static int numberOfExercises;
-    int vol;
+    static int vol;
     Diary diary;
 
 
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         View view = new View(this);
         diary = new Diary();
         diary.openWorkouts(view.getContext());
+        SaveWorkout.checkExistingFiles(view.getContext());
         //thisWorkout.savedExercisez.clear();
         //diary.openSpecificWorkout(view, 0);
         thisWorkout = new Workout();
@@ -383,8 +384,6 @@ public class MainActivity extends AppCompatActivity {
     class SaveWorkoutListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            //Diary.saveWorkout(v);
-            //reload();
 
             SaveWorkout test = new SaveWorkout();
             test.WriteObjectToFile(thisWorkout, v.getContext());
