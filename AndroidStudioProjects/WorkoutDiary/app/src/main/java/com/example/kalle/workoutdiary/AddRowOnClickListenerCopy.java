@@ -24,7 +24,7 @@ public class AddRowOnClickListenerCopy implements View.OnClickListener {
         CopyOfWorkoutActivity.exerciseRowContainer.addView(textFieldRows, textRowParams);
 
 
-        Diary diary = new Diary();
+
 
         Workout workout = new Workout();
 

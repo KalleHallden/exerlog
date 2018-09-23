@@ -124,15 +124,8 @@ public class StatsActivity extends AppCompatActivity {
         LinearLayout.LayoutParams bottomPara = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, Gravity.BOTTOM);
 
-        BottomNav bottomNav = new BottomNav();
-
         LinearLayout bar = new LinearLayout(this);
-        bottomNav.makeBottomnavBar(bar, width);
-
-
-        bottomNav.stats.setOnClickListener(new NavBarOnClickListener(1));
-        bottomNav.addWorkout.setOnClickListener(new NavBarOnClickListener(2));
-        bottomNav.diary.setOnClickListener(new NavBarOnClickListener(3));
+        BottomNav.makeBottomnavBar(bar, width, view.getContext(), 1);
 
         LinearLayout buttonBar = new LinearLayout(this);
         buttonBar.setMinimumWidth(width);
@@ -309,70 +302,6 @@ public class StatsActivity extends AppCompatActivity {
             // Print a messege to the user "Nothing to show here yet"
             System.out.println("Not enough workouts yet: " + workoutList.size());
         }
-    }
-
-
-
-
-    class BottomNav {
-        LinearLayout addWorkout = new LinearLayout(getBaseContext());
-        LinearLayout diary = new LinearLayout(getBaseContext());
-        LinearLayout stats = new LinearLayout(getBaseContext());
-
-        public void makeBottomnavBar(LinearLayout layout, int widths) {
-            layout.setOrientation(LinearLayout.HORIZONTAL);
-            layout.setMinimumWidth(widths);
-
-
-            LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutpara.gravity = Gravity.CENTER;
-            LinearLayout.LayoutParams para = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            para.gravity = Gravity.CENTER;
-
-
-            TextView statText = new TextView(getBaseContext());
-            statText.setText("Stats");
-            statText.setTextColor(MainActivity.green);
-            statText.setLayoutParams(layoutpara);
-            statText.setTextSize(30);
-            stats.addView(statText);
-            stats.setMinimumWidth(widths / 3);
-            stats.setBackgroundColor(Color.rgb(46,52,56));
-            stats.setOrientation(LinearLayout.VERTICAL);
-            System.out.println("This is width: " + (widths / 3));
-            stats.setMinimumHeight(160);
-            // stats.setLayoutParams(para);
-
-            TextView addText = new TextView(getBaseContext());
-            addText.setText("+");
-            addText.setTypeface(null, Typeface.BOLD);
-            addText.setTextSize(45);
-            addText.setTextColor(MainActivity.green);
-            addText.setLayoutParams(layoutpara);
-            addWorkout.addView(addText);
-            addWorkout.setMinimumWidth(widths / 3);
-            addWorkout.setMinimumHeight(160);
-            addWorkout.setOrientation(LinearLayout.VERTICAL);
-            addWorkout.setLayoutParams(layoutpara);
-
-            TextView diar = new TextView(getBaseContext());
-            diar.setText("Diary");
-            diar.setTextSize(30);
-            diary.addView(diar);
-            diary.setMinimumWidth(widths / 3);
-            diary.setMinimumHeight(160);
-            diary.setOrientation(LinearLayout.VERTICAL);
-            diar.setLayoutParams(layoutpara);
-            //diary.setLayoutParams(layoutpara);
-            diar.setTextColor(MainActivity.green);
-
-            layout.addView(stats);
-            layout.addView(addWorkout);
-            layout.addView(diary);
-        }
-
     }
 
     private int height;

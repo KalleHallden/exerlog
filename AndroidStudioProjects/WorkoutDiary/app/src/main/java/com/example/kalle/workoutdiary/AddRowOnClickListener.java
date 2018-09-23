@@ -24,8 +24,6 @@ class AddRowOnClickListener implements View.OnClickListener {
         TextFieldMaker.makeTextFields(textFieldRows, v);
         MainActivity.exerciseRowContainer.addView(textFieldRows, textRowParams);
 
-
-        Diary diary = new Diary();
         Workout.savedExercisez.clear();
 
         for (int i = 0; i < MainActivity.numberOfExercises; i++ ) {

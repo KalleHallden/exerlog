@@ -31,21 +31,19 @@ import static android.text.Layout.Alignment.ALIGN_CENTER;
 public class DiaryActivity extends AppCompatActivity {
 
     static int identify;
-
-    int x;
     ScrollView rowScroller;
     static ArrayList<LinearLayout> rows;
     int y;
-    private int rowClickedId;
+    int width;
+    int height;
 
-    Diary diary;
+    View view;
 
-    public void setRowClickedId(int row) {
-        rowClickedId = row;
-    }
-    public int getRowClickedId() {
-        return  rowClickedId;
-    }
+    LinearLayout  rowsInsideScroll;
+    LinearLayout container;
+    LinearLayout bar;
+    LinearLayout scrollContainer;
+    LinearLayout.LayoutParams buttonParams;
 
     public static void removeRow(int index) {
         rows.remove(index);
@@ -56,46 +54,75 @@ public class DiaryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUp();
-        y++;
-        if (y > 1) {
-            recreate();
-            y = 0;
-        }
 
     }
 
     public void setUp() {
+
+         Display display = getWindowManager().getDefaultDisplay();
+         Point size = new Point();
+         display.getSize(size);
+         width = size.x;
+         height = size.y;
+         view = new View(this);
+
+        buttonParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        SetUp.makeButtonAndTextRowParams(buttonParams);
+
+        makeLinears();
+        makeRows();
+
+
+        LinearLayout.LayoutParams bottomPara = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, Gravity.BOTTOM);
+
+        container.setLayoutParams(bottomPara);
+
+        rowScroller.addView(rowsInsideScroll);
+        scrollContainer.addView(rowScroller);
+        scrollContainer.setLayoutParams(bottomPara);
+        container.addView(scrollContainer);
+        container.addView(bar);
+        container.setBackgroundColor(MainActivity.grey);
+        setContentView(container, bottomPara);
+
+
+    }
+
+
+    public void makeLinears() {
         rows = new ArrayList<LinearLayout>();
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-
-        LinearLayout rowsInsideScroll = new LinearLayout(this);
+        rowsInsideScroll = new LinearLayout(this);
         rowsInsideScroll.setOrientation(LinearLayout.VERTICAL);
-
-
-        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        makeButtonAndTextRowParams(buttonParams);
 
         rowScroller = new ScrollView(this);
         rowScroller.setLayoutParams(new RelativeLayout.LayoutParams(
                 ScrollView.LayoutParams.FILL_PARENT, height - 300));
         rowScroller.setBackgroundColor(MainActivity.grey);
-        System.out.println("this is numworkouts " + ((SaveWorkout.n) + 1));
+
+        container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL);
+        scrollContainer = new LinearLayout(this);
+
+        bar = new LinearLayout(this);
+        BottomNav.makeBottomnavBar(bar, width, view.getContext(), 3);
+    }
 
 
+    public void makeRows() {
         for (int i = 0; i < ((SaveWorkout.n) + 1); i++) {
             rows.add(new LinearLayout(getBaseContext()));
             LinearLayout rowCreated = rows.get(i);
             String theId = Integer.toString(i);
             rowCreated.setOnClickListener(new RowClickedOnClickListener(theId));
         }
+        setUpRows();
+    }
 
-        int counter = rows.size();
+    public void setUpRows() {
+        int counter = SaveWorkout.n;
 
         while (counter != 0) {
             System.out.println("Row counter is at " + counter);
@@ -116,96 +143,8 @@ public class DiaryActivity extends AppCompatActivity {
             rowsInsideScroll.addView(rowCreated, buttonParams);
             counter = counter -1;
         }
-
-        LinearLayout.LayoutParams bottomPara = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, Gravity.BOTTOM);
-
-        LinearLayout container = new LinearLayout(this);
-        container.setLayoutParams(bottomPara);
-        container.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout scrollContainer = new LinearLayout(this);
-
-        BottomNav bottomNav = new BottomNav();
-
-        LinearLayout bar = new LinearLayout(this);
-        bottomNav.makeBottomnavBar(bar, width);
-
-        bottomNav.stats.setOnClickListener(new NavBarOnClickListener(1));
-        bottomNav.addWorkout.setOnClickListener(new NavBarOnClickListener(2));
-        bottomNav.diary.setOnClickListener(new NavBarOnClickListener(3));
-
-        rowScroller.addView(rowsInsideScroll);
-        scrollContainer.addView(rowScroller);
-        scrollContainer.setLayoutParams(bottomPara);
-        //container.addView(rowsInsideScroll);
-        //container.addView(bottomBar);
-        container.addView(scrollContainer);
-        container.addView(bar);
-        container.setBackgroundColor(MainActivity.grey);
-        setContentView(container, bottomPara);
-
-
     }
 
-    class BottomNav {
-        LinearLayout addWorkout = new LinearLayout(getBaseContext());
-        LinearLayout diary = new LinearLayout(getBaseContext());
-        LinearLayout stats = new LinearLayout(getBaseContext());
-
-        public void makeBottomnavBar(LinearLayout layout, int widths) {
-            layout.setOrientation(LinearLayout.HORIZONTAL);
-            layout.setMinimumWidth(widths);
-
-            LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutpara.gravity = Gravity.CENTER;
-            LinearLayout.LayoutParams para = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            para.gravity = Gravity.CENTER;
-
-
-            TextView statText = new TextView(getBaseContext());
-            statText.setText("Stats");
-            statText.setTextColor(MainActivity.green);
-            statText.setLayoutParams(layoutpara);
-            statText.setTextSize(30);
-            stats.addView(statText);
-            stats.setMinimumWidth(widths / 3);
-            stats.setOrientation(LinearLayout.VERTICAL);
-            System.out.println("This is width: " + (widths / 3));
-            stats.setMinimumHeight(160);
-           // stats.setLayoutParams(para);
-
-            TextView addText = new TextView(getBaseContext());
-            addText.setText("+");
-            addText.setTypeface(null, Typeface.BOLD);
-            addText.setTextSize(45);
-            addText.setTextColor(MainActivity.green);
-            addText.setLayoutParams(layoutpara);
-            addWorkout.addView(addText);
-            addWorkout.setMinimumWidth(widths / 3);
-            addWorkout.setMinimumHeight(160);
-            addWorkout.setOrientation(LinearLayout.VERTICAL);
-            addWorkout.setLayoutParams(layoutpara);
-
-            TextView diar = new TextView(getBaseContext());
-            diar.setText("Diary");
-            diar.setTextSize(30);
-            diary.addView(diar);
-            diary.setMinimumWidth(widths / 3);
-            diary.setMinimumHeight(160);
-            diary.setOrientation(LinearLayout.VERTICAL);
-            diary.setBackgroundColor(Color.rgb(46,52,56));
-            diar.setLayoutParams(layoutpara);
-            //diary.setLayoutParams(layoutpara);
-            diar.setTextColor(MainActivity.green);
-
-            layout.addView(stats);
-            layout.addView(addWorkout);
-            layout.addView(diary);
-        }
-
-    }
 
     class RowClickedOnClickListener implements View.OnClickListener {
         String id;
@@ -235,14 +174,6 @@ public class DiaryActivity extends AppCompatActivity {
         }
 
 
-    }
-
-    public void makeButtonAndTextRowParams(LinearLayout.LayoutParams params) {
-        params.leftMargin = 10;
-        params.rightMargin = 10;
-        params.topMargin = 20;
-        params.bottomMargin = 20;
-        params.gravity = Gravity.CENTER_HORIZONTAL;
     }
 
 }

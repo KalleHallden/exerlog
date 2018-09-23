@@ -41,7 +41,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
 
 
 
-    Diary diary;
+   // Diary diary;
     Workout workout;
 
     Button addExerciseButton;
@@ -66,7 +66,6 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
 
 
         System.out.println("We are in!!!");
-        System.out.println("Size " + Diary.workoutList.size());
 
         buildit();
         System.out.println("We built this city!!");
@@ -178,7 +177,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
 
         // Make layout for labels
         LinearLayout labelrow = new LinearLayout(this);
-        makeLabels(labelrow);
+        SetUp.makeLabels(labelrow, view.getContext(), width);
 
         volumeLabel = new TextView(this);
         volumeLabel.setText("Total Volume: 0");
@@ -197,7 +196,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         // make save button
         MyButton makbtn = new MyButton();
         addExerciseButton = new Button(this);
-        makbtn.makeButton(addExerciseButton);
+        makbtn.makeButton(addExerciseButton, "green");
         addExerciseButton.setText("Add");
 
         addExerciseButton.setOnClickListener(new AddRowOnClickListenerCopy());
@@ -206,7 +205,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         // Button Parameter creator
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        makeButtonAndTextRowParams(buttonParams);
+        SetUp.makeButtonAndTextRowParams(buttonParams);
 
         int listlength = Workout.savedExercisez.size();
         System.out.println("Size of list = " + listlength);
@@ -291,9 +290,9 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
 
         rowScroller.addView(exerciseRowContainer);
 
-        makeLinearLayoutParams(volumeRow);
+        SetUp.makeLinearLayoutParams(volumeRow);
         volumeRow.addView(volumeLabel);
-        makeLinearLayoutParamsTopBar(totalLayout);
+        SetUp.makeLinearLayoutParamsTopBar(totalLayout);
 
         row.addView(topBar);
         row.addView(labelrow);
@@ -356,148 +355,6 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         setUp3(workout);
 
         }
-
-
-
-
-    public void makeLinearLayoutParamsTopBar(LinearLayout layout) {
-        LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        layoutpara.setMargins(0, 0, 0, 0);
-        layoutpara.gravity = Gravity.CENTER;
-        layout.setLayoutParams(layoutpara);
-    }
-
-    public void makeLinearLayoutParams(LinearLayout layout) {
-        LinearLayout.LayoutParams layoutpara = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutpara.setMargins(10, 10, 10, 10);
-        layoutpara.gravity = Gravity.CENTER;
-        layout.setLayoutParams(layoutpara);
-    }
-
-    public void makeButtonAndTextRowParams(LinearLayout.LayoutParams params) {
-        params.leftMargin = 10;
-        params.rightMargin = 10;
-        params.topMargin = 20;
-        params.bottomMargin = 20;
-        params.gravity = Gravity.CENTER_HORIZONTAL;
-    }
-
-    public void makeLabels(LinearLayout linear) {
-        // linear layoutcreator
-        MyLinearLayout creatLinearLayout = new MyLinearLayout();
-
-
-        //Make Labels:
-        TextView nameLabel = new TextView(this);
-        nameLabel.setText("Exercise");
-        nameLabel.setPadding(60, 0, 0, 0);
-        nameLabel.setTextSize(12);
-        nameLabel.setTextColor(WHITE);
-
-        TextView repsLabel = new TextView(this);
-        repsLabel.setText("Reps");
-        repsLabel.setPadding(110, 0, 0, 0);
-        repsLabel.setTextSize(12);
-        repsLabel.setTextColor(WHITE);
-
-        TextView setsLabel = new TextView(this);
-        setsLabel.setText("Sets");
-        setsLabel.setPadding(70, 0, 0, 0);
-        setsLabel.setTextSize(12);
-        setsLabel.setTextColor(WHITE);
-
-        TextView weightLabel = new TextView(this);
-        weightLabel.setText("Weight");
-        weightLabel.setPadding(60, 0, 0, 0);
-        weightLabel.setTextSize(12);
-        weightLabel.setTextColor(WHITE);
-
-        TextView restLabel = new TextView(this);
-        restLabel.setText("Rest");
-        restLabel.setPadding(45, 0, 10, 0);
-        restLabel.setTextSize(12);
-        restLabel.setTextColor(WHITE);
-
-        creatLinearLayout.setupLayout(linear);
-        makeLinearLayoutParams(linear);
-        linear.addView(nameLabel);
-        linear.addView(repsLabel);
-        linear.addView(setsLabel);
-        linear.addView(weightLabel);
-        linear.addView(restLabel);
-
-    }
-
-    public void makeTextFields(LinearLayout linlay) {
-
-        containerFortestxArray.add(new ArrayList<EditText>());
-        textFieldArray = containerFortestxArray.get(numberOfExercises);
-
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        layoutParams.setMargins(10, 0, 10, 0);
-        layoutParams.gravity = Gravity.CENTER;
-
-
-        LinearLayout.LayoutParams leftMarginParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        leftMarginParams.leftMargin = 10;
-        leftMarginParams.rightMargin = 5;
-
-        // make textfield
-        EditText exerciseName = new EditText(this);
-        myTextField maktxt = new myTextField();
-        maktxt.makeTextField(exerciseName, 300);
-        //exerciseName.setMaxWidth(300);
-        exerciseName.setMinimumWidth(300);
-        exerciseName.setPadding(10, 5, 10, 5);
-        textFieldArray.add(exerciseName);
-
-        // second textfield
-        EditText repsTextField = new EditText(this);
-        maktxt.makeTextField(repsTextField, 150);
-        // repsTextField.setMaxWidth(150);
-        repsTextField.setMinimumWidth(150);
-        repsTextField.setPadding(10, 5, 10, 5);
-        textFieldArray.add(repsTextField);
-
-        // third textField
-        EditText setsTextField = new EditText(this);
-        maktxt.makeTextField(setsTextField, 150);
-        // setsTextField.setMaxWidth(150);
-        setsTextField.setMinimumWidth(150);
-        setsTextField.setPadding(10, 5, 10, 5);
-        textFieldArray.add(setsTextField);
-
-        //fourth textField
-        EditText weightTextField = new EditText(this);
-        maktxt.makeTextField(weightTextField, 150);
-        // weightTextField.setMaxWidth(150);
-        weightTextField.setMinimumWidth(150);
-        weightTextField.setPadding(10, 5, 10, 5);
-        textFieldArray.add(weightTextField);
-
-        // fifth textField
-        EditText restTextField = new EditText(this);
-        maktxt.makeTextField(restTextField, 150);
-        // restTextField.setMaxWidth(150);
-        restTextField.setMinimumWidth(150);
-        restTextField.setPadding(10, 5, 10, 5);
-        textFieldArray.add(restTextField);
-
-        linlay.setLayoutParams(layoutParams);
-
-        //textFieldRows.setLayoutParams(layoutParams);
-        linlay.addView(exerciseName, leftMarginParams);
-        linlay.addView(repsTextField, leftMarginParams);
-        linlay.addView(setsTextField, leftMarginParams);
-        linlay.addView(weightTextField, leftMarginParams);
-        linlay.addView(restTextField, leftMarginParams);
-
-    }
 
 }
 
