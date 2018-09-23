@@ -22,7 +22,7 @@ public class NavBarOnClickListener implements View.OnClickListener {
         System.out.println("Row " + id + " clicked");
         Context context = v.getContext();
         if (id == 1) {
-            Intent i = new Intent(context, StatsActivity.class);
+            Intent i = new Intent(context, StatChooserActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
         } else if (id == 2) {
@@ -35,7 +35,16 @@ public class NavBarOnClickListener implements View.OnClickListener {
             Intent i = new Intent(context, DiaryActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
+        } else if (id == 4) {
+            Intent i = new Intent(context, StatDiaryActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
+        } else if (id == 5) {
+            Intent i = new Intent(context, StatDiaryActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
         }
+
     }
 }
 

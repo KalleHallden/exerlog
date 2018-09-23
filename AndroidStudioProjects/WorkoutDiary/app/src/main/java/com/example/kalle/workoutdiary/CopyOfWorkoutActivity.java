@@ -35,12 +35,6 @@ import static android.graphics.Color.rgb;
 
 public class CopyOfWorkoutActivity extends AppCompatActivity {
 
-    static int green = Color.rgb(4,168,46);
-    int grey = Color.rgb(30,30,30);
-
-
-
-
    // Diary diary;
     Workout workout;
 
@@ -132,7 +126,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         one.setOnClickListener(new DeleteWorkoutListener());
         one.setText("Delete");
         one.setTextSize(30);
-        one.setTextColor(green);
+        one.setTextColor(MainActivity.green);
         one.setBackgroundColor(Color.rgb(30,30,30));
         one.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
 

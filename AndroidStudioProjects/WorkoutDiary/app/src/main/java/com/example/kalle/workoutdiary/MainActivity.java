@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         view = new View(this);
         SaveWorkout.checkExistingFiles(view.getContext());
         thisWorkout = new Workout();
+        SaveBodyWeight.checkExistingFiles(view.getContext());
 
         savedWorkouts.add(new Workout());
         Display display = getWindowManager().getDefaultDisplay();
