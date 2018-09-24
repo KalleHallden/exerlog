@@ -84,7 +84,7 @@ public class StatChooserActivity extends AppCompatActivity {
         container.setOrientation(LinearLayout.VERTICAL);
 
         bar = new LinearLayout(this);
-        BottomNav.makeBottomnavBar(bar, width, view.getContext(), 4);
+        BottomNav.makeBottomnavBar(bar, width, view.getContext(), 1);
     }
     public void addButtons() {
 

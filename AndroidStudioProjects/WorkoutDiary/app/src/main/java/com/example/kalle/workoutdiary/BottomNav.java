@@ -4,24 +4,27 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class BottomNav {
-    static LinearLayout addWorkout;
-    static LinearLayout diary;
-    static LinearLayout stats;
-    static LinearLayout bodyStats;
-    static LinearLayout profile;
+    static ImageButton addWorkout;
+    static ImageButton diary;
+    static ImageButton stats;
+    static ImageButton bodyStats;
+    static ImageButton profile;
 
     public static void makeBottomnavBar(LinearLayout layout, int widths, Context context, int caller) {
 
 
-        addWorkout = new LinearLayout(context);
-        diary = new LinearLayout(context);
-        stats = new LinearLayout(context);
-        bodyStats = new LinearLayout(context);
-        profile = new LinearLayout(context);
+        addWorkout = new ImageButton(context);
+        diary = new ImageButton(context);
+        stats = new ImageButton(context);
+        bodyStats = new ImageButton(context);
+        profile = new ImageButton(context);
+
 
 
         stats.setOnClickListener(new NavBarOnClickListener(1));
@@ -43,70 +46,50 @@ public class BottomNav {
         para.gravity = Gravity.CENTER;
 
 
-        TextView statText = new TextView(context);
-        statText.setText("Stats");
-        statText.setTextColor(MainActivity.green);
-        statText.setLayoutParams(layoutpara);
-        statText.setTextSize(30);
-        stats.addView(statText);
         stats.setMinimumWidth(widths / 5);
-        stats.setOrientation(LinearLayout.VERTICAL);
         System.out.println("This is width: " + (widths / 4));
         stats.setMinimumHeight(160);
+        stats.setImageResource(R.drawable.stats_image);
+        stats.setColorFilter(MainActivity.green);
+        stats.setBackgroundColor(MainActivity.grey);
         // stats.setLayoutParams(para);
 
-        TextView bodyText = new TextView(context);
-        bodyText.setText("Body");
-        bodyText.setTextSize(30);
-        bodyText.setTextColor(MainActivity.green);
-        bodyText.setLayoutParams(layoutpara);
-        bodyStats.addView(bodyText);
         bodyStats.setMinimumWidth(widths / 5);
         bodyStats.setMinimumHeight(160);
-        bodyStats.setOrientation(LinearLayout.VERTICAL);
         bodyStats.setLayoutParams(layoutpara);
+        bodyStats.setImageResource(R.drawable.weight_image);
+        bodyStats.setColorFilter(MainActivity.green);
+        bodyStats.setBackgroundColor(MainActivity.grey);
 
-        TextView diar = new TextView(context);
-        diar.setText("Diary");
-        diar.setTextSize(30);
-        diary.addView(diar);
         diary.setMinimumWidth(widths / 5);
         diary.setMinimumHeight(160);
-        diary.setOrientation(LinearLayout.VERTICAL);
-        diar.setLayoutParams(layoutpara);
-        //diary.setLayoutParams(layoutpara);
-        diar.setTextColor(MainActivity.green);
+        diary.setImageResource(R.drawable.diary_image);
+        diary.setColorFilter(MainActivity.green);
+        diary.setBackgroundColor(MainActivity.grey);
 
-        TextView addText = new TextView(context);
-        addText.setText("+");
-        addText.setTypeface(null, Typeface.BOLD);
-        addText.setTextSize(45);
-        addText.setTextColor(MainActivity.green);
-        addText.setLayoutParams(layoutpara);
-        addWorkout.addView(addText);
+
         addWorkout.setMinimumWidth(widths / 5);
         addWorkout.setMinimumHeight(160);
-        addWorkout.setOrientation(LinearLayout.VERTICAL);
         addWorkout.setLayoutParams(layoutpara);
+        addWorkout.setImageResource(R.drawable.add_image);
+        addWorkout.setColorFilter(MainActivity.green);
+        addWorkout.setBackgroundColor(MainActivity.grey);
 
-        TextView profText = new TextView(context);
-        profText.setText("Profile");
-        profText.setTextSize(30);
-        profText.setTextColor(MainActivity.green);
-        profText.setLayoutParams(layoutpara);
-        profile.addView(profText);
         profile.setMinimumWidth(widths / 5);
         profile.setMinimumHeight(160);
-        profile.setOrientation(LinearLayout.VERTICAL);
         profile.setLayoutParams(layoutpara);
+        profile.setImageResource(R.drawable.tick_image);
+        profile.setColorFilter(MainActivity.green);
+        profile.setBackgroundColor(MainActivity.grey);
+
 
 
 
 
         if (caller == 1) {
-           stats.setBackgroundColor(Color.rgb(46,52,56));
+            stats.setBackgroundColor(Color.rgb(46,52,56));
         } if (caller == 2) {
-           addWorkout.setBackgroundColor(Color.rgb(46,52,56));
+            addWorkout.setBackgroundColor(Color.rgb(46,52,56));
         } if (caller == 3) {
             diary.setBackgroundColor(Color.rgb(46,52,56));
         } if (caller == 4) {
@@ -119,4 +102,5 @@ public class BottomNav {
         layout.addView(diary);
         layout.addView(bodyStats);
     }
+
 }
