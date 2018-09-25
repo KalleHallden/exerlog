@@ -1,8 +1,11 @@
 package com.example.kalle.workoutdiary;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class BodyStats implements Serializable {
+
+    static ArrayList<Double> bodyweight = new ArrayList<Double>();
 
     private Double bodyWeight;
     private Double bicepsSize;

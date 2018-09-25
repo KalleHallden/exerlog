@@ -2,14 +2,19 @@ package com.example.kalle.workoutdiary;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -50,6 +55,14 @@ public class StatDiaryActivity extends AppCompatActivity {
     }
 
     public void setUp() {
+
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(MainActivity.black);
+
+
+
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -169,7 +182,7 @@ public class StatDiaryActivity extends AppCompatActivity {
 
             System.out.println("Row " + id + " clicked");
             Context context = view.getContext();
-            System.out.println("one");
+            System.out.println("add");
             identify = Integer.parseInt(id);
             System.out.println("two");
             Intent i = new Intent(context, BodyStatActivity.class);
@@ -185,5 +198,6 @@ public class StatDiaryActivity extends AppCompatActivity {
     }
 
 }
+
 
 

@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -68,6 +70,13 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
     }
 
     public void setUp3(Workout w) {
+
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(MainActivity.black);
+
+
             Color.green(Color.rgb(4,168,46));
 
         numberOfExercises = 0;

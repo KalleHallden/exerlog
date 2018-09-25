@@ -2,13 +2,18 @@ package com.example.kalle.workoutdiary;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -61,6 +66,8 @@ public class BodyStatActivity extends AppCompatActivity {
     int height;
 
     View view;
+    int darkgrey = Color.rgb(30, 30, 30);
+
 
     ArrayList<EditText> textfieldArray;
 
@@ -70,12 +77,20 @@ public class BodyStatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setUp();
 
 
     }
 
+
+
     public void setUp() {
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(MainActivity.black);
 
         view = new View(this);
         SaveWorkout.checkExistingFiles(view.getContext());

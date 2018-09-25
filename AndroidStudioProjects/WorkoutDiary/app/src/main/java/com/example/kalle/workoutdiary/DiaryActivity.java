@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -58,6 +60,14 @@ public class DiaryActivity extends AppCompatActivity {
     }
 
     public void setUp() {
+
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(MainActivity.black);
+
+
+
 
          Display display = getWindowManager().getDefaultDisplay();
          Point size = new Point();
@@ -161,7 +171,7 @@ public class DiaryActivity extends AppCompatActivity {
 
             System.out.println("Row " + id + " clicked");
             Context context = view.getContext();
-            System.out.println("one");
+            System.out.println("add");
             identify = Integer.parseInt(id);
             System.out.println("two");
             Intent i = new Intent(context, CopyOfWorkoutActivity.class);

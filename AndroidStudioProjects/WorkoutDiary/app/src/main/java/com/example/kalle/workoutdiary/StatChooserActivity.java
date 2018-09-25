@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,6 +46,14 @@ public class StatChooserActivity extends AppCompatActivity {
     }
 
     public void setUp() {
+
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(MainActivity.black);
+
+
+
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -127,7 +137,7 @@ public class StatChooserActivity extends AppCompatActivity {
         public void onClick(View view) {
             System.out.println("Row " + id + " clicked");
             Context context = view.getContext();
-            System.out.println("one");
+            System.out.println("add");
 
             System.out.println("two");
             Intent i = null;

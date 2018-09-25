@@ -5,8 +5,9 @@ import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Button;
@@ -27,10 +28,13 @@ public class MainActivity extends AppCompatActivity {
 
     static int green = Color.rgb(4,168,46);
     static int grey = Color.rgb(56,62,66);
+    static int red = Color.rgb(176,14,35);
+    static int darkgrey = Color.rgb(30,30,30);
+    static int black = Color.rgb(0,0,0);
 
     Button addExerciseButton;
     Button saveButton;
-    Button one;
+    Button add;
     Button startNewWorkoutButton;
 
     static LinearLayout exerciseRowContainer;
@@ -68,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
     View view;
 
-
-
     static int numWorkouts;
 
     public ArrayList<Exercise> savedExercises = new ArrayList<Exercise>();
@@ -84,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setUp() {
+
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(black);
 
         view = new View(this);
         SaveWorkout.checkExistingFiles(view.getContext());
@@ -185,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         rowList.add(new LinearLayout(this));
         textFieldRows = rowList.get(numberOfExercises);
         layoutTop.addView(saveButton);
-        layoutTop3.addView(one);
+        layoutTop3.addView(add);
         
         grid.addView(layoutTop);
         grid.addView(layoutTop2);
@@ -207,13 +214,13 @@ public class MainActivity extends AppCompatActivity {
 
           saveButton = new Button(this);
           startNewWorkoutButton = new Button(this);
-          one = new Button(this);
-          one.setOnClickListener(new AddRowOnClickListener());
-          one.setText("+");
-          one.setTextSize(30);
-          one.setTextColor(green);
-          one.setBackgroundColor(Color.rgb(30,30,30));
-          one.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+          add = new Button(this);
+          add.setOnClickListener(new AddRowOnClickListener());
+          add.setText("+");
+          add.setTextSize(30);
+          add.setTextColor(green);
+          add.setBackgroundColor(Color.rgb(30,30,30));
+          add.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
 
           //saveButton.setBackgroundResource(R.mipmap.ticks);
           saveButton.setText("✓");
@@ -224,7 +231,8 @@ public class MainActivity extends AppCompatActivity {
 
           volumeLabel = new TextView(this);
           volumeLabel.setText("Total Volume: 0");
-          volumeLabel.setTextColor(WHITE);
+          volumeLabel.setTextColor(darkgrey);
+          volumeLabel.setTextSize(20);
 
 
           // make save button
@@ -315,6 +323,8 @@ class MyButton {
             butn.setBackgroundColor(MainActivity.green);
         } if (color.equals("grey")) {
             butn.setBackgroundColor(Color.rgb(36,42,46));
+        } if (color.equals("red")) {
+            butn.setBackgroundColor(MainActivity.red);
         }
 
     }

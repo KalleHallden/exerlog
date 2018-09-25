@@ -1,15 +1,21 @@
 package com.example.kalle.workoutdiary;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -25,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import android.view.animation.ScaleAnimation;
 
 public class StatsActivity extends AppCompatActivity {
 
@@ -36,9 +43,23 @@ public class StatsActivity extends AppCompatActivity {
     int clicked;
     Button barButton;
 
+    int initialHeight;
+    int actualHeight[];
+    Runnable run1;
+    Runnable run2;
+    Handler handler;
+    Ani a;
+    LinearLayout row;
+    Ani b;
+    LinearLayout row2;
+
+
     ArrayList<Workout> workoutList;
 
+    ArrayList<StatsActivity.Ani> animatorList = new ArrayList<StatsActivity.Ani>();
+
     LinearLayout rowsInsideScroll;
+    ArrayList<LinearLayout> rowsLister = new ArrayList<LinearLayout>();
 
 
     @Override
@@ -51,6 +72,11 @@ public class StatsActivity extends AppCompatActivity {
 
 
     public void setUp() {
+
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(MainActivity.black);
 
         View view = new View(this);
         SaveWorkout.checkExistingFiles(view.getContext());
@@ -93,21 +119,47 @@ public class StatsActivity extends AppCompatActivity {
             rowCreated.setOnClickListener(new BarClickedOnClickListener(theId));
         }
 
+        int[] s = new int[counter];
+        actualHeight = new int[counter];
         while (counter != 0) {
+
             System.out.println("Row counter is at " + counter);
             Workout work = workoutList.get(counter - 1);
             LinearLayout rowCreated = rows.get(counter - 1);
+            LinearLayout rowForRow = new LinearLayout(this);
             rowCreated.setBackgroundColor(MainActivity.green);
             rowCreated.setMinimumWidth(50);
 
             System.out.println("This is the height: " + SaveWorkout.volumes[counter - 1]);
+            s[counter-1] = SaveWorkout.volumes[counter-1];
 
             rowCreated.setMinimumHeight(SaveWorkout.volumes[counter - 1]);
+            rowForRow.addView(rowCreated);
 
-            rowsInsideScroll.addView(rowCreated, buttonParams);
+            //a = new Ani();
+
+
+            actualHeight[counter-1] = SaveWorkout.volumes[counter-1];
+            a = new Ani(rowCreated, counter-1);
+            System.out.println("Hi: " + 1);
+            a.setDuration(800);
+            rowCreated.startAnimation(a);
+
+
+
+            rowsInsideScroll.addView(rowForRow, buttonParams);
 
             counter = counter -1;
         }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -177,19 +229,29 @@ public class StatsActivity extends AppCompatActivity {
                 barButton.setText("Week View");
 
                 int counter2 = barHeights.size();
+                actualHeight = new int[counter2];
 
                 while (counter2 != 0) {
                     System.out.println("Row counter is at " + counter2);
                     Workout work = workoutList.get(counter2 -1);
                     LinearLayout rowCreated = rows.get(counter2 - 1);
+                    LinearLayout rowForRow = new LinearLayout(getBaseContext());
                     rowCreated.setBackgroundColor(MainActivity.green);
                     rowCreated.setMinimumWidth(50);
 
-                    System.out.println("This is the height: " + work.getVolume());
+                    System.out.println("This is the height: " + barHeights.get(counter2-1));
 
                     rowCreated.setMinimumHeight(barHeights.get(counter2-1));
+                    rowForRow.addView(rowCreated);
 
-                    rowsInsideScroll.addView(rowCreated, buttonParams);
+                    actualHeight[counter2-1] = barHeights.get(counter2-1);
+                    a = new Ani(rowCreated, counter2-1);
+                    System.out.println("Hi: " + 1);
+                    a.setDuration(800);
+                    rowCreated.startAnimation(a);
+
+
+                    rowsInsideScroll.addView(rowForRow, buttonParams);
 
                     counter2 = counter2 -1;
                 }
@@ -200,45 +262,66 @@ public class StatsActivity extends AppCompatActivity {
                 System.out.println(clicked);
                 setRows(30);
                 int counter2 = barHeights.size();
+                actualHeight = new int[counter2];
 
                 while (counter2 != 0) {
                     System.out.println("Row counter is at " + counter2);
                     Workout work = workoutList.get(counter2 -1);
                     LinearLayout rowCreated = rows.get(counter2 - 1);
+                    LinearLayout rowForRow = new LinearLayout(getBaseContext());
                     rowCreated.setBackgroundColor(MainActivity.green);
                     rowCreated.setMinimumWidth(50);
 
                     System.out.println("This is the height: " + work.getVolume());
 
                     rowCreated.setMinimumHeight(barHeights.get(counter2 - 1));
+                    rowForRow.addView(rowCreated);
 
-                    rowsInsideScroll.addView(rowCreated, buttonParams);
+                    actualHeight[counter2-1] = barHeights.get(counter2-1);
+                    a = new Ani(rowCreated, counter2-1);
+                    System.out.println("Hi: " + 1);
+                    a.setDuration(800);
+                    rowCreated.startAnimation(a);
+
+                    rowsInsideScroll.addView(rowForRow, buttonParams);
 
                     counter2 = counter2 -1;
                 }                                                                            
 
             } else if (clicked == 2) {
+
                 barButton.setText("Day View");
                 clicked = 0;
                 int counter = workoutList.size();
+                actualHeight = new int[counter];
                 System.out.println();
                 for (int i = 0; i < counter; i++) {
                     rows.add(new LinearLayout(getBaseContext()));                             
-                    LinearLayout rowCreated = rows.get(i);                                    
+                    LinearLayout rowCreated = rows.get(i);
                     String theId = Integer.toString(i);                                       
                     rowCreated.setOnClickListener(new BarClickedOnClickListener(theId));      
                 }                                                                             
                 while (counter != 0) {
                     System.out.println("Row counter is at " + counter);
                     LinearLayout rowCreated = rows.get(counter - 1);
+                    LinearLayout rowForRow = new LinearLayout(getBaseContext());
                     rowCreated.setBackgroundColor(MainActivity.green);
                     rowCreated.setMinimumWidth(50);
 
                     System.out.println("This is the height: " + SaveWorkout.volumes[counter - 1] );
 
+
+                    rowForRow.addView(rowCreated);
+
+                    actualHeight[counter-1] = SaveWorkout.volumes[counter - 1];
+                    a = new Ani(rowCreated, counter-1);
+                    System.out.println("Hi: " + 1);
+                    a.setDuration(800);
+                    rowCreated.startAnimation(a);
                     rowCreated.setMinimumHeight(SaveWorkout.volumes[counter - 1]);
 
-                    rowsInsideScroll.addView(rowCreated, buttonParams);
+
+                    rowsInsideScroll.addView(rowForRow, buttonParams);
 
                     counter = counter -1;
                 }
@@ -379,4 +462,39 @@ class BarClickedOnClickListener implements View.OnClickListener {
         return workoutList;
     }
 
+    class Ani extends Animation {
+    LinearLayout row;
+    int id;
+        public Ani(LinearLayout rows, int identity) {
+            row = rows;
+            id = identity;
+        }
+
+        @Override
+        protected void applyTransformation(float interpolatedTime, Transformation t) {
+            int newHeight;
+
+                //LinearLayout row = rows.get(i);
+                newHeight = (int)(actualHeight[id] * interpolatedTime);
+                row.removeAllViews();
+                row.getLayoutParams().height = newHeight;
+                row.requestLayout();
+
+        }
+
+        @Override
+        public void initialize(int width, int height, int parentWidth, int parentHeight) {
+            super.initialize(width, height, parentWidth, parentHeight);
+            initialHeight = actualHeight[id];
+            System.out.println("Heightish: " + initialHeight);
+        }
+
+        @Override
+        public boolean willChangeBounds() {
+            return true;
+        }
+    }
+
+
 }
+
