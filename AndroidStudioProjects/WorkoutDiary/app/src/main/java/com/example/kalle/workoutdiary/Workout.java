@@ -5,6 +5,16 @@ import java.util.ArrayList;
 
 public class Workout implements Serializable {
     static ArrayList<Exercise> savedExercisez = new ArrayList<Exercise>();
+    private Double volumeWeight;
+
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
+    }
+
     private int volume;
     private ArrayList<Exercise> theSavedExercisesList;
 
@@ -17,12 +27,12 @@ public class Workout implements Serializable {
     }
     //static int numWorkouts;
 
-    public void setVolume(int vol) {
-        volume = vol;
+    public void setWeightVolume(Double vol) {
+        volumeWeight = vol;
     }
 
-    public int getVolume() {
-        return volume;
+    public Double getWeightVolume() {
+        return volumeWeight;
     }
 
 }

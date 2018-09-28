@@ -27,11 +27,13 @@ public class BottomNav {
 
 
 
+/*
         stats.setOnClickListener(new NavBarOnClickListener(1));
         addWorkout.setOnClickListener(new NavBarOnClickListener(2));
+        */
         diary.setOnClickListener(new NavBarOnClickListener(3));
-        bodyStats.setOnClickListener(new NavBarOnClickListener(4));
 
+        //bodyStats.setOnClickListener(new NavBarOnClickListener(4));
 
 
         layout.setOrientation(LinearLayout.HORIZONTAL);

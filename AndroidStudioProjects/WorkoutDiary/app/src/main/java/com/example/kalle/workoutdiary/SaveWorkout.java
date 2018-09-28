@@ -15,7 +15,7 @@ public class SaveWorkout {
     static int n;
 
     static String filepath = "Workout";
-    static int[] volumes;
+    static Double[] volumes;
 
     public static int checkExistingFiles(Context context) {
         n = 0;
@@ -31,7 +31,7 @@ public class SaveWorkout {
                          System.out.println("Done checking existing files");
                      }
                  }
-         volumes = new int[n];
+         volumes = new Double[n];
          return n;
     }
 
@@ -85,6 +85,7 @@ public class SaveWorkout {
     public Workout openWorkout(int id, Context context) {
         Workout workout;
         int volume = 0;
+        Double volumeWeight = 0.0;
         try {
             FileInputStream fi = context.openFileInput("Workout" + id);
             ObjectInputStream oi = new ObjectInputStream(fi);
@@ -103,11 +104,13 @@ public class SaveWorkout {
                 Exercise e = Workout.savedExercisez.get(i);
                 e.setVolume(e.getReps(), e.getSets());
                 volume = volume + e.getVolume();
+                volumeWeight = volumeWeight + calcWeightVol(e.getVolume(), e.getWeight());
+
                 System.out.println("Volume " + volume);
             }
 
             workout.setVolume(volume);
-            volumes[id] = volume;
+            volumes[id] = volumeWeight;
 
             return workout;
         } catch (Exception s) {
@@ -118,4 +121,15 @@ public class SaveWorkout {
          return workout = new Workout();
         }
     }
+
+    public Double calcWeightVol(int exVol, Double weight) {
+        Double result = exVol * weight;
+        return result;
+    }
+
+
+
+
+
+
 }

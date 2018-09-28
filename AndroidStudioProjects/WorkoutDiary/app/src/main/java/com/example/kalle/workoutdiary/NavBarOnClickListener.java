@@ -22,25 +22,32 @@ public class NavBarOnClickListener implements View.OnClickListener {
         System.out.println("Row " + id + " clicked");
         Context context = v.getContext();
         if (id == 1) {
-            Intent i = new Intent(context, StatChooserActivity.class);
+            BottomNaviClass.id = id;
+            Intent i = new Intent(context, BottomNaviClass.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
         } else if (id == 2) {
-            Intent i = new Intent(context, MainActivity.class);
+            BottomNaviClass.id = id;
+            Intent i = new Intent(context, BottomNaviClass.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
             SaveWorkout test = new SaveWorkout();
             test.openWorkout(0, v.getContext());
         } else if (id == 3) {
-            Intent i = new Intent(context, DiaryActivity.class);
+            BottomNaviClass.id = id;
+            SaveWorkout.checkExistingFiles(v.getContext());
+            Intent i = new Intent(context, BottomNaviClass.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
         } else if (id == 4) {
-            Intent i = new Intent(context, StatDiaryActivity.class);
+            BottomNaviClass.id = id;
+            SaveBodyWeight.checkExistingFiles(v.getContext());
+            Intent i = new Intent(context, BottomNaviClass.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
         } else if (id == 5) {
-            Intent i = new Intent(context, StatDiaryActivity.class);
+            BottomNaviClass.id = id;
+            Intent i = new Intent(context, BottomNaviClass.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
         }

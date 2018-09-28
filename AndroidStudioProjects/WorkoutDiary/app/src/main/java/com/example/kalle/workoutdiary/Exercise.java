@@ -6,7 +6,7 @@ public class Exercise implements Serializable {
     private String name;
     private int reps;
     private int sets;
-    private int weight;
+    private Double weight;
     private int rest;
     private int volume;
 
@@ -36,10 +36,10 @@ public class Exercise implements Serializable {
     }
 
     public void setWeight(String w) {
-        weight = Integer.parseInt(w);
+        weight = Double.parseDouble(w);
     }
 
-    public int getWeight() {
+    public Double getWeight() {
         return weight;
     }
 

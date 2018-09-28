@@ -12,6 +12,8 @@ class AddRowOnClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+
+        Double weightVol = 0.0;
         System.out.println("we here");
         LinearLayout.LayoutParams textRowParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -74,13 +76,19 @@ class AddRowOnClickListener implements View.OnClickListener {
                 }
             }
             ex.setVolume(ex.getReps(), ex.getSets());
+            weightVol = weightVol + calcWeightVol(ex.getVolume(), ex.getWeight());
             vol = vol + ex.getVolume();
         }
 
         MainActivity.numberOfExercises++;
         MainActivity.thisWorkout.setVolume(vol);
-        String volString = Integer.toString(vol);
-        MainActivity.volumeLabel.setText("Total Volume: " + MainActivity.thisWorkout.getVolume());
+        MainActivity.thisWorkout.setWeightVolume(weightVol);
+        MainActivity.volumeLabel.setText("Total Volume: " + weightVol + "kg");
+    }
+
+    public Double calcWeightVol(int exVol, Double weight) {
+         Double result = exVol * weight;
+        return result;
     }
 
     public void makeButtonAndTextRowParams(LinearLayout.LayoutParams params) {

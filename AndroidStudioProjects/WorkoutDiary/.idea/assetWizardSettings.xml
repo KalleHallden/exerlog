@@ -19,8 +19,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Desktop/Kalles/ExerLog/Image assets/DiaryIcon.png" />
-                                      <entry key="outputName" value="diary_image" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Desktop/Kalles/ExerLog/Icon/eac_grön.png" />
+                                      <entry key="outputName" value="logo_image" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -80,11 +80,25 @@
                                 </PersistentState>
                               </value>
                             </entry>
+                            <entry key="launcherLegacy">
+                              <value>
+                                <PersistentState>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="backgroundColor" value="383e42" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Desktop/Kalles/ExerLog/Icon/eac_grön.png" />
+                                      <entry key="outputName" value="launcicon" />
+                                    </map>
+                                  </option>
+                                </PersistentState>
+                              </value>
+                            </entry>
                           </map>
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputIconType" value="ACTIONBAR" />
+                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
                           </map>
                         </option>
                       </PersistentState>

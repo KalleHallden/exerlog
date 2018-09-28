@@ -24,7 +24,7 @@ public class AddRowOnClickListenerCopy implements View.OnClickListener {
         CopyOfWorkoutActivity.exerciseRowContainer.addView(textFieldRows, textRowParams);
 
 
-
+        Double weightVol = 0.0;
 
         Workout workout = new Workout();
 
@@ -77,15 +77,25 @@ public class AddRowOnClickListenerCopy implements View.OnClickListener {
                     }
                 }
             }
+
             ex.setVolume(ex.getReps(), ex.getSets());
+            weightVol = weightVol + calcWeightVol(ex.getVolume(), ex.getWeight());
             vol = vol + ex.getVolume();
         }
 
         CopyOfWorkoutActivity.numberOfExercises++;
         workout.setVolume(vol);
-        String volString = Integer.toString(vol);
-        CopyOfWorkoutActivity.volumeLabel.setText("Total Volume: " + workout.getVolume());
+        workout.setWeightVolume(weightVol);
+        CopyOfWorkoutActivity.volumeLabel.setText("Total Volume: " + weightVol + "kg");
     }
+
+    public Double calcWeightVol(int exVol, Double weight) {
+        Double result = exVol * weight;
+        return result;
+    }
+
+
+
 
     public void makeButtonAndTextRowParams(LinearLayout.LayoutParams params) {
         params.leftMargin = 10;

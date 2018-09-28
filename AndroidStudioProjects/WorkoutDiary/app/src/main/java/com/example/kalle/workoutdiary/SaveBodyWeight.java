@@ -10,11 +10,12 @@ import java.util.ArrayList;
 
 public class SaveBodyWeight {
     static int n;
-    static ArrayList<BodyStats> list;
+    static ArrayList<BodyStats> list = new ArrayList<BodyStats>();
 
     static String filepath = "BodyStats";
 
     public static int checkExistingFiles(Context context) {
+        //list.clear();
         n = 0;
         int y = 1;
         for (int i = 0; i < y; i++) {
@@ -37,7 +38,7 @@ public class SaveBodyWeight {
         System.out.println("bodystatshey");
         int num = checkExistingFiles(context);
 
-        System.out.println("Amount of bodystats saved " + num + 1);
+        System.out.println("Amount of bodystats saved " + num);
 
         filepath = "BodyStats" + num;
 

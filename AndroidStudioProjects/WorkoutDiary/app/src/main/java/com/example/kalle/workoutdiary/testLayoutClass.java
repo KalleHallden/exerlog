@@ -2,20 +2,10 @@ package com.example.kalle.workoutdiary;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -23,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class StatDiaryActivity extends AppCompatActivity {
+public class testLayoutClass {
 
     static int identify;
     ScrollView rowScroller;
@@ -40,44 +30,32 @@ public class StatDiaryActivity extends AppCompatActivity {
     LinearLayout scrollContainer;
     LinearLayout.LayoutParams buttonParams;
 
-    Button newEntryButton;
-
     public static void removeRow(int index) {
         rows.remove(index);
     }
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setUp();
-
+    public LinearLayout createLayout(View v) {
+         container = new LinearLayout(v.getContext());
+         container.setBackgroundColor(Color.RED);
+         return container;
     }
 
-    public void setUp() {
+    public LinearLayout createLayout2(View v) {
+        scrollContainer = new LinearLayout(v.getContext());
+        scrollContainer.setBackgroundColor(Color.BLUE);
+        return scrollContainer;
+    }
 
+    public LinearLayout setUp(View v) {
 
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(MainActivity.black);
-
-
-
-
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        width = size.x;
-        height = size.y;
-        view = new View(this);
 
         buttonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         SetUp.makeButtonAndTextRowParams(buttonParams);
 
-        makeLinears();
-        makeRows();
+        makeLinears(v);
+        makeRows(v);
 
 
         LinearLayout.LayoutParams bottomPara = new LinearLayout.LayoutParams(
@@ -87,65 +65,49 @@ public class StatDiaryActivity extends AppCompatActivity {
 
         rowScroller.addView(rowsInsideScroll);
         scrollContainer.addView(rowScroller);
-
         scrollContainer.setLayoutParams(bottomPara);
-        container.addView(newEntryButton);
         container.addView(scrollContainer);
         container.addView(bar);
         container.setBackgroundColor(MainActivity.grey);
-        setContentView(container, bottomPara);
-
-
+        return container;
     }
 
 
-    public void makeLinears() {
+    public void makeLinears(View v) {
         rows = new ArrayList<LinearLayout>();
-
-        rowsInsideScroll = new LinearLayout(this);
         rowsInsideScroll.setOrientation(LinearLayout.VERTICAL);
 
-        rowScroller = new ScrollView(this);
         rowScroller.setLayoutParams(new RelativeLayout.LayoutParams(
-                ScrollView.LayoutParams.FILL_PARENT, height - 400));
+                ScrollView.LayoutParams.FILL_PARENT, height - 300));
         rowScroller.setBackgroundColor(MainActivity.grey);
 
-        container = new LinearLayout(this);
         container.setOrientation(LinearLayout.VERTICAL);
-        scrollContainer = new LinearLayout(this);
-
-        newEntryButton = new Button(this);
-        newEntryButton.setText("Add Entry");
-        newEntryButton.setOnClickListener(new AddEntryListener());
-        newEntryButton.setBackgroundColor(MainActivity.green);
-
-        bar = new LinearLayout(this);
-        BottomNav.makeBottomnavBar(bar, width, view.getContext(), 4);
+        BottomNav.makeBottomnavBar(bar, width, view.getContext(), 3);
     }
 
 
-    public void makeRows() {
-        for (int i = 0; i < ((SaveBodyWeight.n) + 1); i++) {
-            rows.add(new LinearLayout(getBaseContext()));
+    public void makeRows(View v) {
+        for (int i = 0; i < ((SaveWorkout.n) + 1); i++) {
+            rows.add(new LinearLayout(v.getContext()));
             LinearLayout rowCreated = rows.get(i);
             String theId = Integer.toString(i);
             rowCreated.setOnClickListener(new RowClickedOnClickListener(theId));
         }
-        setUpRows();
+        setUpRows(v);
     }
 
-    public void setUpRows() {
-        int counter = SaveBodyWeight.n;
+    public void setUpRows(View v) {
+        int counter = SaveWorkout.n;
 
         while (counter != 0) {
             System.out.println("Row counter is at " + counter);
 
             LinearLayout rowCreated = rows.get(counter - 1);
-            rowCreated.setBackgroundColor(Color.rgb(14, 25, 26));
+            rowCreated.setBackgroundColor(MainActivity.green);
             rowCreated.setMinimumWidth(1000);
             rowCreated.setMinimumHeight(80);
-            TextView name = new TextView(this);
-            name.setText("Body Stat " + counter);
+            TextView name = new TextView(v.getContext());
+            name.setText("Workout " + counter);
             name.setTypeface(null, Typeface.BOLD);
             name.setTextSize(15);
             name.setTextColor(MainActivity.grey);
@@ -155,15 +117,6 @@ public class StatDiaryActivity extends AppCompatActivity {
 
             rowsInsideScroll.addView(rowCreated, buttonParams);
             counter = counter -1;
-        }
-    }
-
-    class AddEntryListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            Intent i = new Intent(v.getContext(), BodyStatActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            v.getContext().startActivity(i);
         }
     }
 
@@ -186,7 +139,7 @@ public class StatDiaryActivity extends AppCompatActivity {
             System.out.println("add");
             identify = Integer.parseInt(id);
             System.out.println("two");
-            Intent i = new Intent(context, BodyStatActivity.class);
+            Intent i = new Intent(context, CopyOfWorkoutActivity.class);
             System.out.println("three");
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             System.out.println("four");
@@ -199,6 +152,4 @@ public class StatDiaryActivity extends AppCompatActivity {
     }
 
 }
-
-
 

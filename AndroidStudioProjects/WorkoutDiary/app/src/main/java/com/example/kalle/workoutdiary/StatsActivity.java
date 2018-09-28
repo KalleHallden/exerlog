@@ -52,6 +52,7 @@ public class StatsActivity extends AppCompatActivity {
     LinearLayout row;
     Ani b;
     LinearLayout row2;
+    int heighty;
 
 
     ArrayList<Workout> workoutList;
@@ -88,7 +89,7 @@ public class StatsActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
-        int heighty = size.y;
+        heighty = size.y;
 
         LinearLayout layout = new LinearLayout(this);
         setContentView(layout);
@@ -123,6 +124,9 @@ public class StatsActivity extends AppCompatActivity {
         actualHeight = new int[counter];
         while (counter != 0) {
 
+            Double num = getMax();
+            int x = (int) ((SaveWorkout.volumes[counter-1]) / num);
+
             System.out.println("Row counter is at " + counter);
             Workout work = workoutList.get(counter - 1);
             LinearLayout rowCreated = rows.get(counter - 1);
@@ -130,16 +134,16 @@ public class StatsActivity extends AppCompatActivity {
             rowCreated.setBackgroundColor(MainActivity.green);
             rowCreated.setMinimumWidth(50);
 
-            System.out.println("This is the height: " + SaveWorkout.volumes[counter - 1]);
-            s[counter-1] = SaveWorkout.volumes[counter-1];
+            System.out.println("This is the height: " + x);
+            s[counter-1] = (SaveWorkout.volumes[counter-1]).intValue();
 
-            rowCreated.setMinimumHeight(SaveWorkout.volumes[counter - 1]);
+            rowCreated.setMinimumHeight(x);
             rowForRow.addView(rowCreated);
 
             //a = new Ani();
 
 
-            actualHeight[counter-1] = SaveWorkout.volumes[counter-1];
+            actualHeight[counter-1] = x;
             a = new Ani(rowCreated, counter-1);
             System.out.println("Hi: " + 1);
             a.setDuration(800);
@@ -239,12 +243,15 @@ public class StatsActivity extends AppCompatActivity {
                     rowCreated.setBackgroundColor(MainActivity.green);
                     rowCreated.setMinimumWidth(50);
 
-                    System.out.println("This is the height: " + barHeights.get(counter2-1));
+                    Double num = getMax();
+                    int x = (int) ((barHeights.get(counter2-1)) / num);
 
-                    rowCreated.setMinimumHeight(barHeights.get(counter2-1));
+                    System.out.println("This is the height: " + x);
+
+                    rowCreated.setMinimumHeight(x);
                     rowForRow.addView(rowCreated);
 
-                    actualHeight[counter2-1] = barHeights.get(counter2-1);
+                    actualHeight[counter2-1] = x;
                     a = new Ani(rowCreated, counter2-1);
                     System.out.println("Hi: " + 1);
                     a.setDuration(800);
@@ -274,10 +281,13 @@ public class StatsActivity extends AppCompatActivity {
 
                     System.out.println("This is the height: " + work.getVolume());
 
-                    rowCreated.setMinimumHeight(barHeights.get(counter2 - 1));
+                    Double num = getMax();
+                    int x = (int) ((barHeights.get(counter2-1)) / num);
+
+                    rowCreated.setMinimumHeight(x);
                     rowForRow.addView(rowCreated);
 
-                    actualHeight[counter2-1] = barHeights.get(counter2-1);
+                    actualHeight[counter2-1] = x;
                     a = new Ani(rowCreated, counter2-1);
                     System.out.println("Hi: " + 1);
                     a.setDuration(800);
@@ -308,17 +318,20 @@ public class StatsActivity extends AppCompatActivity {
                     rowCreated.setBackgroundColor(MainActivity.green);
                     rowCreated.setMinimumWidth(50);
 
-                    System.out.println("This is the height: " + SaveWorkout.volumes[counter - 1] );
+                    Double num = getMax();
+                    int x = (int) ((SaveWorkout.volumes[counter-1]) / num);
+
+                    System.out.println("This is the height: " + x);
 
 
                     rowForRow.addView(rowCreated);
 
-                    actualHeight[counter-1] = SaveWorkout.volumes[counter - 1];
+                    actualHeight[counter-1] = x;
                     a = new Ani(rowCreated, counter-1);
                     System.out.println("Hi: " + 1);
                     a.setDuration(800);
                     rowCreated.startAnimation(a);
-                    rowCreated.setMinimumHeight(SaveWorkout.volumes[counter - 1]);
+                    rowCreated.setMinimumHeight(x);
 
 
                     rowsInsideScroll.addView(rowForRow, buttonParams);
@@ -354,7 +367,7 @@ public class StatsActivity extends AppCompatActivity {
                     a = 0;
                     rowCount++;
                 } else {
-                    vol = vol + SaveWorkout.volumes[i];
+                    vol = vol + SaveWorkout.volumes[i].intValue();
                     a++;
                 }
             }
@@ -375,7 +388,7 @@ public class StatsActivity extends AppCompatActivity {
                     vol = 0;
                     a = 0;
                 } else {
-                    vol = vol + SaveWorkout.volumes[i];
+                    vol = vol + SaveWorkout.volumes[i].intValue();
                     a++;
                 }
             }
@@ -493,6 +506,22 @@ class BarClickedOnClickListener implements View.OnClickListener {
         public boolean willChangeBounds() {
             return true;
         }
+    }
+
+    public Double getMax() {
+    Double maxHeight = 0.0;
+    Double returnMultiplicationNumber = 0.0;
+        for (int i = 0; i < SaveWorkout.volumes.length; i++ ) {
+            if (maxHeight < SaveWorkout.volumes[i]) {
+                maxHeight = SaveWorkout.volumes[i];
+            }
+        }
+        if (maxHeight > heighty) {
+            while (maxHeight / returnMultiplicationNumber > heighty) {
+                returnMultiplicationNumber += 10;
+            }
+        }
+        return returnMultiplicationNumber;
     }
 
 

@@ -30,7 +30,7 @@ import static android.graphics.Color.WHITE;
 public class BodyStatActivity extends AppCompatActivity {
 
     Button saveButton;
-    Button one;
+    Button deleteButton;
 
     static LinearLayout exerciseRowContainer;
     ScrollView rowScroller;
@@ -42,6 +42,7 @@ public class BodyStatActivity extends AppCompatActivity {
     static Workout thisWorkout;
     static int numberOfExercises;
     static int vol;
+    BodyStats bs;
 
     LinearLayout row;
     LinearLayout topBar;
@@ -77,11 +78,7 @@ public class BodyStatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setUp();
-
-
     }
 
 
@@ -93,10 +90,7 @@ public class BodyStatActivity extends AppCompatActivity {
         window.setStatusBarColor(MainActivity.black);
 
         view = new View(this);
-        SaveWorkout.checkExistingFiles(view.getContext());
-        thisWorkout = new Workout();
 
-        savedWorkouts.add(new Workout());
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -190,6 +184,7 @@ public class BodyStatActivity extends AppCompatActivity {
         
 
         layoutTop.addView(saveButton);
+        layoutTop3.addView(deleteButton);
 
 
         grid.addView(layoutTop);
@@ -219,7 +214,14 @@ public class BodyStatActivity extends AppCompatActivity {
         saveButton.setTextSize(30);
         saveButton.setTextColor(MainActivity.green);
         saveButton.setBackgroundColor(topBar.getSolidColor());
-        saveButton.setOnClickListener(new SaveWorkoutListener());
+        saveButton.setOnClickListener(new SaveBodyStatListener());
+
+        deleteButton = new Button(this);
+        deleteButton.setText("DELETE");
+        deleteButton.setTextSize(30);
+        deleteButton.setTextColor(MainActivity.green);
+        deleteButton.setBackgroundColor(topBar.getSolidColor());
+        deleteButton.setOnClickListener(new DeleteBodyStatListener());
 
         System.out.println("5 worked");
         addViews();
@@ -268,6 +270,7 @@ public class BodyStatActivity extends AppCompatActivity {
      class GoBackOnClickListener implements  View.OnClickListener {
                 @Override
                  public void onClick(View v) {
+                    SaveBodyWeight.checkExistingFiles(v.getContext());
                     Context context = v.getContext();
                     Intent intent = new Intent(context, StatDiaryActivity.class);
                     context.startActivity(intent);
@@ -275,18 +278,11 @@ public class BodyStatActivity extends AppCompatActivity {
         }
 
 
-
-
-
-
-
-
-
-    class SaveWorkoutListener implements View.OnClickListener {
+    class SaveBodyStatListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
 
-            BodyStats bs = new BodyStats();
+            bs = new BodyStats();
 
             for (int i = 0; i < 8; i++) {
                 EditText textfield = textfieldArray.get(i);
@@ -427,5 +423,22 @@ public class BodyStatActivity extends AppCompatActivity {
         }
 
         return info;
+    }
+
+    class DeleteBodyStatListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+
+            String filename = "BodyStats" + StatDiaryActivity.identify;
+            deleteFile(filename);
+            SaveBodyWeight.n -= 1;
+            StatDiaryActivity.removeRow(StatDiaryActivity.identify);
+
+            Context context = v.getContext();
+            Intent intent = new Intent(context, StatDiaryActivity.class);
+            context.startActivity(intent);
+            System.out.println("File should get deleted");
+
+        }
     }
 }

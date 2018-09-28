@@ -216,6 +216,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         ArrayList<LinearLayout> textFieldRows = new ArrayList<LinearLayout>();
         //listlength = listlength/2;
         vol = 0;
+        Double weightVol = 0.0;
 
         if (listlength != 0) {
             for (int s = 0; s < listlength; s++) {
@@ -258,10 +259,10 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
                             exer.setSets("1");
                         }
                     } if (x == 3) {
-                        int r = ex.getWeight();
-                        text.setText(Integer.toString(r));
+                        Double r = ex.getWeight();
+                        text.setText(Double.toString(r));
                         try {
-                            exer.setWeight(Integer.toString(ex.getWeight()));
+                            exer.setWeight(Double.toString(ex.getWeight()));
                         } catch (Exception f) {
                             exer.setWeight("0");
                         }
@@ -276,8 +277,9 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
                     }
                 }
                 ex.setVolume(ex.getReps(), ex.getSets());
+                weightVol = weightVol + (ex.getVolume() * ex.getWeight());
                 vol = vol + ex.getVolume();
-                volumeLabel.setText("Total Volume: " + vol);
+                volumeLabel.setText("Total Volume: " + weightVol);
             }
         } else {
                 System.out.println("We are NOT in the matrix!!");
