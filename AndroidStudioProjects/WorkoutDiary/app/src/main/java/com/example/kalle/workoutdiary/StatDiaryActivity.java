@@ -60,7 +60,7 @@ public class StatDiaryActivity extends AppCompatActivity {
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(MainActivity.black);
+        window.setStatusBarColor(BottomNaviClass.black);
 
 
 
@@ -92,7 +92,7 @@ public class StatDiaryActivity extends AppCompatActivity {
         container.addView(newEntryButton);
         container.addView(scrollContainer);
         container.addView(bar);
-        container.setBackgroundColor(MainActivity.grey);
+        container.setBackgroundColor(BottomNaviClass.grey);
         setContentView(container, bottomPara);
 
 
@@ -108,7 +108,7 @@ public class StatDiaryActivity extends AppCompatActivity {
         rowScroller = new ScrollView(this);
         rowScroller.setLayoutParams(new RelativeLayout.LayoutParams(
                 ScrollView.LayoutParams.FILL_PARENT, height - 400));
-        rowScroller.setBackgroundColor(MainActivity.grey);
+        rowScroller.setBackgroundColor(BottomNaviClass.grey);
 
         container = new LinearLayout(this);
         container.setOrientation(LinearLayout.VERTICAL);
@@ -117,7 +117,7 @@ public class StatDiaryActivity extends AppCompatActivity {
         newEntryButton = new Button(this);
         newEntryButton.setText("Add Entry");
         newEntryButton.setOnClickListener(new AddEntryListener());
-        newEntryButton.setBackgroundColor(MainActivity.green);
+        newEntryButton.setBackgroundColor(BottomNaviClass.green);
 
         bar = new LinearLayout(this);
         BottomNav.makeBottomnavBar(bar, width, view.getContext(), 4);
@@ -148,7 +148,7 @@ public class StatDiaryActivity extends AppCompatActivity {
             name.setText("Body Stat " + counter);
             name.setTypeface(null, Typeface.BOLD);
             name.setTextSize(15);
-            name.setTextColor(MainActivity.grey);
+            name.setTextColor(BottomNaviClass.grey);
             name.setPadding(20, 40, 0, 0);
 
             rowCreated.addView(name, buttonParams);

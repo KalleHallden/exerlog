@@ -50,7 +50,7 @@ public class StatChooserActivity extends AppCompatActivity {
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(MainActivity.black);
+        window.setStatusBarColor(BottomNaviClass.black);
 
 
 
@@ -76,7 +76,7 @@ public class StatChooserActivity extends AppCompatActivity {
 
         container.addView(buttonRows, bottomPara);
         container.addView(bar);
-        container.setBackgroundColor(MainActivity.grey);
+        container.setBackgroundColor(BottomNaviClass.grey);
         setContentView(container, bottomPara);
 
 

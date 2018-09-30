@@ -19,8 +19,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Desktop/Kalles/ExerLog/Icon/eac_grön.png" />
-                                      <entry key="outputName" value="logo_image" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Desktop/Kalles/ExerLog/Image assets/LineStats.png" />
+                                      <entry key="outputName" value="weigthstat_icon" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -98,7 +98,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
+                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>

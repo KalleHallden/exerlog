@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,6 +45,8 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
     Button saveButton;
     Button one;
     Button startNewWorkoutButton;
+    ImageButton backButton;
+    LinearLayout layoutTop;
     LinearLayout row;
     static LinearLayout exerciseRowContainer;
     ScrollView rowScroller;
@@ -54,6 +57,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
     static ArrayList<EditText> textFieldArray;
     static int numberOfExercises;
     static int vol;
+    LinearLayout.LayoutParams buttonParams;
 
 
         @Override
@@ -74,7 +78,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(MainActivity.black);
+        window.setStatusBarColor(BottomNaviClass.black);
 
 
             Color.green(Color.rgb(4,168,46));
@@ -94,7 +98,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         int thirdWidth = (int)(width*0.333333);
 
         LinearLayout testLayout = new LinearLayout(this);
-        testLayout.setBackgroundColor(MainActivity.grey);
+        testLayout.setBackgroundColor(BottomNaviClass.grey);
         setContentView(testLayout);
 
         LinearLayout totalLayout = new LinearLayout(this);
@@ -109,9 +113,9 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
 
 
         LinearLayout topBar = new LinearLayout(this);
-        topBar.setBackgroundColor(Color.rgb(30,30,30));
+        topBar.setBackgroundColor(BottomNaviClass.lightBlack);
 
-        LinearLayout layoutTop = new LinearLayout(this);
+        layoutTop = new LinearLayout(this);
         //layoutTop.setBackgroundColor(Color.BLUE);
 
         LinearLayout layoutTop2 = new LinearLayout(this);
@@ -135,19 +139,10 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         one.setOnClickListener(new DeleteWorkoutListener());
         one.setText("Delete");
         one.setTextSize(30);
-        one.setTextColor(MainActivity.green);
-        one.setBackgroundColor(Color.rgb(30,30,30));
+        one.setTextColor(BottomNaviClass.green);
+        one.setBackgroundColor(BottomNaviClass.lightBlack);
         one.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
 
-
-
-
-
-
-
-
-        ImageView tick = new ImageView(this);
-        tick.setImageResource(R.mipmap.ticks);
 
         layoutTop.addView(saveButton);
         layoutTop2.addView(startNewWorkoutButton);
@@ -158,7 +153,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         //saveButton.setBackgroundResource(R.mipmap.ticks);
         saveButton.setText("✓");
         saveButton.setTextSize(30);
-        saveButton.setTextColor(MainActivity.green);
+        saveButton.setTextColor(BottomNaviClass.green);
         saveButton.setBackgroundColor(topBar.getSolidColor());
         saveButton.setOnClickListener(new SaveWorkoutListener());
 
@@ -206,7 +201,7 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
 
 
         // Button Parameter creator
-        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+        buttonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         SetUp.makeButtonAndTextRowParams(buttonParams);
 
@@ -314,14 +309,15 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
     class DeleteWorkoutListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            String filename = "Workout" + DiaryActivity.identify;
+            String filename = "Workout" + DiaryClass.identify;
             deleteFile(filename);
             SaveWorkout.n -= 1;
             Workout.savedExercisez.clear();
-            DiaryActivity.removeRow(DiaryActivity.identify);
+            DiaryClass.removeRow(DiaryClass.identify);
 
             Context context = v.getContext();
-            Intent intent = new Intent(context, DiaryActivity.class);
+            Intent intent = new Intent(context, BottomNaviClass.class);
+            BottomNaviClass.identifier = 3;
             context.startActivity(intent);
             System.out.println("File should get deleted");
 
@@ -332,7 +328,8 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
             @Override
              public void onClick(View v) {
                 Context context = v.getContext();
-                Intent intent = new Intent(context, DiaryActivity.class);
+                Intent intent = new Intent(context, BottomNaviClass.class);
+                BottomNaviClass.identifier = 3;
                 context.startActivity(intent);
             }
     }
@@ -342,21 +339,27 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         public void onClick(View v) {
 
             SaveWorkout savespec = new SaveWorkout();
-            savespec.saveSpecific(DiaryActivity.identify, v.getContext(), workout);
-            saveButton.setText("Back");
-            saveButton.setOnClickListener(new GoBackOnClickListener());
+            savespec.saveSpecific(DiaryClass.identify, v.getContext(), workout);
+            layoutTop.removeAllViews();
+            backButton = new ImageButton(v.getContext());
+            layoutTop.addView(backButton);
+            backButton.setImageResource(R.drawable.back_icon);
+            backButton.setMinimumWidth(200);
+            backButton.setColorFilter(BottomNaviClass.green);
+            backButton.setBackgroundColor(BottomNaviClass.lightBlack);
+            backButton.setOnClickListener(new GoBackOnClickListener());
         }
     }
 
     public void buildit() {
         View view = new View(this);
         System.out.println("We are here ");
-        System.out.println("This is identity: " + DiaryActivity.identify);
+        System.out.println("This is identity: " + DiaryClass.identify);
         //Diary.numWorkouts = Diary.numWorkouts - 1;
 
         //Workout workouts = Diary.openSpecificWorkout(view.getContext(), (DiaryActivity.identify), workout);
         SaveWorkout test = new SaveWorkout();
-        Workout workout = test.openWorkout(DiaryActivity.identify, view.getContext());
+        Workout workout = test.openWorkout(DiaryClass.identify, view.getContext());
         setUp3(workout);
 
         }

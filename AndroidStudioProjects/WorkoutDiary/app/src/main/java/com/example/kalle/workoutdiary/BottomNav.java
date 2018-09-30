@@ -9,21 +9,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class BottomNav {
+
+    static ArrayList<ImageButton> buttonList;
+
     static ImageButton addWorkout;
     static ImageButton diary;
     static ImageButton stats;
     static ImageButton bodyStats;
     static ImageButton profile;
+    public static int caller;
 
-    public static void makeBottomnavBar(LinearLayout layout, int widths, Context context, int caller) {
-
+    public static void makeBottomnavBar(LinearLayout layout, int widths, Context context, int call) {
+        buttonList = new ArrayList<ImageButton>();
 
         addWorkout = new ImageButton(context);
         diary = new ImageButton(context);
         stats = new ImageButton(context);
         bodyStats = new ImageButton(context);
         profile = new ImageButton(context);
+
+        buttonList.add(stats);
+        buttonList.add(profile);
+        buttonList.add(addWorkout);
+        buttonList.add(diary);
+        buttonList.add(bodyStats);
 
 
 
@@ -52,51 +64,38 @@ public class BottomNav {
         System.out.println("This is width: " + (widths / 4));
         stats.setMinimumHeight(160);
         stats.setImageResource(R.drawable.stats_image);
-        stats.setColorFilter(MainActivity.green);
-        stats.setBackgroundColor(MainActivity.grey);
+        stats.setColorFilter(BottomNaviClass.green);
+        stats.setBackgroundColor(BottomNaviClass.lightBlack);
         // stats.setLayoutParams(para);
 
         bodyStats.setMinimumWidth(widths / 5);
         bodyStats.setMinimumHeight(160);
         bodyStats.setLayoutParams(layoutpara);
         bodyStats.setImageResource(R.drawable.weight_image);
-        bodyStats.setColorFilter(MainActivity.green);
-        bodyStats.setBackgroundColor(MainActivity.grey);
+        bodyStats.setColorFilter(BottomNaviClass.green);
+        bodyStats.setBackgroundColor(BottomNaviClass.lightBlack);
 
         diary.setMinimumWidth(widths / 5);
         diary.setMinimumHeight(160);
         diary.setImageResource(R.drawable.diary_image);
-        diary.setColorFilter(MainActivity.green);
-        diary.setBackgroundColor(MainActivity.grey);
+        diary.setColorFilter(BottomNaviClass.green);
+        diary.setBackgroundColor(BottomNaviClass.lightBlack);
 
 
         addWorkout.setMinimumWidth(widths / 5);
         addWorkout.setMinimumHeight(160);
         addWorkout.setLayoutParams(layoutpara);
         addWorkout.setImageResource(R.drawable.add_image);
-        addWorkout.setColorFilter(MainActivity.green);
-        addWorkout.setBackgroundColor(MainActivity.grey);
+        addWorkout.setColorFilter(BottomNaviClass.green);
+        addWorkout.setBackgroundColor(BottomNaviClass.lightBlack);
 
         profile.setMinimumWidth(widths / 5);
         profile.setMinimumHeight(160);
         profile.setLayoutParams(layoutpara);
         profile.setImageResource(R.drawable.tick_image);
-        profile.setColorFilter(MainActivity.green);
-        profile.setBackgroundColor(MainActivity.grey);
+        profile.setColorFilter(BottomNaviClass.green);
+        profile.setBackgroundColor(BottomNaviClass.lightBlack);
 
-
-
-
-
-        if (caller == 1) {
-            stats.setBackgroundColor(Color.rgb(46,52,56));
-        } if (caller == 2) {
-            addWorkout.setBackgroundColor(Color.rgb(46,52,56));
-        } if (caller == 3) {
-            diary.setBackgroundColor(Color.rgb(46,52,56));
-        } if (caller == 4) {
-            bodyStats.setBackgroundColor(Color.rgb(46,52,56));
-        }
 
         layout.addView(stats);
         layout.addView(profile);

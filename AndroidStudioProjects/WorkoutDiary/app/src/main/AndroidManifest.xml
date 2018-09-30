@@ -8,21 +8,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAUL" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".DiaryActivity" />
-        <activity android:name=".CopyOfWorkoutActivity" />
-        <activity android:name=".StatsActivity" />
-        <activity android:name=".BodyStatActivity" />
-        <activity android:name=".StatDiaryActivity" />
-        <activity android:name=".StatChooserActivity" />
-        <activity android:name=".BodyGraphActivity" />
-        <activity android:name=".LayoutAnimationActivity" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +15,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BottomNaviClass"></activity>
+        <activity android:name=".BottomNaviClass">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".CopyOfWorkoutActivity" />
+        <activity android:name=".StatsActivity" />
+        <activity android:name=".BodyStatActivity" />
+        <activity android:name=".StatDiaryActivity" />
+        <activity android:name=".StatChooserActivity" />
+        <activity android:name=".BodyGraphActivity" />
+        <activity android:name=".LayoutAnimationActivity" />
     </application>
 
 </manifest>

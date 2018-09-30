@@ -77,7 +77,7 @@ public class StatsActivity extends AppCompatActivity {
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(MainActivity.black);
+        window.setStatusBarColor(BottomNaviClass.black);
 
         View view = new View(this);
         SaveWorkout.checkExistingFiles(view.getContext());
@@ -93,7 +93,7 @@ public class StatsActivity extends AppCompatActivity {
 
         LinearLayout layout = new LinearLayout(this);
         setContentView(layout);
-        layout.setBackgroundColor(MainActivity.grey);
+        layout.setBackgroundColor(BottomNaviClass.grey);
         rowsInsideScroll = new LinearLayout(this);
         rowsInsideScroll.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -131,7 +131,7 @@ public class StatsActivity extends AppCompatActivity {
             Workout work = workoutList.get(counter - 1);
             LinearLayout rowCreated = rows.get(counter - 1);
             LinearLayout rowForRow = new LinearLayout(this);
-            rowCreated.setBackgroundColor(MainActivity.green);
+            rowCreated.setBackgroundColor(BottomNaviClass.green);
             rowCreated.setMinimumWidth(50);
 
             System.out.println("This is the height: " + x);
@@ -155,15 +155,6 @@ public class StatsActivity extends AppCompatActivity {
 
             counter = counter -1;
         }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -194,7 +185,7 @@ public class StatsActivity extends AppCompatActivity {
         barButton.setHeight(120);
         barButton.setText("Day View");
         barButton.setTextSize(20);
-        barButton.setTextColor(MainActivity.green);
+        barButton.setTextColor(BottomNaviClass.green);
         barButton.setOnClickListener(new ChangeBarOnClickListener());
 
 
@@ -240,7 +231,7 @@ public class StatsActivity extends AppCompatActivity {
                     Workout work = workoutList.get(counter2 -1);
                     LinearLayout rowCreated = rows.get(counter2 - 1);
                     LinearLayout rowForRow = new LinearLayout(getBaseContext());
-                    rowCreated.setBackgroundColor(MainActivity.green);
+                    rowCreated.setBackgroundColor(BottomNaviClass.green);
                     rowCreated.setMinimumWidth(50);
 
                     Double num = getMax();
@@ -276,7 +267,7 @@ public class StatsActivity extends AppCompatActivity {
                     Workout work = workoutList.get(counter2 -1);
                     LinearLayout rowCreated = rows.get(counter2 - 1);
                     LinearLayout rowForRow = new LinearLayout(getBaseContext());
-                    rowCreated.setBackgroundColor(MainActivity.green);
+                    rowCreated.setBackgroundColor(BottomNaviClass.green);
                     rowCreated.setMinimumWidth(50);
 
                     System.out.println("This is the height: " + work.getVolume());
@@ -315,7 +306,7 @@ public class StatsActivity extends AppCompatActivity {
                     System.out.println("Row counter is at " + counter);
                     LinearLayout rowCreated = rows.get(counter - 1);
                     LinearLayout rowForRow = new LinearLayout(getBaseContext());
-                    rowCreated.setBackgroundColor(MainActivity.green);
+                    rowCreated.setBackgroundColor(BottomNaviClass.green);
                     rowCreated.setMinimumWidth(50);
 
                     Double num = getMax();
@@ -435,10 +426,11 @@ class BarClickedOnClickListener implements View.OnClickListener {
         int row = Integer.parseInt(id);
         LinearLayout rowCreated = rows.get(row);
         rowCreated.setBackgroundColor(Color.rgb(0,80,34));
+
             if (g != row) {
                 System.out.println("Number: " + g);
                 LinearLayout rowz = rows.get(g);
-                rowz.setBackgroundColor(MainActivity.green);
+                rowz.setBackgroundColor(BottomNaviClass.green);
                 g = row;
             } else {
                 System.out.println("Number: " + g);

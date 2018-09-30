@@ -27,7 +27,7 @@ public class TextFieldMakerCopy {
 
         // make textfield
         EditText exerciseName = new EditText(v.getContext());
-        myTextField maktxt = new myTextField();
+        MyTextField maktxt = new MyTextField();
         maktxt.makeTextField(exerciseName, 300);
         //exerciseName.setMaxWidth(300);
         exerciseName.setMinimumWidth(300);

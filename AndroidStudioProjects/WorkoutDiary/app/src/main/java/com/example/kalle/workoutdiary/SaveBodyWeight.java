@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class SaveBodyWeight {
     static int n;
     static ArrayList<BodyStats> list = new ArrayList<BodyStats>();
+    static Double[] bodyweightList;
 
     static String filepath = "BodyStats";
 
@@ -30,6 +31,7 @@ public class SaveBodyWeight {
                 System.out.println("Done checking existing files");
             }
         }
+        bodyweightList = new Double[n];
         return n;
     }
 
@@ -40,7 +42,7 @@ public class SaveBodyWeight {
 
         System.out.println("Amount of bodystats saved " + num);
 
-        filepath = "BodyStats" + num;
+        filepath = "BodyStats" + (num);
 
         try {
             FileOutputStream fileOut = context.openFileOutput(filepath, Context.MODE_PRIVATE);
@@ -77,7 +79,7 @@ public class SaveBodyWeight {
         BodyStats bodystats;
         int volume = 0;
         try {
-            FileInputStream fi = context.openFileInput("Workout" + id);
+            FileInputStream fi = context.openFileInput("BodyStats" + id);
             ObjectInputStream oi = new ObjectInputStream(fi);
 
             // Read objects
@@ -88,6 +90,8 @@ public class SaveBodyWeight {
 
             oi.close();
             fi.close();
+
+            bodyweightList[id] = bodystats.getBodyWeight();
 
             return bodystats;
         } catch (Exception s) {

@@ -30,7 +30,7 @@ public class LineView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        paint.setColor(MainActivity.green);
+        paint.setColor(BottomNaviClass.green);
         paint.setStrokeWidth(7);
         canvas.drawLine(pointA.x, pointB.x, pointA.y, pointB.y, paint);
         super.onDraw(canvas);

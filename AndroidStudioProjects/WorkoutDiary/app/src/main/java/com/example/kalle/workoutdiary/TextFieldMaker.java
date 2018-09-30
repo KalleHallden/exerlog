@@ -11,10 +11,10 @@ public class TextFieldMaker {
 
 
 
-    static void makeTextFields(LinearLayout linlay, View v) {
+    static void makeTextFields(LinearLayout linlay, View v, ArrayList<ArrayList> containerForTextArray, ArrayList textFieldArray, int numExercises) {
 
-        MainActivity.containerFortestxArray.add(new ArrayList<EditText>());
-        MainActivity.textFieldArray = MainActivity.containerFortestxArray.get(MainActivity.numberOfExercises);
+       containerForTextArray.add(new ArrayList<EditText>());
+       textFieldArray = containerForTextArray.get(numExercises);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -30,12 +30,12 @@ public class TextFieldMaker {
 
         // make textfield
         EditText exerciseName = new EditText(v.getContext());
-        myTextField maktxt = new myTextField();
+        MyTextField maktxt = new MyTextField();
         maktxt.makeTextField(exerciseName, 300);
         //exerciseName.setMaxWidth(300);
         exerciseName.setMinimumWidth(300);
         exerciseName.setPadding(10,5,10,5);
-        MainActivity.textFieldArray.add(exerciseName);
+        textFieldArray.add(exerciseName);
 
         // second textfield
         EditText repsTextField = new EditText(v.getContext());
@@ -43,7 +43,7 @@ public class TextFieldMaker {
         // repsTextField.setMaxWidth(150);
         repsTextField.setMinimumWidth(150);
         repsTextField.setPadding(10,5,10,5);
-        MainActivity.textFieldArray.add(repsTextField);
+        textFieldArray.add(repsTextField);
 
         // third textField
         EditText setsTextField = new EditText(v.getContext());
@@ -51,7 +51,7 @@ public class TextFieldMaker {
         // setsTextField.setMaxWidth(150);
         setsTextField.setMinimumWidth(150);
         setsTextField.setPadding(10,5,10,5);
-        MainActivity.textFieldArray.add(setsTextField);
+        textFieldArray.add(setsTextField);
 
         //fourth textField
         EditText weightTextField = new EditText(v.getContext());
@@ -59,7 +59,7 @@ public class TextFieldMaker {
         // weightTextField.setMaxWidth(150);
         weightTextField.setMinimumWidth(150);
         weightTextField.setPadding(10,5,10,5);
-        MainActivity.textFieldArray.add(weightTextField);
+        textFieldArray.add(weightTextField);
 
         // fifth textField
         EditText restTextField = new EditText(v.getContext());
@@ -67,7 +67,7 @@ public class TextFieldMaker {
         // restTextField.setMaxWidth(150);
         restTextField.setMinimumWidth(150);
         restTextField.setPadding(10,5,10,5);
-        MainActivity.textFieldArray.add(restTextField);
+        textFieldArray.add(restTextField);
 
         linlay.setLayoutParams(layoutParams);
 

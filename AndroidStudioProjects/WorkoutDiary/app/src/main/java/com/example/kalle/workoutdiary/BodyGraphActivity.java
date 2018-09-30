@@ -63,7 +63,7 @@ public class BodyGraphActivity extends AppCompatActivity {
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(MainActivity.black);
+        window.setStatusBarColor(BottomNaviClass.black);
 
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -93,7 +93,7 @@ public class BodyGraphActivity extends AppCompatActivity {
              //listOfDraw.add(new DrawView(this));
              //DrawView draw = listOfDraw.get(i);
              draw.setPointA(pointax);
-             draw.setBackgroundColor(MainActivity.grey);
+             draw.setBackgroundColor(BottomNaviClass.grey);
              SaveBodyWeight opener = new SaveBodyWeight();
              BodyStats weightStat = new BodyStats();
              opener.openBodyStat(i, view.getContext());
@@ -114,7 +114,7 @@ public class BodyGraphActivity extends AppCompatActivity {
 
         container.addView(draw, bottomPara);
         container.addView(bar);
-        container.setBackgroundColor(MainActivity.grey);
+        container.setBackgroundColor(BottomNaviClass.grey);
         setContentView(container, bottomPara);
 
 
@@ -131,7 +131,7 @@ public class BodyGraphActivity extends AppCompatActivity {
         container.setOrientation(LinearLayout.VERTICAL);
 
         scrollView = new ScrollView(getBaseContext());
-        scrollView.setBackgroundColor(MainActivity.green);
+        scrollView.setBackgroundColor(BottomNaviClass.green);
 
         bar = new LinearLayout(this);
         BottomNav.makeBottomnavBar(bar, width, view.getContext(), 1);
@@ -198,7 +198,7 @@ public class BodyGraphActivity extends AppCompatActivity {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            paint.setColor(MainActivity.green);
+            paint.setColor(BottomNaviClass.green);
             paint.setStrokeWidth(7);
             canvas.drawLine(pointA.x, pointB.x, pointA.y, pointB.y, paint);
             super.onDraw(canvas);

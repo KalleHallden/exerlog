@@ -1,7 +1,6 @@
 package com.example.kalle.workoutdiary;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
@@ -9,12 +8,17 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 public class BottomNaviClass extends AppCompatActivity {
 
+    static int green = Color.rgb(4, 168, 46);
+    static int grey = Color.rgb(40, 40, 45);
+    static int red = Color.rgb(176, 14, 35);
+    static int darkgrey = Color.rgb(30, 30, 30);
+    static int black = Color.rgb(0, 0, 0);
+    static int lightBlack = Color.rgb(20,20,22);
+    static int superLightBlack = Color.rgb(10,10,10);
 
     public static int height;
     public static int width;
@@ -27,14 +31,17 @@ public class BottomNaviClass extends AppCompatActivity {
     LinearLayout.LayoutParams bottomPara;
 
     public static int id;
+    static int identifier = 3;
+    static  boolean hasLoadedOnce = false;
 
 
-
+    static boolean inWeightPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUp();
+        hasLoadedOnce = true;
     }
 
     public void setUp() {
@@ -50,17 +57,24 @@ public class BottomNaviClass extends AppCompatActivity {
         pageHolder = new LinearLayout(this);
 
 
-
         bottomPara = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, Gravity.BOTTOM);
         viewContainer.setLayoutParams(bottomPara);
         viewContainer.setOrientation(LinearLayout.VERTICAL);
         makeNav();
+        if (hasLoadedOnce == false) {
+            createSpecific(2);
+        }
+
+        if (hasLoadedOnce) {
+            createSpecific(identifier);
+        }
 
         pageHolder.setLayoutParams(bottomPara);
         viewContainer.addView(pageHolder);
         viewContainer.addView(bar);
         setContentView(viewContainer);
+        changeNavBar(identifier);
 
     }
 
@@ -75,57 +89,130 @@ public class BottomNaviClass extends AppCompatActivity {
 
     public void createSpecific(int identifier) {
         if (identifier == 0) {
+            System.out.println("identity " + identifier );
             pageHolder.removeAllViews();
-            makeStatChooser();
+            if (inWeightPage) {
+                makeWeightGraph();
+            } else {
+                makeStatChooser();
+            }
             pageHolder.addView(page);
+            setSelectedNavButtonColor(0);
+
         }
         if (identifier == 1) {
+            System.out.println("identity " + identifier );
             pageHolder.removeAllViews();
             page = new LinearLayout(this);
             page.setBackgroundColor(Color.GREEN);
             page.setLayoutParams(bottomPara);
             pageHolder.addView(page);
+            setSelectedNavButtonColor(1);
+
         }
         if (identifier == 2) {
+            System.out.println("identity " + identifier );
+            pageHolder.removeAllViews();
+            makeAddWorkout();
+            pageHolder.addView(page);
+            setSelectedNavButtonColor(2);
+
+        }
+        if (identifier == 3) {
+            System.out.println("identity " + identifier );
             pageHolder.removeAllViews();
             makeDiary();
             pageHolder.addView(page);
-        }
-        if (identifier == 3) {
-            pageHolder.removeAllViews();
-            page = new LinearLayout(this);
-            page.setBackgroundColor(Color.BLUE);
-            page.setLayoutParams(bottomPara);
-            pageHolder.addView(page);
+            setSelectedNavButtonColor(3);
+
         }
         if (identifier == 4) {
+            System.out.println("identity " + identifier );
             pageHolder.removeAllViews();
-            page = new LinearLayout(this);
-            page.setBackgroundColor(Color.WHITE);
-            page.setLayoutParams(bottomPara);
+            makeBodyStat();
             pageHolder.addView(page);
+            setSelectedNavButtonColor(4);
+
         }
+    }
+    int g;
+    public void setSelectedNavButtonColor(int caller)  {
+        int row = caller;
+
+        System.out.println("Tryin to get: " + row);
+
+        BottomNav.buttonList.get(row).setBackgroundColor(superLightBlack);
+
+        if (g != row) {
+            System.out.println("Numberd: " + g);
+            BottomNav.buttonList.get(g).setBackgroundColor(lightBlack);
+            g = row;
+            System.out.println("Numberd: " + g);
+        } else {
+            System.out.println("Number1: " + g);
+            g = row;
+        }
+
     }
 
     public void makeDiary() {
-        testLayoutClass tryit = new testLayoutClass();
-        page = tryit.createLayout(view);
+        page = new LinearLayout(this);
+        DiaryClass.createLayout(view, page);
         page.setLayoutParams(bottomPara);
     }
 
     public void makeStatChooser() {
-        testLayoutClass tryit = new testLayoutClass();
-        page = tryit.createLayout2(view);
+           page = new LinearLayout(this);
+           StatChooserClass.createLayout(view, page);
+           page.setLayoutParams(bottomPara);
+    }
+
+    public void makeBodyStat() {
+        page = new LinearLayout(this);
+        BodyStatClass.createLayout(view, page);
         page.setLayoutParams(bottomPara);
+    }
+
+    public void makeWeightGraph() {
+        page = new LinearLayout(this);
+        BodyGraphClass.createLayout(view, page);
+        page.setLayoutParams(bottomPara);
+    }
+
+    public void makeAddWorkout() {
+        page = new LinearLayout(this);
+        AddWorkoutClass.createLayout(view, page);
+        page.setLayoutParams(bottomPara);
+    }
+
+    public void changeNavBar(int identity) {
+        if (identity == 4 || inWeightPage == true) {
+            for (int i = 0; i < BottomNav.buttonList.size(); i++ ) {
+                BottomNav.buttonList.get(i).setColorFilter(red);
+
+                if (i == 0) {
+                    BottomNav.buttonList.get(i).setImageResource(R.drawable.weigthstat_icon);
+                }
+            }
+        } else {
+            for (int i = 0; i < BottomNav.buttonList.size(); i++ ) {
+                BottomNav.buttonList.get(i).setColorFilter(green);
+
+                if (i == 0) {
+                    BottomNav.buttonList.get(i).setImageResource(R.drawable.stats_image);
+                }
+            }
+        }
+
     }
 
 
     class NavBarOnClickListener1 implements View.OnClickListener {
 
-        int id;
+        int ids;
 
         public NavBarOnClickListener1(int name) {
-            id = name;
+            ids = name;
         }
 
         public NavBarOnClickListener1() {
@@ -133,23 +220,50 @@ public class BottomNaviClass extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            System.out.println("Row " + id + " clicked");
+            System.out.println("Row " + ids + " clicked");
             Context context = v.getContext();
-            if (id == 1) {
-                BottomNaviClass.id = id;
-                createSpecific(id);
-            } else if (id == 2) {
-                BottomNaviClass.id = id;
-                createSpecific(id);
-            } else if (id == 3) {
-                BottomNaviClass.id = id;
-                createSpecific(id);
-            } else if (id == 4) {
-                BottomNaviClass.id = id;
-                createSpecific(id);
-            } else if (id == 5) {
-                BottomNaviClass.id = id;
-                createSpecific(id);
+            System.out.println("id " + id );
+            SaveWorkout.checkExistingFiles(v.getContext());
+            SaveBodyWeight.checkExistingFiles(v.getContext());
+
+
+
+
+            if (ids == 0) {
+                BottomNaviClass.id = ids;
+                System.out.println("ids " + ids );
+                createSpecific(ids);
+                changeNavBar(ids);
+                System.out.println("id " + id );
+
+            } if (ids == 1) {
+                inWeightPage = false;
+                System.out.println("ids " + ids );
+                BottomNaviClass.id = ids;
+                createSpecific(ids);
+                changeNavBar(ids);
+                System.out.println("id " + id );
+            } if (ids == 2) {
+                inWeightPage = false;
+                System.out.println("ids " + ids );
+                BottomNaviClass.id = ids;
+                createSpecific(ids);
+                changeNavBar(ids);
+                System.out.println("id " + id );
+            } if (ids == 3) {
+                inWeightPage = false;
+                BottomNaviClass.id = ids;
+                System.out.println("ids " + ids );
+                createSpecific(ids);
+                changeNavBar(ids);
+                System.out.println("id " + id );
+            } if (ids == 4) {
+                inWeightPage = true;
+                System.out.println("ids " + ids );
+                BottomNaviClass.id = ids;
+                createSpecific(ids);
+                changeNavBar(ids);
+                System.out.println("id " + id );
             }
 
         }

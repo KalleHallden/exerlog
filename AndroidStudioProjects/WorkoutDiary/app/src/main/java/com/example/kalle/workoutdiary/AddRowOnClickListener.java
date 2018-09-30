@@ -20,23 +20,26 @@ class AddRowOnClickListener implements View.OnClickListener {
         makeButtonAndTextRowParams(textRowParams);
 
         int vol = 0;
-        MainActivity.rowList.add(new LinearLayout(v.getContext()));
-        LinearLayout textFieldRows = MainActivity.rowList.get(MainActivity.numberOfExercises);
+        AddWorkoutClass.rowList.add(new LinearLayout(v.getContext()));
+        LinearLayout textFieldRows = AddWorkoutClass.rowList.get(AddWorkoutClass.numberOfExercises);
 
-        TextFieldMaker.makeTextFields(textFieldRows, v);
-        MainActivity.exerciseRowContainer.addView(textFieldRows, textRowParams);
+        TextFieldMaker.makeTextFields(textFieldRows, v, AddWorkoutClass.containerFortestxArray, AddWorkoutClass.textFieldArray, AddWorkoutClass.numberOfExercises);
+        AddWorkoutClass.rowContainer.addView(textFieldRows, textRowParams);
 
         Workout.savedExercisez.clear();
+        System.out.println("we here");
 
-        for (int i = 0; i < MainActivity.numberOfExercises; i++ ) {
+        for (int i = 0; i < AddWorkoutClass.numberOfExercises; i++ ) {
+            System.out.println("we here");
 
             Workout.savedExercisez.add(new Exercise());
-            Exercise ex = MainActivity.thisWorkout.savedExercisez.get(i);
+            Exercise ex = AddWorkoutClass.thisWorkout.savedExercisez.get(i);
             System.out.println(i);
 
-            ArrayList<EditText> rowinfo = MainActivity.containerFortestxArray.get(i);
+            ArrayList<EditText> rowinfo = AddWorkoutClass.containerFortestxArray.get(i);
 
             for (int j = 0; j < 5; j++) {
+                System.out.println("we here");
                 EditText textField = rowinfo.get(j);
                 String ys = textField.getText().toString();
                 if (j == 0) {
@@ -80,10 +83,10 @@ class AddRowOnClickListener implements View.OnClickListener {
             vol = vol + ex.getVolume();
         }
 
-        MainActivity.numberOfExercises++;
-        MainActivity.thisWorkout.setVolume(vol);
-        MainActivity.thisWorkout.setWeightVolume(weightVol);
-        MainActivity.volumeLabel.setText("Total Volume: " + weightVol + "kg");
+        AddWorkoutClass.numberOfExercises++;
+        AddWorkoutClass.thisWorkout.setVolume(vol);
+        AddWorkoutClass.thisWorkout.setWeightVolume(weightVol);
+        AddWorkoutClass.volumeLabel.setText("Total volume: " + weightVol + "kg");
     }
 
     public Double calcWeightVol(int exVol, Double weight) {
