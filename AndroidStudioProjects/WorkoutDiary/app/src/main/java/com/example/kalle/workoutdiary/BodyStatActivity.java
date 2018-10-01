@@ -20,7 +20,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
+import javax.xml.parsers.SAXParser;
 
 public class BodyStatActivity extends AppCompatActivity {
 
@@ -38,6 +45,9 @@ public class BodyStatActivity extends AppCompatActivity {
     static int numberOfExercises;
     static int vol;
     BodyStats bs;
+    BodyStats bsthree;
+    BodyStats bsthe;
+    String deleteDate;
 
     LinearLayout row;
     LinearLayout topBar;
@@ -50,6 +60,7 @@ public class BodyStatActivity extends AppCompatActivity {
     LinearLayout volumeRow;
     LinearLayout divider;
     LinearLayout textFieldRows;
+    LinearLayout rowofTextAndLabels;
 
     ImageButton backButton;
 
@@ -180,8 +191,13 @@ public class BodyStatActivity extends AppCompatActivity {
         // Make initial row of textfields and increment number of rows by 1 and add it to the exerciseRowContainer
         
 
-        layoutTop.addView(saveButton);
-        layoutTop3.addView(deleteButton);
+        if (!newEntryClicked) {
+            layoutTop.addView(saveButton);
+            layoutTop3.addView(deleteButton);
+        } else {
+            layoutTop.addView(backButton);
+            layoutTop3.addView(saveButton);
+        }
 
 
         grid.addView(layoutTop);
@@ -193,7 +209,38 @@ public class BodyStatActivity extends AppCompatActivity {
         makeTextFields();
 
         for (int i = 0; i < 8; i++) {
-            exerciseRowContainer.addView(textfieldArray.get(i), buttonParams);
+            TextView label = new TextView(this);
+            if (i == 0){
+                label.setText("Body Weight:  ");
+            }
+            if (i == 1){
+                label.setText("Bicep Size:     ");
+            }
+            if (i == 2){
+                label.setText("Neck Size:     ");
+            }
+            if (i == 3){
+                label.setText("Wrist Size:     ");
+            }
+            if (i == 4){
+                label.setText("Chest Size:     ");
+            }
+            if (i == 5){
+                label.setText("Waist Size:     ");
+            }
+            if (i == 6){
+                label.setText("Thigh Size:     ");
+            }
+            if (i == 7){
+                label.setText("Calf Size:       ");
+            }
+
+
+
+            LinearLayout rowofTextAndLabels = new LinearLayout(this);
+            rowofTextAndLabels.addView(label, buttonParams);
+            rowofTextAndLabels.addView(textfieldArray.get(i));
+            exerciseRowContainer.addView(rowofTextAndLabels, buttonParams);
         }
 
         numberOfExercises = numberOfExercises + 1;
@@ -214,11 +261,21 @@ public class BodyStatActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new SaveBodyStatListener());
 
         deleteButton = new Button(this);
-        deleteButton.setText("DELETE");
-        deleteButton.setTextSize(30);
-        deleteButton.setTextColor(BottomNaviClass.red);
         deleteButton.setBackgroundColor(topBar.getSolidColor());
-        deleteButton.setOnClickListener(new DeleteBodyStatListener());
+
+        if (!newEntryClicked) {
+            deleteButton.setText("DELETE");
+            deleteButton.setTextSize(30);
+            deleteButton.setTextColor(BottomNaviClass.red);
+            deleteButton.setOnClickListener(new DeleteBodyStatListener());
+        } else {
+            backButton = new ImageButton(this);
+            backButton.setImageResource(R.drawable.back_icon);
+            backButton.setMinimumWidth(200);
+            backButton.setColorFilter(BottomNaviClass.red);
+            backButton.setBackgroundColor(BottomNaviClass.lightBlack);
+            backButton.setOnClickListener(new GoBackOnClickListener());
+        }
 
         System.out.println("5 worked");
         addViews();
@@ -353,19 +410,25 @@ public class BodyStatActivity extends AppCompatActivity {
                     }
 
                 }
+                Long tsLong = System.currentTimeMillis()/1000;
+                String timeMilli = tsLong.toString();
+                String ts = getDate(tsLong).toString();
+                String[] s = ts.split(":00 GMT");
+                String s2 = s[1];
+                String[] r = s2.split(":00");
+                String date = s[0] + r[1];
 
-
+                bs.setDate(date);
                 SaveBodyWeight test = new SaveBodyWeight();
-                test.WriteObjectToFile(bs, v.getContext());
+                SaveBodyWeight.log.bodystatsList.add(bs);
+                test.WriteObjectToFile(SaveBodyWeight.log, v.getContext());
+                Context context = v.getContext();
+                Intent intent = new Intent(context, BottomNaviClass.class);
+                BottomNaviClass.identifier = 4;
+                context.startActivity(intent);
+                BottomNaviClass.inWeightPage = true;
 
-                layoutTop.removeAllViews();
-                backButton = new ImageButton(v.getContext());
-                layoutTop.addView(backButton);
-                backButton.setImageResource(R.drawable.back_icon);
-                backButton.setMinimumWidth(200);
-                backButton.setColorFilter(BottomNaviClass.red);
-                backButton.setBackgroundColor(BottomNaviClass.lightBlack);
-                backButton.setOnClickListener(new GoBackOnClickListener());
+
             } else {
                 System.out.println("Saving re");
                 SaveBodyWeight opener = new SaveBodyWeight();
@@ -429,9 +492,21 @@ public class BodyStatActivity extends AppCompatActivity {
 
                 }
 
+                Long tsLong = System.currentTimeMillis()/1000;
+                String timeMilli = tsLong.toString();
+                String ts = getDate(tsLong).toString();
+                String[] s = ts.split(":00 GMT");
+                String s2 = s[1];
+                String[] r = s2.split(":00");
+                String date = s[0] + r[1];
+
+                bs2.setDate(date);
+                SaveBodyWeight.log.bodystatsList.add(bs2);
+
+
 
                 SaveBodyWeight test = new SaveBodyWeight();
-                test.saveSpecific(BodyStatClass.identify, v.getContext(), bs2);
+                test.saveSpecific(v.getContext(), SaveBodyWeight.log);
 
                 layoutTop.removeAllViews();
                 backButton = new ImageButton(v.getContext());
@@ -454,19 +529,19 @@ public class BodyStatActivity extends AppCompatActivity {
         SaveBodyWeight opener = new SaveBodyWeight();
 
         SaveBodyWeight.checkExistingFiles(getBaseContext());
-        BodyStats bs2 = opener.openBodyStat((SaveBodyWeight.n -1), getBaseContext());
+        bsthree = opener.openBodyStat((SaveBodyWeight.n -1), getBaseContext());
 
 
             if (which == 0) {
                 try {
-                    info = bs2.getBodyWeight().toString();
+                    info = bsthree.getBodyWeight().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work weight");
                 }
             }
             if (which == 1) {
                 try {
-                    info = bs2.getBicepsSize().toString();
+                    info = bsthree.getBicepsSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work bicep");
                 }
@@ -474,7 +549,7 @@ public class BodyStatActivity extends AppCompatActivity {
 
             if (which == 2) {
                 try {
-                    info = bs2.getNeckSize().toString();
+                    info = bsthree.getNeckSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work neck");
                 }
@@ -482,7 +557,7 @@ public class BodyStatActivity extends AppCompatActivity {
 
             if (which == 3) {
                 try {
-                    info = bs2.getWristSize().toString();
+                    info = bsthree.getWristSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work wrist");
                 }
@@ -490,7 +565,7 @@ public class BodyStatActivity extends AppCompatActivity {
 
             if (which == 4) {
                 try {
-                    info = bs2.getChestSize().toString();
+                    info = bsthree.getChestSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work chest");
                 }
@@ -498,21 +573,21 @@ public class BodyStatActivity extends AppCompatActivity {
 
             if (which == 5) {
                 try {
-                    info = bs2.getWaistSize().toString();
+                    info = bsthree.getWaistSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work waist");
                 }
             }
             if (which == 6) {
                 try {
-                    info = bs2.getThighSize().toString();
+                    info = bsthree.getThighSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work thigh");
                 }
             }
             if (which == 7) {
                 try {
-                    info = bs2.getCalfSize().toString();
+                    info = bsthree.getCalfSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work calf");
                 }
@@ -531,12 +606,13 @@ public class BodyStatActivity extends AppCompatActivity {
         System.out.println("Recreating " + which);
 
         SaveBodyWeight.checkExistingFiles(getBaseContext());
-        BodyStats bs2 = opener.openBodyStat(which, getBaseContext());
+        bsthe = opener.openBodyStat(which, getBaseContext());
+
 
         for (int i = 0; i < 8; i++) {
             if (i == 0) {
                 try {
-                    info = bs2.getBodyWeight().toString();
+                    info = bsthe.getBodyWeight().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work weight");
                 }
@@ -544,7 +620,7 @@ public class BodyStatActivity extends AppCompatActivity {
             }
             if (i == 1) {
                 try {
-                    info = bs2.getBicepsSize().toString();
+                    info = bsthe.getBicepsSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work bicep");
                 }
@@ -553,7 +629,7 @@ public class BodyStatActivity extends AppCompatActivity {
 
             if (i == 2) {
                 try {
-                    info = bs2.getNeckSize().toString();
+                    info = bsthe.getNeckSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work neck");
                 }
@@ -562,7 +638,7 @@ public class BodyStatActivity extends AppCompatActivity {
 
             if (i == 3) {
                 try {
-                    info = bs2.getWristSize().toString();
+                    info = bsthe.getWristSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work wrist");
                 }
@@ -571,7 +647,7 @@ public class BodyStatActivity extends AppCompatActivity {
 
             if (i == 4) {
                 try {
-                    info = bs2.getChestSize().toString();
+                    info = bsthe.getChestSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work chest");
                 }
@@ -580,7 +656,7 @@ public class BodyStatActivity extends AppCompatActivity {
 
             if (i == 5) {
                 try {
-                    info = bs2.getWaistSize().toString();
+                    info = bsthe.getWaistSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work waist");
                 }
@@ -588,7 +664,7 @@ public class BodyStatActivity extends AppCompatActivity {
             }
             if (i == 6) {
                 try {
-                    info = bs2.getThighSize().toString();
+                    info = bsthe.getThighSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work thigh");
                 }
@@ -596,7 +672,7 @@ public class BodyStatActivity extends AppCompatActivity {
             }
             if (i == 7) {
                 try {
-                    info = bs2.getCalfSize().toString();
+                    info = bsthe.getCalfSize().toString();
                 } catch (Exception e) {
                     System.out.println("Didn't work calf");
                 }
@@ -614,10 +690,8 @@ public class BodyStatActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
 
-            String filename = "BodyStats" + BodyStatClass.identify;
-            deleteFile(filename);
-            SaveBodyWeight.n -= 1;
-            BodyStatClass.removeRow(BodyStatClass.identify);
+            SaveBodyWeight deleter = new SaveBodyWeight();
+            deleter.deleteSpecific(v.getContext(), bsthe.getDate());
 
             Context context = v.getContext();
             Intent intent = new Intent(context, BottomNaviClass.class);
@@ -626,5 +700,20 @@ public class BodyStatActivity extends AppCompatActivity {
             System.out.println("File should get deleted");
 
         }
+    }
+    private static Date getDate(long time) {
+        Calendar cal = Calendar.getInstance();
+        TimeZone tz = cal.getTimeZone();//get your local time zone.
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        sdf.setTimeZone(tz);//set time zone.
+        String localTime = sdf.format(new Date(time * 1000));
+        Date date = new Date();
+        try {
+            date = sdf.parse(localTime);//get local date
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
     }
 }

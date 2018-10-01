@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -25,8 +26,14 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashSet;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class AddWorkoutClass {
 
@@ -60,6 +67,8 @@ public class AddWorkoutClass {
     }
 
     public static void make(LinearLayout containers, View v) {
+
+        SaveWorkout.checkExistingFiles(v.getContext());
 
         thisWorkout = new Workout();
 
@@ -210,13 +219,45 @@ public class AddWorkoutClass {
     static class SaveWorkoutListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            Long tsLong = System.currentTimeMillis()/1000;
+            String timeMilli = tsLong.toString();
+            String ts = getDate(tsLong).toString();
+            System.out.println(ts);
+            String[] s = ts.split(":00 GMT");
+            String s2 = s[1];
+            String[] r = s2.split(":00");
+            String date = s[0] + r[1];
+
+            thisWorkout.setDate(date);
+            thisWorkout.setVolume(CopyOfWorkoutActivity.vol);
+            thisWorkout.setTheSavedExercisesList(Workout.savedExercisez);
+
+            SaveWorkout.log.workouts.add(thisWorkout);
+
+            System.out.println("This is your time in millis " + timeMilli);
+            System.out.println("This is your timeStamp " + date);
             SaveWorkout test = new SaveWorkout();
-            test.WriteObjectToFile(thisWorkout, v.getContext());
+            test.WriteObjectToFile(SaveWorkout.log, v.getContext());
             SaveWorkout.checkExistingFiles(v.getContext());
             Context context = v.getContext();
             Intent intent = new Intent(context, BottomNaviClass.class);
             BottomNaviClass.identifier = 3;
             context.startActivity(intent);
         }
+    }
+    private static Date getDate(long time) {
+        Calendar cal = Calendar.getInstance();
+        TimeZone tz = cal.getTimeZone();//get your local time zone.
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        sdf.setTimeZone(tz);//set time zone.
+        String localTime = sdf.format(new Date(time * 1000));
+        Date date = new Date();
+        try {
+            date = sdf.parse(localTime);//get local date
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
     }
 }

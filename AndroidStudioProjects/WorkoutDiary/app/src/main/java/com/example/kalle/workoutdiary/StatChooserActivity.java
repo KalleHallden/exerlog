@@ -148,7 +148,7 @@ public class StatChooserActivity extends AppCompatActivity {
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 System.out.println("four");
             } if (id.equals("2")) {
-                 i = new Intent(context, BodyGraphActivity.class);
+                 i = new Intent(context, BodyStatLog.class);
                 System.out.println("three");
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 System.out.println("four");

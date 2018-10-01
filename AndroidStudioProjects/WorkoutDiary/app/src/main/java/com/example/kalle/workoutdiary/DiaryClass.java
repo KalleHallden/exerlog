@@ -71,8 +71,7 @@ public class DiaryClass {
 
 
     public static void makeRows(View v, ArrayList<LinearLayout> rowList) {
-        for (int i = 0; i < ((SaveWorkout.n) + 1); i++) {
-
+        for (int i = 0; i < ((SaveWorkout.log.workouts.size()) + 1); i++) {
             rowList.add(new LinearLayout(v.getContext()));
             LinearLayout rowCreated = rowList.get(i);
             String theId = Integer.toString(i);
@@ -82,7 +81,7 @@ public class DiaryClass {
 
     public static void setUpRows(View v, LinearLayout rowsInsideScroll, ArrayList<LinearLayout> rowList, LinearLayout.LayoutParams buttonP) {
 
-        int counter = SaveWorkout.n;
+        int counter = SaveWorkout.log.workouts.size();
 
         while (counter != 0) {
             System.out.println("Row counter is at " + counter);
@@ -92,7 +91,7 @@ public class DiaryClass {
             rowCreated.setMinimumWidth(1000);
             rowCreated.setMinimumHeight(80);
             TextView name = new TextView(v.getContext());
-            name.setText("Workout " + counter);
+            name.setText(SaveWorkout.log.workouts.get(counter-1).getDate());
             name.setTypeface(null, Typeface.BOLD);
             name.setTextSize(15);
             name.setTextColor(BottomNaviClass.grey);

@@ -26,7 +26,6 @@
         <activity android:name=".BodyStatActivity" />
         <activity android:name=".StatDiaryActivity" />
         <activity android:name=".StatChooserActivity" />
-        <activity android:name=".BodyGraphActivity" />
         <activity android:name=".LayoutAnimationActivity" />
     </application>
 

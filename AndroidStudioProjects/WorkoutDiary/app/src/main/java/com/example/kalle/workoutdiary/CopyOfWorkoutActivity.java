@@ -309,11 +309,8 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
     class DeleteWorkoutListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            String filename = "Workout" + DiaryClass.identify;
-            deleteFile(filename);
-            SaveWorkout.n -= 1;
-            Workout.savedExercisez.clear();
-            DiaryClass.removeRow(DiaryClass.identify);
+            SaveWorkout remover = new SaveWorkout();
+            remover.deleteSpecific(v.getContext(), workout.getDate());
 
             Context context = v.getContext();
             Intent intent = new Intent(context, BottomNaviClass.class);
@@ -339,7 +336,12 @@ public class CopyOfWorkoutActivity extends AppCompatActivity {
         public void onClick(View v) {
 
             SaveWorkout savespec = new SaveWorkout();
-            savespec.saveSpecific(DiaryClass.identify, v.getContext(), workout);
+            workout.setVolume(CopyOfWorkoutActivity.vol);
+            workout.setTheSavedExercisesList(Workout.savedExercisez);
+
+            SaveWorkout.log.workouts.remove(DiaryClass.identify);
+            SaveWorkout.log.workouts.add(DiaryClass.identify, workout);
+            savespec.saveSpecific( v.getContext(), SaveWorkout.log);
             layoutTop.removeAllViews();
             backButton = new ImageButton(v.getContext());
             layoutTop.addView(backButton);

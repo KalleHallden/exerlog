@@ -16,35 +16,67 @@ public class SaveWorkout {
 
     static String filepath = "Workout";
     static Double[] volumes;
+    static Workout[] listOfWorkouts;
+    static WorkoutLog log = new WorkoutLog();
+    static boolean filesHaveBeenChecked;
 
     public static int checkExistingFiles(Context context) {
-        n = 0;
+       // System.out.println("We are checking files and currently " + listOfWorkouts.length + " workouts exist");
+        //n = 0;
         int y = 1;
-                 for (int i = 0; i < y; i++) {
-                     try {
-                         FileInputStream fi = context.openFileInput("Workout" + n);
-                         ObjectInputStream oi = new ObjectInputStream(fi);
-                         y++;
-                         n++;
-                     } catch (Exception e) {
 
-                         System.out.println("Done checking existing files");
-                     }
-                 }
+        System.out.println(" ");
+        if (!filesHaveBeenChecked) {
+            try {
+                FileInputStream fi = context.openFileInput("Workout");
+                ObjectInputStream oi = new ObjectInputStream(fi);
+                y++;
+            } catch (Exception e) {
+                System.out.println("Doesn't exist");
+            }
+
+            try {
+                FileInputStream fi = context.openFileInput("Workout");
+                ObjectInputStream oi = new ObjectInputStream(fi);
+
+                // Read objects
+                log = (WorkoutLog) oi.readObject();
+                System.out.println("This is the size of n: " + (log.workouts.size()));
+                n = log.workouts.size();
+
+            } catch (Exception e) {
+
+            }
+            filesHaveBeenChecked = true;
+        } else {
+            n = log.workouts.size();
+            filesHaveBeenChecked = true;
+        }
+
+        System.out.println("This is n " + n);
+
          volumes = new Double[n];
          return n;
     }
 
-    public void WriteObjectToFile(Workout workout, Context context) {
-        workout.setVolume(CopyOfWorkoutActivity.vol);
-        workout.setTheSavedExercisesList(Workout.savedExercisez);
+    public void deleteSpecific(Context context, String identifier) {
+        for (int i = 0; i < n; i++){
+            if (log.workouts.get(i).getDate() == identifier) {
+                log.workouts.remove(i);
+                WriteObjectToFile(log, context);
+            }
+        }
+    }
+
+    public void WriteObjectToFile(WorkoutLog workout, Context context) {
+        filesHaveBeenChecked = true;
 
         System.out.println("hey");
         int num = checkExistingFiles(context);
 
-        System.out.println("Amount of workouts " + num);
+        System.out.println("Amount of workouts " + workout.workouts.size());
 
-        filepath = "Workout" + num;
+        filepath = "Workout";
 
         try {
             FileOutputStream fileOut = context.openFileOutput(filepath, Context.MODE_PRIVATE);
@@ -61,10 +93,8 @@ public class SaveWorkout {
         //Workout.savedExercisez.clear();
     }
 
-    public void saveSpecific(int id, Context context, Workout workout) {
-        String fileName = "Workout" + id;
-        workout.setVolume(CopyOfWorkoutActivity.vol);
-        workout.setTheSavedExercisesList(Workout.savedExercisez);
+    public void saveSpecific(Context context, WorkoutLog workout) {
+        String fileName = "Workout";
 
         try {
             FileOutputStream fileOut = context.openFileOutput(fileName, Context.MODE_PRIVATE);
@@ -87,12 +117,13 @@ public class SaveWorkout {
         int volume = 0;
         Double volumeWeight = 0.0;
         try {
-            FileInputStream fi = context.openFileInput("Workout" + id);
+            FileInputStream fi = context.openFileInput("Workout");
             ObjectInputStream oi = new ObjectInputStream(fi);
 
             // Read objects
-            workout = (Workout) oi.readObject();
+            log = (WorkoutLog) oi.readObject();
             System.out.println("It worked");
+            workout = log.workouts.get(id);
 
             oi.close();
             fi.close();

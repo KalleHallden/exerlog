@@ -81,7 +81,7 @@ public class BodyStatClass {
 
 
     public static void makeRows(View v, ArrayList<LinearLayout> rowList) {
-        for (int i = 0; i < ((SaveBodyWeight.n) + 1); i++) {
+        for (int i = 0; i < SaveBodyWeight.log.bodystatsList.size(); i++) {
 
             rowList.add(new LinearLayout(v.getContext()));
             LinearLayout rowCreated = rowList.get(i);
@@ -92,17 +92,17 @@ public class BodyStatClass {
 
     public static void setUpRows(View v, LinearLayout rowsInsideScroll, ArrayList<LinearLayout> rowList, LinearLayout.LayoutParams buttonP) {
 
-        int counter = SaveBodyWeight.n;
+        int counter = SaveBodyWeight.log.bodystatsList.size();
 
         while (counter != 0) {
-            System.out.println("Row counter is at " + counter);
+            System.out.println("Row counter is at " + (counter -1));
 
             LinearLayout rowCreated = rowList.get(counter - 1);
             rowCreated.setBackgroundColor(BottomNaviClass.black);
             rowCreated.setMinimumWidth(1000);
             rowCreated.setMinimumHeight(80);
             TextView name = new TextView(v.getContext());
-            name.setText("Body Stat " + counter);
+            name.setText(SaveBodyWeight.log.bodystatsList.get(counter-1).getDate());
             name.setTypeface(null, Typeface.BOLD);
             name.setTextSize(15);
             name.setTextColor(BottomNaviClass.red);

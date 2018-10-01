@@ -15,6 +15,15 @@ public class BodyStats implements Serializable {
     private Double waistSize;
     private Double thighSize;
     private Double calfSize;
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public void setBodyWeight(String bw) {
         bodyWeight = Double.parseDouble(bw);

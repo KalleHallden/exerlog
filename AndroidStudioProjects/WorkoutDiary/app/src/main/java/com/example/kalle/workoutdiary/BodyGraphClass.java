@@ -1,6 +1,7 @@
 package com.example.kalle.workoutdiary;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -22,6 +23,8 @@ public class BodyGraphClass {
     static int[] actualHeight;
     static int initialHeight;
     static BodyGraphClass.Ani a;
+
+    static Button addEntryButton;
 
     View view;
 
@@ -56,11 +59,12 @@ public class BodyGraphClass {
 
         LinearLayout divider = new LinearLayout(v.getContext());
 
-        Button addEntryButton = new Button(v.getContext());
+        addEntryButton = new Button(v.getContext());
         MyButton.makeButton(addEntryButton, "red");
         addEntryButton.setMinimumWidth(BottomNaviClass.width);
         addEntryButton.setMinimumHeight(100);
-        addEntryButton.setText("Day view");
+        addEntryButton.setText("Body Weight");
+        addEntryButton.setOnClickListener(new TyppeOfStatOnClockListener());
 
 
         buttonParams = new LinearLayout.LayoutParams(
@@ -78,7 +82,7 @@ public class BodyGraphClass {
                 ScrollView.LayoutParams.FILL_PARENT, BottomNaviClass.height));
 
         makeRows(v, rowList);
-        setRowHeights(v, rowsInsideScroll);
+        setRowHeights(v, rowsInsideScroll, SaveBodyWeight.bodyweightList);
 
 
         rowsInsideScroll.setOrientation(LinearLayout.HORIZONTAL);
@@ -93,10 +97,6 @@ public class BodyGraphClass {
     }
 
     public static void makeButtonAndTextRowParams(LinearLayout.LayoutParams params) {
-        params.leftMargin = 10;
-        params.rightMargin = 10;
-        params.topMargin = 20;
-        params.bottomMargin = 20;
         params.gravity = Gravity.BOTTOM;
     }
 
@@ -128,36 +128,45 @@ public class BodyGraphClass {
         }
     }
 
-    public static void setRowHeights(View v, LinearLayout rowsInsideScroll) {
-
+    public static void setRowHeights(View v, LinearLayout rowsInsideScroll, Double[] listofStat) {
+        rowsInsideScroll.removeAllViews();
         int counter = statList.size();
+        boolean larger;
 
         int[] s = new int[counter];
         actualHeight = new int[counter];
+
+        Double num = getMax(listofStat);
+
+        Double c = 1.0;
+        Double f = findMaxHeight(listofStat);
+        Double height;
+        int x = 0;
+
+        if (num > 10) {
+            larger = true;
+        } else {
+            larger = false;
+            while (f * c < BottomNaviClass.height -500 ) {
+                c += 0.1;
+                System.out.println(c);
+            }
+        }
+
         while (counter != 0) {
 
-            System.out.println("This is the weght: " + SaveBodyWeight.bodyweightList[counter-1]);
-            Double num = getMax();
-
-            Double y = SaveBodyWeight.bodyweightList[counter-1];
-            Double c = 10.0;
-            Double f = findMaxHeight();
-            Double height;
-            int x = 0;
-
-            if (num > 10) {
-                c =  y / num;
+            Double y = listofStat[counter-1];
+            if (larger) {
+                c = y / num;
                 x = c.intValue();
             } else {
-                while (f * c < BottomNaviClass.height -100 ) {
-                    c = c * 2;
-                    System.out.println(c);
-                }
-                x = (int) (y * c);
+                x = (int) (y*c);
             }
+
+
+            System.out.println("This is the weght: " + listofStat[counter-1]);
+
             System.out.println("This " +x);
-
-
             System.out.println("Row counter is at " + counter);
             BodyStats work = statList.get(counter - 1);
             LinearLayout rowCreated = rowList.get(counter - 1);
@@ -180,15 +189,67 @@ public class BodyGraphClass {
             a.setDuration(800);
             rowCreated.startAnimation(a);
 
-
-
             rowsInsideScroll.addView(rowForRow, buttonParams);
 
             counter = counter -1;
         }
     }
+    static int ss = 1;
+    static class TyppeOfStatOnClockListener implements View.OnClickListener {
 
+        @Override
+        public void onClick(View view) {
 
+                Double[] statlist = setupSat(ss);
+                if (ss != 7) {
+                    ss +=1;
+                } else {
+                    ss = 0;
+                }
+                rowList.clear();
+                makeRows(view, rowList);
+                setRowHeights(view, rowsInsideScroll ,statlist);
+        }
+    }
+
+    public static Double[] setupSat(int which) {
+
+        if (which == 0) {
+            addEntryButton.setText("Body Weight");
+           return SaveBodyWeight.bodyweightList;
+        }
+        if (which == 1) {
+            addEntryButton.setText("Bicep Size");
+            return SaveBodyWeight.bicepSizeList;
+        }
+        if (which == 2) {
+            addEntryButton.setText("Neck Size");
+            return SaveBodyWeight.neckSizeList;
+        }
+        if (which == 3) {
+            addEntryButton.setText("Wrist Size");
+            return SaveBodyWeight.wristSizeList;
+        }
+        if (which == 4) {
+            addEntryButton.setText("Chest Size");
+            return SaveBodyWeight.chestSizeList;
+        }
+        if (which == 5) {
+            addEntryButton.setText("Waist Size");
+            return SaveBodyWeight.waistSizeList;
+        }
+        if (which == 6) {
+            addEntryButton.setText("Thigh Size");
+            return SaveBodyWeight.thighSizeList;
+        }
+        if (which == 7) {
+            addEntryButton.setText("Calf Size");
+            return SaveBodyWeight.calfSizeList;
+        }
+        return null;
+    }
+
+    static int g;
     static class RowClickedOnClickListener implements View.OnClickListener {
         String id;
 
@@ -208,6 +269,21 @@ public class BodyGraphClass {
             identify = Integer.parseInt(id);
             System.out.println("two");
             System.out.println("five");
+
+
+            int row = Integer.parseInt(id);
+            LinearLayout rowCreated = rowList.get(row);
+            rowCreated.setBackgroundColor(Color.rgb(0,80,34));
+
+            if (g != row) {
+                System.out.println("Number: " + g);
+                LinearLayout rowz = rowList.get(g);
+                rowz.setBackgroundColor(BottomNaviClass.green);
+                g = row;
+            } else {
+                System.out.println("Number: " + g);
+                g = row;
+            }
         }
 
 
@@ -266,18 +342,18 @@ public class BodyGraphClass {
         }
     }
 
-    public static Double getMax() {
+    public static Double getMax(Double[] list) {
 
         Double maxHeight = 0.0;
         Double returnMultiplicationNumber = 0.0;
         for (int i = 0; i < statList.size(); i++ ) {
-            if (maxHeight < SaveBodyWeight.bodyweightList[i]) {
-                maxHeight = SaveBodyWeight.bodyweightList[i];
+            if (maxHeight < list[i]) {
+                maxHeight = list[i];
                 System.out.println("here " + maxHeight);
             }
         }
-        if (maxHeight > BottomNaviClass.height - 100) {
-            while (maxHeight / returnMultiplicationNumber > BottomNaviClass.height - 100) {
+        if (maxHeight > BottomNaviClass.height - 500) {
+            while (maxHeight / returnMultiplicationNumber > BottomNaviClass.height - 500) {
                 returnMultiplicationNumber += 10;
             }
         } else {
@@ -286,11 +362,11 @@ public class BodyGraphClass {
         return returnMultiplicationNumber;
     }
 
-    public static Double findMaxHeight() {
+    public static Double findMaxHeight(Double[] list) {
         Double maxHeight = 0.0;
         for (int i = 0; i < statList.size(); i++ ) {
-            if (maxHeight < SaveBodyWeight.bodyweightList[i]) {
-                maxHeight = SaveBodyWeight.bodyweightList[i];
+            if (maxHeight < list[i]) {
+                maxHeight = list[i];
                 System.out.println("here " + maxHeight);
             }
         }

@@ -7,6 +7,17 @@ public class Workout implements Serializable {
     static ArrayList<Exercise> savedExercisez = new ArrayList<Exercise>();
     private Double volumeWeight;
 
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    private String date;
+
     public int getVolume() {
         return volume;
     }

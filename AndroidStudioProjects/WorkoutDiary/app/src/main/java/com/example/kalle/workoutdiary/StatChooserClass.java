@@ -131,7 +131,7 @@ public class StatChooserClass {
 
             LinearLayout rowCreated = rowList.get(counter - 1);
             rowCreated.setBackgroundColor(BottomNaviClass.green);
-            rowCreated.setMinimumWidth(50);
+            rowCreated.setMinimumWidth(70);
             rowCreated.setMinimumHeight(300);
 
             rowsInsideScroll.addView(rowCreated, buttonP);
@@ -156,7 +156,7 @@ public class StatChooserClass {
             LinearLayout rowCreated = rowList.get(counter - 1);
             LinearLayout rowForRow = new LinearLayout(v.getContext());
             rowCreated.setBackgroundColor(BottomNaviClass.green);
-            rowCreated.setMinimumWidth(50);
+            rowCreated.setMinimumWidth(60);
 
             System.out.println("This is the height: " + x);
             s[counter-1] = (SaveWorkout.volumes[counter-1]).intValue();
@@ -181,7 +181,7 @@ public class StatChooserClass {
         }
     }
 
-
+    static int g;
     static class RowClickedOnClickListener implements View.OnClickListener {
         String id;
 
@@ -201,7 +201,22 @@ public class StatChooserClass {
             identify = Integer.parseInt(id);
             System.out.println("two");
             System.out.println("five");
+
+            int row = Integer.parseInt(id);
+            LinearLayout rowCreated = rowList.get(row);
+            rowCreated.setBackgroundColor(Color.rgb(0,80,34));
+
+            if (g != row) {
+                System.out.println("Number: " + g);
+                LinearLayout rowz = rowList.get(g);
+                rowz.setBackgroundColor(BottomNaviClass.green);
+                g = row;
+            } else {
+                System.out.println("Number: " + g);
+                g = row;
+            }
         }
+
 
 
     }
@@ -267,8 +282,8 @@ public class StatChooserClass {
                 maxHeight = SaveWorkout.volumes[i];
             }
         }
-        if (maxHeight > BottomNaviClass.height - 100) {
-            while (maxHeight / returnMultiplicationNumber > BottomNaviClass.height - 100) {
+        if (maxHeight > BottomNaviClass.height - 500) {
+            while (maxHeight / returnMultiplicationNumber > BottomNaviClass.height - 500) {
                 returnMultiplicationNumber += 10;
             }
         }
