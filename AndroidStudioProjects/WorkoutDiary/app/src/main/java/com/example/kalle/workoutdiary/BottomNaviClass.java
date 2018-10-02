@@ -10,6 +10,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 public class BottomNaviClass extends AppCompatActivity {
 
     static int green = Color.rgb(4, 168, 46);
@@ -34,6 +39,12 @@ public class BottomNaviClass extends AppCompatActivity {
     static int identifier = 3;
     static  boolean hasLoadedOnce = false;
 
+    LinearLayout banner;
+
+    private static final String TAG = "MainActivity";
+
+    private AdView mAdView;
+
 
     static boolean inWeightPage;
 
@@ -42,6 +53,7 @@ public class BottomNaviClass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setUp();
         hasLoadedOnce = true;
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
     }
 
     public void setUp() {
@@ -55,6 +67,21 @@ public class BottomNaviClass extends AppCompatActivity {
         height = size.y;
         view = new View(this);
         pageHolder = new LinearLayout(this);
+        banner = new LinearLayout(this);
+        banner.setBackgroundColor(Color.BLACK);
+        banner.setMinimumWidth(width);
+
+
+
+        AdView adView = new AdView(this);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+        adView.loadAd(adRequest);
+
+        LinearLayout.LayoutParams topPara = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        makeTopgravityparams(topPara);
 
 
         bottomPara = new LinearLayout.LayoutParams(
@@ -70,12 +97,22 @@ public class BottomNaviClass extends AppCompatActivity {
             createSpecific(identifier);
         }
 
+        LinearLayout.LayoutParams buttP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        SetUp.makeButtonAndTextRowParams(buttP);
+
+        banner.addView(adView, buttP);
+
         pageHolder.setLayoutParams(bottomPara);
+        viewContainer.addView(banner);
         viewContainer.addView(pageHolder);
         viewContainer.addView(bar);
         setContentView(viewContainer);
         changeNavBar(identifier);
 
+    }
+    public static void makeTopgravityparams(LinearLayout.LayoutParams params) {
+        params.gravity = Gravity.TOP;
     }
 
     public void makeNav() {

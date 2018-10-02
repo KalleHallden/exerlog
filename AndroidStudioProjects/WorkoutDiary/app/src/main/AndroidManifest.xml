@@ -22,11 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".CopyOfWorkoutActivity" />
-        <activity android:name=".StatsActivity" />
         <activity android:name=".BodyStatActivity" />
-        <activity android:name=".StatDiaryActivity" />
-        <activity android:name=".StatChooserActivity" />
-        <activity android:name=".LayoutAnimationActivity" />
     </application>
 
 </manifest>

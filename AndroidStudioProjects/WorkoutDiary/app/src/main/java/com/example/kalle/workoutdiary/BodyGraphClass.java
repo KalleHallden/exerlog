@@ -12,6 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
 import java.util.ArrayList;
 
 public class BodyGraphClass {
@@ -37,6 +41,10 @@ public class BodyGraphClass {
     static LinearLayout.LayoutParams bottomPara;
     static LinearLayout.LayoutParams buttonParams;
 
+
+    static GraphView graph;
+    static LineGraphSeries<DataPoint> series;
+
     public static void removeRow(int index) {
         rowList.remove(index);
     }
@@ -58,6 +66,7 @@ public class BodyGraphClass {
         allViews.setOrientation(LinearLayout.VERTICAL);
 
         LinearLayout divider = new LinearLayout(v.getContext());
+        LinearLayout divider2 = new LinearLayout(v.getContext());
 
         addEntryButton = new Button(v.getContext());
         MyButton.makeButton(addEntryButton, "red");
@@ -65,6 +74,10 @@ public class BodyGraphClass {
         addEntryButton.setMinimumHeight(100);
         addEntryButton.setText("Body Weight");
         addEntryButton.setOnClickListener(new TyppeOfStatOnClockListener());
+
+        LinearLayout.LayoutParams topP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        makeTopParams(topP);
 
 
         buttonParams = new LinearLayout.LayoutParams(
@@ -81,15 +94,15 @@ public class BodyGraphClass {
         rowScroller.setLayoutParams(new RelativeLayout.LayoutParams(
                 ScrollView.LayoutParams.FILL_PARENT, BottomNaviClass.height));
 
-        makeRows(v, rowList);
+        //makeRows(v, rowList);
         setRowHeights(v, rowsInsideScroll, SaveBodyWeight.bodyweightList);
 
 
         rowsInsideScroll.setOrientation(LinearLayout.HORIZONTAL);
 
         allViews.addView(addEntryButton);
-        rowScroller.addView(rowsInsideScroll);
-        allViews.addView(rowScroller, bottomPara);
+        //rowScroller.addView(rowsInsideScroll);
+        allViews.addView(rowsInsideScroll, topP);
         allViews.addView(divider);
         containers.addView(allViews, bottomPara);
 
@@ -98,6 +111,10 @@ public class BodyGraphClass {
 
     public static void makeButtonAndTextRowParams(LinearLayout.LayoutParams params) {
         params.gravity = Gravity.BOTTOM;
+    }
+
+    public static void makeTopParams(LinearLayout.LayoutParams params) {
+        params.gravity = Gravity.TOP - 200;
     }
 
 
@@ -130,13 +147,49 @@ public class BodyGraphClass {
 
     public static void setRowHeights(View v, LinearLayout rowsInsideScroll, Double[] listofStat) {
         rowsInsideScroll.removeAllViews();
+
+
+        graph = new GraphView(v.getContext());
+        DataPoint[] dataPointsArray = new DataPoint[listofStat.length];
+
+        int num = findMaxHeight(listofStat).intValue();
+
+        int x = 0;
+        for (int i = 0; i < listofStat.length; i++) {
+            System.out.println("run " + i);
+            if (i == 0) {
+                System.out.println("in");
+                dataPointsArray[i] = new DataPoint(0, listofStat[i]);
+            } else {
+                dataPointsArray[i] = new DataPoint(x, listofStat[i]);
+            }
+            System.out.println("This is number1 " + listofStat[x] + " and num2 " + listofStat[i]);
+            x += 1;
+        }
+
+
+        series = new LineGraphSeries<>(dataPointsArray);
+        series.setColor(BottomNaviClass.red);
+
+        graph.addSeries(series);
+
+        graph.getViewport().setMinX(0);
+        graph.getViewport().setMaxX(listofStat.length);
+        graph.getViewport().setMinY(num - 10);
+        graph.getViewport().setMaxY(num + 10);
+        graph.canScrollHorizontally(View.SCROLL_AXIS_HORIZONTAL);
+
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setXAxisBoundsManual(true);
+
+        /*
         int counter = statList.size();
         boolean larger;
 
         int[] s = new int[counter];
         actualHeight = new int[counter];
 
-        Double num = getMax(listofStat);
+
 
         Double c = 1.0;
         Double f = findMaxHeight(listofStat);
@@ -147,9 +200,11 @@ public class BodyGraphClass {
             larger = true;
         } else {
             larger = false;
-            while (f * c < BottomNaviClass.height -500 ) {
-                c += 0.1;
-                System.out.println(c);
+            if (f > 0) {
+                while (f * c < BottomNaviClass.height -500 ) {
+                    c += 0.1;
+                    System.out.println(c);
+                }
             }
         }
 
@@ -189,10 +244,12 @@ public class BodyGraphClass {
             a.setDuration(800);
             rowCreated.startAnimation(a);
 
-            rowsInsideScroll.addView(rowForRow, buttonParams);
+            */
 
-            counter = counter -1;
-        }
+            rowsInsideScroll.addView(graph, buttonParams);
+
+           // counter = counter -1;
+        //}
     }
     static int ss = 1;
     static class TyppeOfStatOnClockListener implements View.OnClickListener {

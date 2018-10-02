@@ -431,10 +431,12 @@ public class BodyStatActivity extends AppCompatActivity {
 
             } else {
                 System.out.println("Saving re");
+
                 SaveBodyWeight opener = new SaveBodyWeight();
+                SaveBodyWeight.log.bodystatsList.remove(BodyStatClass.identify);
+                BodyStats bs2 = new BodyStats();
 
                 SaveBodyWeight.checkExistingFiles(getBaseContext());
-                BodyStats bs2 = opener.openBodyStat(BodyStatClass.identify, v.getContext());
 
                 for (int i = 0; i < 8; i++) {
                     EditText textfield = textfieldArray.get(i);
@@ -501,11 +503,13 @@ public class BodyStatActivity extends AppCompatActivity {
                 String date = s[0] + r[1];
 
                 bs2.setDate(date);
-                SaveBodyWeight.log.bodystatsList.add(bs2);
+
+                SaveBodyWeight.log.bodystatsList.add(BodyStatClass.identify ,bs2);
 
 
 
                 SaveBodyWeight test = new SaveBodyWeight();
+
                 test.saveSpecific(v.getContext(), SaveBodyWeight.log);
 
                 layoutTop.removeAllViews();

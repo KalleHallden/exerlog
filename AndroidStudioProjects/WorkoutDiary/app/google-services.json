@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "878009859805",
+    "firebase_url": "https://exerlog-55e3a.firebaseio.com",
+    "project_id": "exerlog-55e3a",
+    "storage_bucket": "exerlog-55e3a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878009859805:android:0509606012806001",
+        "android_client_info": {
+          "package_name": "com.example.kalle.workoutdiary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878009859805-21mbf4dqfsslvl4sgaat7lp6fq16uo9v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kalle.workoutdiary",
+            "certificate_hash": "ccc1644dea63dd3a7871302492122308b3d8c516"
+          }
+        },
+        {
+          "client_id": "878009859805-t67uv3addatda9lrqv6vm6rg8n8nqhlb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR-OiY0U0VEpPxRvirp9zJzO3JOb-fIOY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878009859805-t67uv3addatda9lrqv6vm6rg8n8nqhlb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
