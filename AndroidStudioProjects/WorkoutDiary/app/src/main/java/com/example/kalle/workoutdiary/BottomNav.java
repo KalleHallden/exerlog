@@ -38,14 +38,7 @@ public class BottomNav {
         buttonList.add(bodyStats);
 
 
-
-/*
-        stats.setOnClickListener(new NavBarOnClickListener(1));
-        addWorkout.setOnClickListener(new NavBarOnClickListener(2));
-        */
         diary.setOnClickListener(new NavBarOnClickListener(3));
-
-        //bodyStats.setOnClickListener(new NavBarOnClickListener(4));
 
 
         layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -66,7 +59,6 @@ public class BottomNav {
         stats.setImageResource(R.drawable.stats_image);
         stats.setColorFilter(BottomNaviClass.green);
         stats.setBackgroundColor(BottomNaviClass.lightBlack);
-        // stats.setLayoutParams(para);
 
         bodyStats.setMinimumWidth(widths / 5);
         bodyStats.setMinimumHeight(160);
